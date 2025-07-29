@@ -1,6 +1,7 @@
 import 'package:ddavila/assets_helper/app_colors.dart';
 import 'package:ddavila/assets_helper/app_icons.dart';
 import 'package:ddavila/assets_helper/text_font_style.dart';
+import 'package:ddavila/common_widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -395,6 +396,13 @@ class _FilterScreenState extends State<FilterScreen> {
                   color: Colors.grey,
                   thickness: 1,
                   height: 20,
+                ),
+                SizedBox(height: 20),
+                CustomButton(
+                  minWidth: double.infinity,
+                  text: 'Reset Filter',
+                  context: context,
+                  onTap: () {},
                 ),
               ],
             ),
