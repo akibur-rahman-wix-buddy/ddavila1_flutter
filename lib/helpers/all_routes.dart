@@ -4,8 +4,8 @@ import 'package:ddavila/features/auth_screen/presentation/role_screen.dart';
 import 'package:ddavila/features/auth_screen/presentation/signin_screen.dart';
 import 'package:ddavila/features/auth_screen/presentation/signup_screen.dart';
 import 'package:ddavila/features/auth_screen/presentation/success_screen.dart';
-import 'package:ddavila/features/filter_screen/presentation/filter_screen.dart';
-import 'package:ddavila/features/home_screen/presentation/home_screen.dart';
+import 'package:ddavila/features/user_app/filter_screen/presentation/filter_screen.dart';
+import 'package:ddavila/features/user_app/home_screen/presentation/home_screen.dart';
 import 'package:flutter/cupertino.dart';
 
 final class Routes {
