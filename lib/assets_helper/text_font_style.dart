@@ -8,7 +8,7 @@ class TextFontStyle {
   // use font for this projects
   // ################# mrdawud #######################
   static final textLine7w400cFFFFFFDmSans = TextStyle(
-    fontSize: 7.sp,
+    fontSize: 14.sp,
     fontFamily: 'Dm Sans',
     fontWeight: FontWeight.w400,
     color: AppColor.cFFFFFF,

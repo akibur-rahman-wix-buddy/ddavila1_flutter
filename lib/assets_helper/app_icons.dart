@@ -20,4 +20,6 @@ class AppIcons {
 
   // * ===================> Filter Screen Icons <====================
   static const String arrowBack = '$iconsRoute/arrowBack.svg';
+  static const String xcloseIcon = '$iconsRoute/xcloseIcon.svg';
+  static const String clockIcon = '$iconsRoute/clockIcon.svg';
 }

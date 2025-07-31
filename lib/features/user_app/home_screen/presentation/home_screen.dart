@@ -92,10 +92,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   fieldWidth: double.infinity,
                   borderRadius: 58,
                   hintText: 'Search...',
-                  prefixIcon: Padding(
-                    padding: const EdgeInsets.all(6.0),
-                    child: SvgPicture.asset(
-                      AppIcons.searchIcon,
+                  prefixIcon: GestureDetector(
+                    onTap: () {
+                      NavigationService.navigateTo(
+                        Routes.searchScreen,
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(6.0),
+                      child: SvgPicture.asset(
+                        AppIcons.searchIcon,
+                      ),
                     ),
                   ),
                   suffixIcon: GestureDetector(

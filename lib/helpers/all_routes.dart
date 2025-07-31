@@ -6,6 +6,7 @@ import 'package:ddavila/features/auth_screen/presentation/signup_screen.dart';
 import 'package:ddavila/features/auth_screen/presentation/success_screen.dart';
 import 'package:ddavila/features/user_app/filter_screen/presentation/filter_screen.dart';
 import 'package:ddavila/features/user_app/home_screen/presentation/home_screen.dart';
+import 'package:ddavila/features/user_app/home_screen/presentation/search_screen.dart';
 import 'package:flutter/cupertino.dart';
 
 final class Routes {
@@ -32,6 +33,7 @@ final class Routes {
   // * =============> Home navigation <============= */
   static const String homeScreen = '/homeScreen';
   static const String filterScreen = '/filterScreen';
+  static const String searchScreen = '/searchScreen';
 }
 
 final class RouteGenerator {
@@ -97,6 +99,15 @@ final class RouteGenerator {
                 widget: const ScreenTitle(widget: FilterScreen()),
                 settings: settings)
             : CupertinoPageRoute(builder: (context) => const FilterScreen());
+
+      // * Filter Screen
+      case Routes.searchScreen:
+        return Platform.isIOS
+            ? UltimateSmoothTransitionRoute(
+                widget: const ScreenTitle(widget: SearchUserScreen()),
+                settings: settings)
+            : CupertinoPageRoute(
+                builder: (context) => const SearchUserScreen());
 
       default:
         return null;
