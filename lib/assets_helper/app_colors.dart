@@ -2,7 +2,12 @@ import 'dart:ui';
 
 class AppColor {
   static const Color onboardColor = Color(0xFF112D48);
+  static const Color cEDEDED = Color(0xFFEDEDED);
+  static const Color cF3F2F2 = Color(0xFFF3F2F2);
+  static const Color cF6F8FA = Color(0xFFF6F8FA);
+  static const Color cDBE5FD = Color(0xFFDBE5FD);
   static const Color c6940C9 = Color(0xFF6940C9);
+  static const Color c898282 = Color(0xFF898282);
   static const Color c5A5C5F = Color(0xFF5A5C5F);
   static const Color buttonColor = Color(0xFFDB683F);
   static const Color allPrimaryColor = Color(0xFF6200EE);

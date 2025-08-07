@@ -1,6 +1,8 @@
+import 'package:ddavila/assets_helper/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:ddavila/assets_helper/app_colors.dart';
 import 'package:ddavila/assets_helper/text_font_style.dart';
+import 'package:flutter_svg/svg.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String text;
@@ -12,11 +14,27 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       title: Text(
         text,
-        style: TextFontStyle.headLine20w600cFFFFFFLato,
+        style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+          fontSize: 20,
+          color: AppColor.blackColor,
+        ),
+      ),
+      leading: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        child: GestureDetector(
+          onTap: () {
+            Navigator.of(context).pop();
+          },
+          child: SvgPicture.asset(
+            AppIcons.arrowBack,
+            width: 24,
+            height: 24,
+          ),
+        ),
       ),
       flexibleSpace: Container(
         decoration: const BoxDecoration(
-          color: AppColor.onboardColor,
+          color: AppColor.whiteColor,
         ),
       ),
     );

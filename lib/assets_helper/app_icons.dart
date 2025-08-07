@@ -22,4 +22,14 @@ class AppIcons {
   static const String arrowBack = '$iconsRoute/arrowBack.svg';
   static const String xcloseIcon = '$iconsRoute/xcloseIcon.svg';
   static const String clockIcon = '$iconsRoute/clockIcon.svg';
+  static const String loveIcon = '$iconsRoute/loveIcon.svg';
+  static const String cartIcon = '$iconsRoute/cartIcon.svg';
+  static const String whiteLoveIcon = '$iconsRoute/whiteLoveIcon.svg';
+
+  // * ===================> Product Screen Icons <====================
+  static const String blueTimer = '$iconsRoute/blueTimer.svg';
+  static const String liveIcon = '$iconsRoute/liveIcon.svg';
+  static const String done = '$iconsRoute/done.svg';
+  static const String dollar = '$iconsRoute/dollarIcon.svg';
+  static const String clockCircle = '$iconsRoute/clockCircle.svg';
 }
