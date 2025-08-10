@@ -354,114 +354,123 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemCount: 4, // Replace with your data count
                   itemBuilder: (context, index) {
                     return Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Column(
-                          mainAxisAlignment:
-                              MainAxisAlignment.center, // Center content
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // Image Section
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(12),
-                                  child: Image.asset(
-                                    AppImages.productImage,
-                                    fit: BoxFit.cover,
-                                    width: double.infinity,
-                                    height: 200,
+                      child: GestureDetector(
+                        onTap: () {
+                          NavigationService.navigateTo(
+                            Routes.productDetailsScreen,
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Column(
+                            mainAxisAlignment:
+                                MainAxisAlignment.center, // Center content
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Image Section
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Image.asset(
+                                      AppImages.productImage,
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                      height: 200,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 8),
-                                // Product Title & Price
-                                Text(
-                                  'Yugioh Speed Duel Battle City FINALS Brand New Factory Sealed',
-                                  style: TextFontStyle
-                                      .textLine7w400cFFFFFFDmSans
-                                      .copyWith(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
+                                  const SizedBox(height: 8),
+                                  // Product Title & Price
+                                  Text(
+                                    'Yugioh Speed Duel Battle City FINALS Brand New Factory Sealed',
+                                    style: TextFontStyle
+                                        .textLine7w400cFFFFFFDmSans
+                                        .copyWith(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  'Pre-Owned',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.redAccent,
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    'Pre-Owned',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.redAccent,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 8),
-                                // * Bid Info and Delivery
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      '\$15,000',
-                                      style: TextFontStyle
-                                          .textLine7w400cFFFFFFDmSans
-                                          .copyWith(
-                                        fontSize: 18,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
+                                  const SizedBox(height: 8),
+                                  // * Bid Info and Delivery
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        '\$15,000',
+                                        style: TextFontStyle
+                                            .textLine7w400cFFFFFFDmSans
+                                            .copyWith(
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'lostrav_6599.5%',
-                                          style: TextStyle(
-                                              fontSize: 12, color: Colors.grey),
-                                        ),
-                                        Text(
-                                          'positive (595)',
-                                          style: TextStyle(
-                                              fontSize: 12, color: Colors.grey),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 8),
-                                // * Bid Status
-                                Row(
-                                  children: [
-                                    Text(
-                                      '0 bids',
-                                      style: TextStyle(
-                                          fontSize: 10, color: Colors.red),
-                                    ),
-                                    Text(
-                                      ' • Ended (Today 11:50 AM)',
-                                      style: TextStyle(
-                                          fontSize: 10, color: Colors.grey),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 5),
-                                Text(
-                                  '+\$19.15 delivery',
-                                  style: TextStyle(
-                                      fontSize: 12, color: Colors.grey),
-                                ),
-                                const SizedBox(height: 4),
-                                // *  Seller info
-                                Text(
-                                  'From Australia',
-                                  style: TextStyle(
-                                      fontSize: 12, color: Colors.grey),
-                                ),
-                              ],
-                            )
-                          ],
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'lostrav_6599.5%',
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.grey),
+                                          ),
+                                          Text(
+                                            'positive (595)',
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.grey),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 8),
+                                  // * Bid Status
+                                  Row(
+                                    children: [
+                                      Text(
+                                        '0 bids',
+                                        style: TextStyle(
+                                            fontSize: 10, color: Colors.red),
+                                      ),
+                                      Text(
+                                        ' • Ended (Today 11:50 AM)',
+                                        style: TextStyle(
+                                            fontSize: 10, color: Colors.grey),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Text(
+                                    '+\$19.15 delivery',
+                                    style: TextStyle(
+                                        fontSize: 12, color: Colors.grey),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  // *  Seller info
+                                  Text(
+                                    'From Australia',
+                                    style: TextStyle(
+                                        fontSize: 12, color: Colors.grey),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     );

@@ -27,4 +27,15 @@ class AppIcons {
   static const String voucherCard = '$iconsRoute/voucher.svg';
   static const String arrowLeftRightIcon = '$iconsRoute/arrow-up-right.svg';
   static const String sendIcon2 = 'assets/icons/send.svg';
+
+  static const String loveIcon = '$iconsRoute/loveIcon.svg';
+  static const String cartIcon = '$iconsRoute/cartIcon.svg';
+  static const String whiteLoveIcon = '$iconsRoute/whiteLoveIcon.svg';
+
+  // * ===================> Product Screen Icons <====================
+  static const String blueTimer = '$iconsRoute/blueTimer.svg';
+  static const String liveIcon = '$iconsRoute/liveIcon.svg';
+  static const String done = '$iconsRoute/done.svg';
+  static const String dollar = '$iconsRoute/dollarIcon.svg';
+  static const String clockCircle = '$iconsRoute/clockCircle.svg';
 }

@@ -74,8 +74,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   // Get participant info safely
                   final participantName = participant?.name ?? "Unknown";
                   final participantAvatar = participant?.avatar;
-                  final participantId =
-                  conversation?.participants?.isNotEmpty == true
+                  final participantId =conversation?.participants?.isNotEmpty == true
                       ? conversation!.participants![0].participantableId
                       : null;
 
@@ -100,15 +99,14 @@ class _ChatScreenState extends State<ChatScreen> {
                           ),
                         ),
                         onPressed: () {
-                          print(
-                              'check the  conversation id : ${conversation?.id.toString()}');
+                          print('check the  conversation id : ${conversation?.id.toString()}');
                           if (participantId != null) {
                             Get.to(ChatToPersonScreen(
-                              conversationId: conversation?.participants?.first.participantableId
+                              conversationId: conversation?.participants?.first.conversationId
                                   .toString(), // Use conversation.id instead
                               name: participantName,
                               image: participantAvatar,
-                              receiverId: participantId,
+                              participantableId: participantId,
                             ));
                             setState(() {
                               selectedIndexes.add(index);

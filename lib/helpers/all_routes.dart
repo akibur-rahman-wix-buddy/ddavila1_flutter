@@ -7,6 +7,7 @@ import 'package:ddavila/features/auth_screen/presentation/success_screen.dart';
 import 'package:ddavila/features/user_app/filter_screen/presentation/filter_screen.dart';
 import 'package:ddavila/features/user_app/home_screen/presentation/home_screen.dart';
 import 'package:ddavila/features/user_app/home_screen/presentation/search_screen.dart';
+import 'package:ddavila/features/user_app/products_screen/products_screen.dart';
 import 'package:flutter/cupertino.dart';
 
 final class Routes {
@@ -34,6 +35,9 @@ final class Routes {
   static const String homeScreen = '/homeScreen';
   static const String filterScreen = '/filterScreen';
   static const String searchScreen = '/searchScreen';
+
+  // * =============> Cart navigation <============= */
+  static const String productDetailsScreen = '/productDetailsScreen';
 }
 
 final class RouteGenerator {
@@ -108,6 +112,14 @@ final class RouteGenerator {
                 settings: settings)
             : CupertinoPageRoute(
                 builder: (context) => const SearchUserScreen());
+
+      // * Products Screen
+      case Routes.productDetailsScreen:
+        return Platform.isIOS
+            ? UltimateSmoothTransitionRoute(
+                widget: const ScreenTitle(widget: ProductsScreen()),
+                settings: settings)
+            : CupertinoPageRoute(builder: (context) => const ProductsScreen());
 
       default:
         return null;

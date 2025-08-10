@@ -27,14 +27,14 @@ import 'package:intl/intl.dart';
 
 
 class ChatToPersonScreen extends StatefulWidget {
-  final dynamic receiverId;
+  final dynamic participantableId;
   final dynamic name;
   final dynamic image;
   final dynamic conversationId;
 
   const ChatToPersonScreen({
     super.key,
-    required this.receiverId,
+    required this.participantableId,
     required this.name,
     required this.image,
     required this.conversationId,
@@ -61,7 +61,7 @@ class _ChatToPersonScreenState extends State<ChatToPersonScreen> {
   String? _errorMessage;
   List<Message> _messages = [];
   bool nullMessage = false;
-  dynamic myId;
+  dynamic myId = appData.read(kKeyUserID);
   bool youBLock = true;
   bool blockedYou = true;
 
@@ -70,10 +70,12 @@ class _ChatToPersonScreenState extends State<ChatToPersonScreen> {
   @override
   void initState() {
     super.initState();
-    print("Receiver Id: ${widget.receiverId}");
+    print("Receiver Id: ${widget.participantableId}");
     print("Conversation Id: ${widget.conversationId}");
+    print("my Id: ${myId}");
     _loadInitialMessages();
     _initializePusher();
+
   }
 
 
@@ -92,7 +94,7 @@ class _ChatToPersonScreenState extends State<ChatToPersonScreen> {
     try {
       setState(() => _isLoading = true);
       final response = await getChatMessageRx.getChatList(
-          participantableId:  widget.conversationId);
+          participantableId:  widget.participantableId);
 
       if (mounted && response?.data?.conversations?.messages != null) {
         setState(() {
@@ -148,7 +150,7 @@ class _ChatToPersonScreenState extends State<ChatToPersonScreen> {
 
       // Step 3: Create private channel
       final myPrivateChannel = _pusherClient!.privateChannel(
-        "private-chat.2",
+        "private-chat.${widget.conversationId}",
         // "private-chat.${widget.conversationId}",
         authorizationDelegate: EndpointAuthorizableChannelTokenAuthorizationDelegate
                 .forPrivateChannel(
@@ -222,7 +224,7 @@ class _ChatToPersonScreenState extends State<ChatToPersonScreen> {
               body: messageData['content'], // Changed from 'body' to 'content'
               type: 'text',
               createdAt: DateTime.parse(messageData['created_at']),
-              isMe: messageData["sendable_id"] == 2 ? true : false, // Changed to compare with myId
+              isMe: messageData["sendable_id"] == myId ? true : false, // Changed to compare with myId
               // reactions: [], // Empty array if no reactions
             );
 
@@ -282,7 +284,7 @@ class _ChatToPersonScreenState extends State<ChatToPersonScreen> {
       sendMessageRx
           .addChat(
         message: messageText,
-        toUserId: widget.receiverId,
+        toUserId: widget.participantableId,
           avatars: []
       )
           .then((response) {

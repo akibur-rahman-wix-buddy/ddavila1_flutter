@@ -40,15 +40,15 @@ final class SignInApiRx extends RxResponseInt<Map<String, dynamic>> {
   handleSuccessWithReturn(Map<String, dynamic> data) {
     // Extract the token from the response
     String token = data['data']['token']['original']['access_token'];
-    // String userId = data['data']['user']['id'];
+    dynamic userId = data['data']['user']['id'];
 
     print(">>>>>>>>>>>>>>>>>>>>>>> here is the token:${token}");
-    // print(">>>>>>>>>>>>>>>>>>>>>>> here is the id:${userId}");
+    print(">>>>>>>>>>>>>>>>>>>>>>> here is the id:${userId}");
 
     // Save the token and login status using appData
     appData.write(kKeyAccessToken, token); // Storing the token
 
-    // appData.write(kKeyUserID,userId );
+    appData.write(kKeyUserID,userId );
     print(
         ">>>>>>>>>>>>>>>>>>>> here isthe access info rx :${appData.read(kKeyIsLoggedIn)}");
     print(
