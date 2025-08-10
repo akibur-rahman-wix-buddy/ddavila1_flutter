@@ -82,8 +82,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   SizedBox(height: 250),
                   Image.asset(AppImages.appLogo, height: 100, width: 200),
-                  SizedBox(height: 210),
+                  SizedBox(height:
+                  210),
                   CustomButton(
+
+                    onTap: () {
+                      NavigationService.navigateTo(Routes.signInScreen);
+                    },
                     minWidth: double.infinity,
                     text: 'Login',
                     context: context,

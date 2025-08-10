@@ -22,4 +22,9 @@ class AppIcons {
   static const String arrowBack = '$iconsRoute/arrowBack.svg';
   static const String xcloseIcon = '$iconsRoute/xcloseIcon.svg';
   static const String clockIcon = '$iconsRoute/clockIcon.svg';
+  static const String carIcon = '$iconsRoute/car-02.svg';
+  static const String creditCard = '$iconsRoute/credit-card-plus.svg';
+  static const String voucherCard = '$iconsRoute/voucher.svg';
+  static const String arrowLeftRightIcon = '$iconsRoute/arrow-up-right.svg';
+  static const String sendIcon2 = 'assets/icons/send.svg';
 }
