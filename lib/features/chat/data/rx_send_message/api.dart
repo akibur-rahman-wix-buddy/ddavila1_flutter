@@ -1,102 +1,6 @@
-// // import 'dart:convert';
-// // import 'package:ddavila/networks/dio/dio.dart';
-// // import 'package:ddavila/networks/endpoints.dart';
-// // import 'package:ddavila/networks/exception_handler/data_source.dart';
-// // import 'package:dio/dio.dart';
-// //
-// // class AddMessageApi {
-// //   static final AddMessageApi _singleton = AddMessageApi._internal();
-// //   AddMessageApi._internal();
-// //
-// //   static AddMessageApi get instance => _singleton;
-// //
-// //   Future<Map> addChat({
-// //     required String message,
-// //     dynamic rideId,
-// //     XFile avatar
-// //   }) async {
-// //     Map<String, dynamic> data = {"to_user_id": rideId, "message": message};
-// //     try {
-// //       Response response = await postHttp(Endpoints.postSentMessage(), data);
-// //
-// //       if (response.statusCode == 200) {
-// //         final data = json.decode(json.encode(response.data));
-// //         return data;
-// //       } else {
-// //         // Handle non-200 status code errors
-// //         throw DataSource.DEFAULT.getFailure();
-// //       }
-// //     } catch (error) {
-// //       // Handle generic errors
-// //       throw ErrorHandler.handle(error).failure.responseMessage;
-// //     }
-// //   }
-// // }
-//
-//
-//
-//
-//
-// import 'package:ddavila/helpers/toast.dart';
-// import 'package:ddavila/networks/dio/dio.dart';
-// import 'package:ddavila/networks/endpoints.dart';
-// import 'package:dio/dio.dart';
-// import 'package:image_picker/image_picker.dart';
-// import '../../../../networks/exception_handler/data_source.dart';
-//
-// final class AddMessageApi {
-//   static final AddMessageApi _singleton = AddMessageApi._internal();
-//
-//   AddMessageApi._internal();
-//
-//   static AddMessageApi get instance => _singleton;
-//
-//   Future<Map<String, dynamic>> addChat({
-//     required String message,
-//     dynamic toUserId,
-//     XFile? avatar,
-//
-//   }) async {
-//     try {
-//       // Prepare FormData
-//       final FormData data = FormData.fromMap({
-//         if (message != null) "message": message,
-//         if (toUserId != null) "to_user_id": toUserId,
-//
-//       });
-//
-//       // Add avatar if provided
-//       if (avatar != null) {
-//         final MultipartFile avatarFile = await MultipartFile.fromFile(avatar.path);
-//         data.files.add(MapEntry("files[]", avatarFile));
-//       }
-//
-//       print("Request Data: ${data.fields}");
-//
-//       // Make API call
-//       final Response response = await postHttp(Endpoints.postSentMessage(), data);
-//
-//       if (response.statusCode == 200) {
-//         final responseData = response.data;
-//         ToastUtil.showShortToast('Profile updated successfully.');
-//         return responseData;
-//       } else {
-//         throw DataSource.DEFAULT.getFailure();
-//       }
-//     } catch (error) {
-//       print("Error in createNetworkData: $error");
-//       ToastUtil.showShortToast("Failed to update profile. Please try again.");
-//       rethrow;
-//     }
-//   }
-// }
 
-
-
-
-
-
-
+import 'dart:developer';
+import 'dart:io';
 
 import 'package:ddavila/helpers/toast.dart';
 import 'package:ddavila/networks/dio/dio.dart';
@@ -113,29 +17,66 @@ final class AddMessageApi {
   static AddMessageApi get instance => _singleton;
 
   Future<Map<String, dynamic>> addChat({
-    required String message,
+    dynamic message,
     dynamic toUserId,
     List<XFile>? avatars, // Changed from XFile? to List<XFile>?
   }) async {
     try {
-      // Prepare FormData
-      final FormData data = FormData.fromMap({
-        if (message != null) "message": message,
-        if (toUserId != null) "to_user_id": toUserId,
-      });
 
-      // Add avatars if provided
-      if (avatars != null && avatars.isNotEmpty) {
-        for (var avatar in avatars) {
-          final MultipartFile avatarFile = await MultipartFile.fromFile(avatar.path);
-          data.files.add(MapEntry("files[]", avatarFile));
+
+      List<MultipartFile> imageFiles = [];
+
+      for (var img in avatars!) {
+        final fileExists = await File(img.path).exists();
+        log("📸 Checking image: ${img.path} => exists: $fileExists");
+
+        if (fileExists) {
+          MultipartFile file = await MultipartFile.fromFile(
+            img.path,
+            filename: img.name,
+          );
+          imageFiles.add(file);
+        } else {
+          log("⚠️ Skipping non-existent image: ${img.path}");
         }
       }
+
+
+      log(">>>>>>>>>>>>>>>>> this is the message value: $message");
+      log(">>>>>>>>>>>>>>>>> this is the message value: $imageFiles");
+
+      FormData data;
+
+      if (message.toString().isEmpty) {
+        data = FormData.fromMap({
+          "to_user_id": toUserId,
+          "files[]": imageFiles,
+        });
+      } else if (avatars.isEmpty) {
+        data = FormData.fromMap({
+          "message": message,
+          if (toUserId != null) "to_user_id": toUserId,
+        });
+      } else {
+        data = FormData.fromMap({
+          if (message != null) "message": message,
+          if (toUserId != null) "to_user_id": toUserId,
+          "files[]": imageFiles,
+        });
+      }
+
+      // // Prepare FormData
+      // final FormData data = FormData.fromMap({
+      //   if (message != null)"message": message,
+      //   if (toUserId != null) "to_user_id": toUserId,
+      //   "files[]": imageFiles,
+      // });
 
       print("Request Data: ${data.fields}");
 
       // Make API call
-      final Response response = await postHttp(Endpoints.postSentMessage(), data);
+      final Response response =
+          await postHttp(Endpoints.postSentMessage(), data);
 
       if (response.statusCode == 200) {
         final responseData = response.data;

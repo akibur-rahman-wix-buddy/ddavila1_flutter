@@ -84,6 +84,9 @@ dependencies:
   introduction_screen: ^3.1.17
   custom_social_button: ^1.0.6
   flutter_lints: ^5.0.0
+  photo_view: ^0.14.0
+  cached_network_image: ^3.4.1
+  file_picker: ^10.2.4
 
   # flutter_screenutil: ^5.9.3
   # permission_handler: ^11.3.1

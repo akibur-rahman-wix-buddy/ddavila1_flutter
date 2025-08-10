@@ -1,7 +1,7 @@
 // ignore_for_file: constant_identifier_names
 //const String url = "http://192.168.40.86:8000";
 const String url = "https://app.thehobbynexus.com";
-// const String url = "https://1c66-103-174-189-33.ngrok-free.app";
+const String image_url = "https://app.thehobbynexus.com/";
 const String imageUrls = "$url/";
 
 final class NetworkConstants {

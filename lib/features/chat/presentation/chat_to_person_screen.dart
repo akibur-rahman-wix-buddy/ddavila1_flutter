@@ -1,30 +1,22 @@
-
-
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:dart_pusher_channels/dart_pusher_channels.dart';
-import 'package:ddavila/assets_helper/app_icons.dart';
 import 'package:ddavila/assets_helper/app_image.dart';
 import 'package:ddavila/assets_helper/text_font_style.dart';
 import 'package:ddavila/constants/app_constants.dart';
 import 'package:ddavila/features/chat/model/chat_to_person.dart';
+import 'package:ddavila/features/chat/widget/admin_chat_widget.dart';
+import 'package:ddavila/features/chat/widget/chat_bottom_bar.dart';
+import 'package:ddavila/features/chat/widget/user_chat_widget.dart';
 import 'package:ddavila/helpers/di.dart';
-import 'package:ddavila/helpers/toast.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';
 import 'package:ddavila/networks/api_acess.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-
-
-
-
 
 class ChatToPersonScreen extends StatefulWidget {
   final dynamic participantableId;
@@ -44,15 +36,11 @@ class ChatToPersonScreen extends StatefulWidget {
   State<ChatToPersonScreen> createState() => _ChatToPersonScreenState();
 }
 
-
-
-
 class _ChatToPersonScreenState extends State<ChatToPersonScreen> {
   bool isKeyboardVisible = false;
   final TextEditingController chatController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   late final StreamSubscription<bool> _keyboardVisibilitySubscription;
-
 
   PusherChannelsClient? _pusherClient;
   StreamSubscription? _connectionSubs;
@@ -64,20 +52,17 @@ class _ChatToPersonScreenState extends State<ChatToPersonScreen> {
   dynamic myId = appData.read(kKeyUserID);
   bool youBLock = true;
   bool blockedYou = true;
-
-
+  List<XFile> selectedImages = [];
 
   @override
   void initState() {
     super.initState();
-    print("Receiver Id: ${widget.participantableId}");
+    print("participant Id: ${widget.participantableId}");
     print("Conversation Id: ${widget.conversationId}");
     print("my Id: ${myId}");
     _loadInitialMessages();
     _initializePusher();
-
   }
-
 
   String formatUtcToTimeAMPM({required String utcTimeString}) {
     DateTime utcDateTime = DateTime.parse(utcTimeString).toUtc();
@@ -94,15 +79,17 @@ class _ChatToPersonScreenState extends State<ChatToPersonScreen> {
     try {
       setState(() => _isLoading = true);
       final response = await getChatMessageRx.getChatList(
-          participantableId:  widget.participantableId);
+          participantableId: widget.participantableId);
 
       if (mounted && response?.data?.conversations?.messages != null) {
         setState(() {
-          _messages = response?.data?.conversations?.messages?.reversed.toList()??[];
-          youBLock = response!.data!.youblocked! ;
-          blockedYou = response.data!.blockedyou! ;
+          _messages =
+              response?.data?.conversations?.messages?.reversed.toList() ?? [];
+          youBLock = response!.data!.youblocked!;
+          blockedYou = response.data!.blockedyou!;
 
-          nullMessage =response.data?.conversations?.messages ==[]? true : false;
+          nullMessage =
+              response.data?.conversations?.messages == [] ? true : false;
           _isLoading = false;
         });
         _scrollToBottom();
@@ -122,10 +109,7 @@ class _ChatToPersonScreenState extends State<ChatToPersonScreen> {
     }
   }
 
-
-
   ///>>>>>>>>>>>>>>>>>>>> here is the block status >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
 
   void _initializePusher() {
     try {
@@ -152,13 +136,13 @@ class _ChatToPersonScreenState extends State<ChatToPersonScreen> {
       final myPrivateChannel = _pusherClient!.privateChannel(
         "private-chat.${widget.conversationId}",
         // "private-chat.${widget.conversationId}",
-        authorizationDelegate: EndpointAuthorizableChannelTokenAuthorizationDelegate
+        authorizationDelegate:
+            EndpointAuthorizableChannelTokenAuthorizationDelegate
                 .forPrivateChannel(
           authorizationEndpoint:
               Uri.parse("https://app.thehobbynexus.com/api/broadcasting/auth"),
           headers: {
-           "Authorization": "Bearer ${appData.read(kKeyAccessToken)}",
-           //  "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2FwcC50aGVob2JieW5leHVzLmNvbS9hcGkvbG9naW4iLCJpYXQiOjE3NTQ3MzUxMDMsImV4cCI6MTc1NDczODcwMywibmJmIjoxNzU0NzM1MTAzLCJqdGkiOiJBc2VPNzVLQkg1WGxxUzYwIiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.sDyi_E8XfDrC2Zj1PV0uG646_PPjc6DeqKLs1OQML78",
+            "Authorization": "Bearer ${appData.read(kKeyAccessToken)}",
           },
         ),
       );
@@ -170,52 +154,24 @@ class _ChatToPersonScreenState extends State<ChatToPersonScreen> {
       });
 
       // Step 5: Listen to incoming messages
-      _channelEventSubs = myPrivateChannel.bind("App\\Events\\MessageCustomEvent").listen((event) {
-
+      _channelEventSubs = myPrivateChannel
+          .bind("App\\Events\\MessageCustomEvent")
+          .listen((event) {
         print("=======================in the pushar: ${event.data}");
 
-
         try {
-          // if (event.data != null) {
-          //   print("=======================Pusher event data: ${event.data}");
-          //
-          //   final Map<String, dynamic> messageData = json.decode(event.data);
-          //   print(
-          //       "=======================Pusher sender id data: ${messageData['id']}");
-          //   print(
-          //       "=======================Pusher receiver id data: ${messageData['receiver_id']}");
-          //   print(
-          //       "=======================Pusher sender id data: ${messageData["sendable_id"]}");
-          //   print(
-          //       "=======================Pusher sender body: ${messageData["body"]}");
-          //   print("=======================Pusher sender my Id: $myId");
-          //
-          //   final newMessage = Message(
-          //     id: messageData['id'] ?? 0,
-          //     body: messageData['body'],
-          //     type: 'text',
-          //     createdAt: DateTime.parse(messageData['created_at']),
-          //     isMe: messageData["sender_id"].toString() == 2.toString()
-          //         ? true
-          //         : false,
-          //     // reactions: [], // Empty array if no reactions
-          //   );
-          //
-          //   if (mounted) {
-          //     setState(() {
-          //       _messages.insert(0, newMessage);
-          //     });
-          //     _scrollToBottom();
-          //   }
-          // }
           if (event.data != null) {
             print("=======================Pusher event data: ${event.data}");
 
             final Map<String, dynamic> messageData = json.decode(event.data);
-            print("=======================Pusher message ID: ${messageData['id']}");
-            print("=======================Pusher conversation ID: ${messageData['conversation_id']}");
-            print("=======================sendable_id: ${messageData["sendable_id"]}");
-            print("=======================Pusher message content: ${messageData["content"]}");
+            print(
+                "=======================Pusher message ID: ${messageData['id']}");
+            print(
+                "=======================Pusher conversation ID: ${messageData['conversation_id']}");
+            print(
+                "=======================sendable_id: ${messageData["sendable_id"]}");
+            print(
+                "=======================Pusher message content: ${messageData["content"]}");
             print("=======================Pusher my ID: $myId");
             print("=======================Pusher isMe: ${messageData["isMe"]}");
 
@@ -224,7 +180,9 @@ class _ChatToPersonScreenState extends State<ChatToPersonScreen> {
               body: messageData['content'], // Changed from 'body' to 'content'
               type: 'text',
               createdAt: DateTime.parse(messageData['created_at']),
-              isMe: messageData["sendable_id"] == myId ? true : false, // Changed to compare with myId
+              isMe: messageData["sendable_id"] == myId
+                  ? true
+                  : false, // Changed to compare with myId
               // reactions: [], // Empty array if no reactions
             );
 
@@ -234,23 +192,13 @@ class _ChatToPersonScreenState extends State<ChatToPersonScreen> {
               });
               _scrollToBottom();
             }
-          }
-
-
-
-
-
-
-
-
-          else{
+          } else {
             print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>> event issue");
           }
         } catch (e, stack) {
           log("Error in main pusher : $e", error: stack);
         }
       });
-
 
       _pusherClient!.connect();
     } catch (e, stack) {
@@ -278,40 +226,36 @@ class _ChatToPersonScreenState extends State<ChatToPersonScreen> {
   }
 
   void _sendMessage() {
-    if (chatController.text.isNotEmpty) {
-      final messageText = chatController.text.trim();
-      log("Sending message: $messageText");
-      sendMessageRx
-          .addChat(
-        message: messageText,
+      log("Sending message: ${chatController.text ??""} with ${selectedImages.length} images");
+      log( "this is the message ${chatController.text}");
+
+      sendMessageRx.addChat(
+        message: chatController.text.trim() ,
         toUserId: widget.participantableId,
-          avatars: []
-      )
-          .then((response) {
+        avatars: selectedImages,
+      ).then((response) {
         if (response != null) {
           log("Message sent successfully");
           _scrollToBottom();
+          setState(() {
+            chatController.clear();
+            selectedImages.clear(); // Clear parent's list
+          });
         } else {
-          log("Failed to send message");
-          Fluttertoast.showToast(
-            msg: "Failed to send message",
-            toastLength: Toast.LENGTH_LONG,
-            timeInSecForIosWeb: 3,
-            gravity: ToastGravity.BOTTOM,
-          );
+          _showError("Failed to send message");
         }
       }).catchError((error) {
-        log("Error sending message: $error");
-        Fluttertoast.showToast(
-          msg: "Message rejected: $error",
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-        );
+        _showError("Message rejected: $error");
       });
-      setState(() {
-        chatController.clear();
-      });
-    }
+
+  }
+
+  void _showError(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.BOTTOM,
+    );
   }
 
   @override
@@ -341,75 +285,52 @@ class _ChatToPersonScreenState extends State<ChatToPersonScreen> {
           backgroundColor: Colors.transparent, // Make sure to set this
           leadingWidth: 30,
           title: Row(
-            mainAxisAlignment:MainAxisAlignment.spaceBetween ,
-
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 children: [
-          GestureDetector(
+                  GestureDetector(
+                    ///>>>>>>>>>>>>>>>>>>>>>> here you can send the profile>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
+                    // onTap:(){
+                    //   Get.to(ProfileScreen(id: widget.receiverId,));
+                    // },
 
-
-            ///>>>>>>>>>>>>>>>>>>>>>> here you can send the profile>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-            // onTap:(){
-            //   Get.to(ProfileScreen(id: widget.receiverId,));
-            // },
-
-            child: Row(
-              children: [
-                ClipOval(
-                child: Image.network(
-                widget.image.toString(),
-                width: 32,  // double the radius (16 * 2)
-                height: 32,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    width: 32,
-                    height: 32,
-                    color: Colors.grey,  // Fallback color
-                    child: Image.asset(AppImages.profileIcon),
-                  );
-                },
+                    child: Row(
+                      children: [
+                        ClipOval(
+                          child: Image.network(
+                            widget.image.toString(),
+                            width: 32, // double the radius (16 * 2)
+                            height: 32,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                width: 32,
+                                height: 32,
+                                color: Colors.grey, // Fallback color
+                                child: Image.asset(AppImages.profileIcon),
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                const SizedBox(width: 8),
-                SizedBox(width: 200.w,
-                  child: Text(
-                    widget.name,
-                    style: TextFontStyle.buttonTextStyle
-                        .copyWith(color: Colors.white, fontSize: 18),
+                        const SizedBox(width: 8),
+                        SizedBox(
+                          width: 200.w,
+                          child: Text(
+                            widget.name,
+                            style: TextFontStyle.buttonTextStyle
+                                .copyWith(color: Colors.white, fontSize: 18),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
-
                 ],
               ),
-
-
               GestureDetector(
                 onTap: () {
-
-
-
-                 // Get.to( PersonInboxInfo(blockStatus:blockStatus,blockId: widget.receiverId,conversationId: widget.conversationId,));
-
-
-
-
-                          // if(  true) {
-                          //   Get.to(GroupIntoScreen(
-                          //     conversionId: widget.conversationId,
-                          //     type: "",
-                          //   ));
-                          // } else {
-                          //   Get.to(UserGroupIntoScreen());
-                          // }
-                        }
-               ,
+                },
                 child: Image.asset(
                   AppImages.appLogo,
                   color: Colors.white,
@@ -455,93 +376,102 @@ class _ChatToPersonScreenState extends State<ChatToPersonScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Column(
               children: [
-
                 Expanded(
                   child: _isLoading
                       ? const Center(
-                    child: Text("Data is loading...", style: TextStyle(color: Colors.white)),
-                  )
+                          child: Text("Data is loading...",
+                              style: TextStyle(color: Colors.white)),
+                        )
                       : _errorMessage != null
-                      ? Center(child: Text(_errorMessage!))
-                      : _messages.isEmpty?
+                          ? Center(child: Text(_errorMessage!))
+                          : _messages.isEmpty
+                              ? Center(
+                                  child: Container(
+                                    height: 200.h,
+                                    width: 300.h,
+                                    child: Column(
+                                      children: [
+                                        ClipOval(
+                                          child: Image.network(
+                                            widget.image.toString(),
+                                            width:
+                                                106, // double the radius (16 * 2)
+                                            height: 106,
+                                            fit: BoxFit.cover,
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                              return Container(
+                                                width: 32,
+                                                height: 32,
+                                                color: Colors
+                                                    .grey, // Fallback color
+                                                child: Image.asset(
+                                                    AppImages.profileIcon),
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                        UIHelper.verticalSpace(12.h),
 
+                                        Text(widget.name.toString(),
+                                            style:
+                                                TextFontStyle.buttonTextStyle),
+                                        // UIHelper.verticalSpace(8.h),
+                                        Text(
+                                          "Start Conversation .Say Hi",
+                                          style: TextFontStyle.buttonTextStyle,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              : ListView.builder(
+                                  controller: _scrollController,
+                                  physics: const ClampingScrollPhysics(),
+                                  padding: const EdgeInsets.only(bottom: 20),
+                                  reverse: true,
+                                  itemCount: _messages.length,
+                                  itemBuilder: (context, index) {
+                                    final message = _messages[index];
 
+                                    print(
+                                        ">>>>>>>>>>>>>>>>>>>>> is me ? ${message.isMe}");
 
-                      Center(
-                        child: Container(
-                          height: 200.h,
-                          width: 300.h,
-                          child: Column(
+                                    final isSentByCurrentUser =
+                                        message.isMe ?? false;
 
-                            children: [
-                              ClipOval(
-                                child: Image.network(
-                                  widget.image.toString(),
-                                  width: 106,  // double the radius (16 * 2)
-                                  height: 106,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Container(
-                                      width: 32,
-                                      height: 32,
-                                      color: Colors.grey,  // Fallback color
-                                      child: Image.asset(AppImages.profileIcon),
+                                    return Align(
+                                      alignment: isSentByCurrentUser
+                                          ? Alignment.centerRight
+                                          : Alignment.centerLeft,
+                                      child: isSentByCurrentUser
+                                          ? UserChatWidget(
+                                              attachments:
+                                                  message.attachment ?? [],
+                                              time: formatUtcToTimeAMPM(
+                                                  utcTimeString: message
+                                                      .createdAt
+                                                      .toString()),
+                                              message: message.body ?? "",
+                                              isMe: message.isMe!,
+                                              // image: message.sender?.avatar.toString() ?? "",
+                                            )
+                                          : AdminChatWidget(
+                                              attachments:
+                                                  message.attachment ?? [],
+                                              id: 3,
+                                              time: formatUtcToTimeAMPM(
+                                                  utcTimeString: message
+                                                      .createdAt
+                                                      .toString()),
+                                              senderName: widget.name,
+                                              message: message.body ?? "",
+                                              image: widget.image ?? "",
+                                            ),
                                     );
                                   },
                                 ),
-                              ),
-                              UIHelper.verticalSpace(12.h),
-                              
-                              Text(widget.name.toString(),style:TextFontStyle.buttonTextStyle),
-                              // UIHelper.verticalSpace(8.h),
-                              Text("Start Conversation .Say Hi",style:TextFontStyle.buttonTextStyle,),
-                            ],
-
-                          ),
-                        ),
-                      )
-
-
-
-
-                      : ListView.builder(
-                    controller: _scrollController,
-                    physics: const ClampingScrollPhysics(),
-                    padding: const EdgeInsets.only(bottom: 20),
-                    reverse: true,
-                    itemCount: _messages.length,
-                    itemBuilder: (context, index) {
-                      final message = _messages[index];
-
-                      print(">>>>>>>>>>>>>>>>>>>>> is me ? ${message.isMe}");
-
-
-                      final isSentByCurrentUser = message.isMe ?? false;
-
-                      return Align(
-                        alignment: isSentByCurrentUser
-                            ? Alignment.centerRight
-                            : Alignment.centerLeft,
-                        child: isSentByCurrentUser
-                            ? UserChatWidget(
-                          time: formatUtcToTimeAMPM(
-                              utcTimeString: message.createdAt.toString()),
-                          message: message.body ?? "",
-                          // image: message.sender?.avatar.toString() ?? "",
-                        )
-                            : AdminChatWidget(
-                          id: 3,
-                          time: formatUtcToTimeAMPM(
-                              utcTimeString: message.createdAt.toString()),
-                          senderName: widget.name,
-                          message: message.body ?? "",
-                          image: widget.image ?? "",
-                        ),
-                      );
-                    },
-                  ),
                 ),
-
 
                 // blockStatus == false?
                 // ChatBottomBarWidget(
@@ -557,13 +487,18 @@ class _ChatToPersonScreenState extends State<ChatToPersonScreen> {
                 //
                 // }, text:"Unblock",),
 
-
+// In your build method:
                 ChatBottomBarWidget(
                   chatController: chatController,
-                  onTapAdd: () {},
-                  onTapMic: () {},
                   onSendTap: _sendMessage,
-                ) ,
+                  onImagesSelected: (images) {
+                    setState(() {
+                      selectedImages = images;
+                    });
+                  },
+                  initialImages: selectedImages, // Pass current images
+                ),
+
                 const SizedBox(height: 25),
               ],
             ),
@@ -574,284 +509,11 @@ class _ChatToPersonScreenState extends State<ChatToPersonScreen> {
   }
 }
 
-
-
-
-class ChatBottomBarWidget extends StatelessWidget {
-  final VoidCallback onTapAdd;
-  final VoidCallback onTapMic;
-  final VoidCallback onSendTap;
-  final TextEditingController chatController;
-
-  const ChatBottomBarWidget({
-    super.key,
-    required this.onTapMic,
-    required this.onTapAdd,
-    required this.onSendTap,
-    required this.chatController,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 50,
-      width: double.infinity,
-      child: Row(
-        children: [
-          Flexible(
-            child: Container(
-              height: 56,
-              padding: const EdgeInsets.symmetric(vertical: 4),
-              decoration: BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: TextField(
-                cursorColor: Colors.white,
-                controller: chatController,
-                style:TextFontStyle.buttonTextStyle
-                    .copyWith(color: Colors.white, fontSize: 14),
-                decoration: InputDecoration(
-                  // prefixIcon: IconButton(
-                  //   onPressed: onTapAdd,
-                  //   icon: const Icon(
-                  //     Icons.add,
-                  //     color: Colors.white,
-                  //   ),
-                  // ),
-                  // suffixIcon: IconButton(
-                  //   onPressed: onTapMic,
-                  //   icon: const Icon(Icons.mic, color: Colors.white),
-                  // ),
-                  hintText: "Send a message...",
-                  hintStyle: TextFontStyle.buttonTextStyle
-                      .copyWith(color: Colors.white, fontSize: 14),
-                  contentPadding:
-                      const EdgeInsets.symmetric(vertical: 12, horizontal: 15),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50),
-                    borderSide: const BorderSide(color: Colors.transparent),
-                  ),
-                  errorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50),
-                    borderSide: const BorderSide(color: Colors.white, width: 1),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50),
-                    borderSide:
-                        const BorderSide(color: Colors.transparent, width: 1),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          GestureDetector(
-            onTap: onSendTap,
-            child: Container(
-              height: 50,
-              width: 50,
-              padding: EdgeInsets.all(10.r),
-              decoration: BoxDecoration(
-                color: Colors.purple,
-                borderRadius: BorderRadius.circular(50.r)
-              ),
-              child: Icon(Icons.send_sharp,color: Colors.white,)
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-
-
-
-
-class AdminChatWidget extends StatelessWidget {
-  final String message;
-  final String senderName;
-  final String image;
-  final dynamic id;
-  final String time;
-
-
-  const AdminChatWidget({
-    super.key,
-    required this.message,
-    required this.senderName,
-    required this.image, required this.time,required this.id,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 5),
-      width: double.infinity,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          GestureDetector(
-            onTap: (){
-              // userProfileDialogBox(
-              //   name: senderName,
-              //   image: image,
-              //   id: id,
-              //   context: context
-              // );
-            },
-            child: Text(
-              senderName,
-              style: TextFontStyle.buttonTextStyle.copyWith(color: Colors.white,fontWeight: FontWeight.w700),
-            ),
-          ),
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              GestureDetector(
-                onTap: (){
-                  // userProfileDialogBox(
-                  //     name: senderName,
-                  //     image: image,
-                  //     id: id,
-                  //     context: context
-                  // );
-                },
-                child: CircleAvatar(
-                  radius: 20,
-                  backgroundImage: NetworkImage(image),
-                ),
-              ),
-              UIHelper.horizontalSpace(5.w),
-              GestureDetector(
-                onLongPress: () {
-                  Clipboard.setData(ClipboardData(text: message));
-                  ToastUtil.showLongToast("Test copied");
-                },
-                child: Container(
-                  constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width * 0.7),
-                  decoration: BoxDecoration(
-                    color: Colors.red.withOpacity(0.83),
-                    borderRadius: const BorderRadius.only(
-                      topRight: Radius.circular(16),
-                      bottomLeft: Radius.circular(16),
-                      bottomRight: Radius.circular(16),
-                    ),
-                  ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        message,
-                        style: TextFontStyle.buttonTextStyle
-                            .copyWith(fontWeight: FontWeight.w700, fontSize: 14),
-                      ),
-                      Text(
-                        time,
-                        style: TextFontStyle.buttonTextStyle
-                            .copyWith(fontWeight: FontWeight.w700, fontSize: 12,color: Colors.white60),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class UserChatWidget extends StatelessWidget {
-  final String message;
-  // final String image;
-  final String time;
-
-
-  const UserChatWidget({super.key, required this.message,
-    // required this.image,
-    required this.time});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 5),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          GestureDetector(
-
-            onLongPress: () {
-              Clipboard.setData(ClipboardData(text: message));
-              ToastUtil.showLongToast("Test copied");
-            },
-            child: Container(
-              constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width * 0.7),
-              decoration: const BoxDecoration(
-                color: Colors.brown,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  bottomLeft: Radius.circular(16),
-                  bottomRight: Radius.circular(16),
-                ),
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    message,
-                    style: TextFontStyle.buttonTextStyle
-                        .copyWith(fontWeight: FontWeight.bold, fontSize: 14),
-                  ),
-                  Text(
-                    time,
-                    style: TextFontStyle.buttonTextStyle
-                        .copyWith(fontWeight: FontWeight.bold, fontSize: 12,color: Colors.white60),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          UIHelper.horizontalSpace(10),
-        ],
-      ),
-    );
-  }
-}
-
-class ShimmerList extends StatelessWidget {
-  final int itemCount;
-  const ShimmerList({super.key, required this.itemCount});
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: itemCount,
-      itemBuilder: (context, index) => Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          height: 50,
-          color: Colors.grey[300],
-        ),
-      ),
-    );
-  }
-}
-
-
-class _EmojiReactionOverlay extends StatelessWidget {
+class EmojiReactionOverlay extends StatelessWidget {
   final Function(String) onEmojiSelected;
   final Offset position;
 
-  const _EmojiReactionOverlay({
+  const EmojiReactionOverlay({
     required this.onEmojiSelected,
     required this.position,
   });

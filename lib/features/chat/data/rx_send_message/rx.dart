@@ -45,7 +45,7 @@ final class SendMessageRx extends RxResponseInt<Map> {
   ValueStream get chatListStream => dataFetcher.stream;
 
   Future<Map?> addChat({
-    required String message,
+     dynamic message,
     dynamic toUserId,
     List<XFile>? avatars, // Changed from XFile? to List<XFile>?
   }) async {
