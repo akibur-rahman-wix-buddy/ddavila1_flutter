@@ -21,6 +21,13 @@ class TextFontStyle {
     color: AppColor.cFFFFFF,
   );
 
+  static final textLine20w400cFFFFFFDvSans = TextStyle(
+    fontSize: 20.sp,
+    fontFamily: 'Dm Sans',
+    fontWeight: FontWeight.bold,
+    color: AppColor.cFFFFFF,
+  );
+
   static final textLine9w400cFFFFFFLato = TextStyle(
     fontSize: 9.sp,
     fontFamily: 'Lato',

@@ -11,6 +11,8 @@ import 'package:ddavila/networks/dio/dio.dart';
 import 'package:provider/provider.dart';
 import '/helpers/all_routes.dart';
 import 'constants/custome_theme.dart';
+import 'features/user_app/checkout/presentation/checkout_screen.dart';
+import 'features/user_app/products_screen/product_bid_screen.dart';
 import 'helpers/helper_methods.dart';
 import 'helpers/navigation_service.dart';
 import 'helpers/register_provider.dart';
@@ -92,7 +94,11 @@ class UtillScreenMobile extends StatelessWidget {
             },
             navigatorKey: NavigationService.navigatorKey,
             onGenerateRoute: RouteGenerator.generateRoute,
-            home: Loading(),
+
+            // home: const LoadingScreen(),
+
+            home: ProductsBidScreen(),
+
           ),
         );
       },
