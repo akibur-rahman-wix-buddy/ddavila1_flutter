@@ -38,4 +38,24 @@ class AppIcons {
   static const String done = '$iconsRoute/done.svg';
   static const String dollar = '$iconsRoute/dollarIcon.svg';
   static const String clockCircle = '$iconsRoute/clockCircle.svg';
+
+  // * ===================> Profile Screen Icons <====================
+  static const String profileIcon = '$iconsRoute/profileIcon.svg';
+  static const String packedIcon = '$iconsRoute/packedIcon.svg';
+  static const String truckIcon = '$iconsRoute/truckIcon.svg';
+  static const String starIcon = '$iconsRoute/starIcon.svg';
+  static const String notificationIcon = '$iconsRoute/notificationIcon.svg';
+  static const String securityIcon = '$iconsRoute/securityIcon.svg';
+  static const String selerIcon = '$iconsRoute/selerIcon.svg';
+  static const String nextIcon = '$iconsRoute/nextIcon.svg';
+  static const String logoutIcon = '$iconsRoute/logoutIcon.svg';
+  static const String logoutNext = '$iconsRoute/logoutNext.svg';
+  static const String contactIcon = '$iconsRoute/contactIcon.svg';
+  static const String accountDelete = '$iconsRoute/accountDelete.svg';
+
+  // * ==================== Edit Profile =======================
+  static const String editProfileIcon = '$iconsRoute/userProfileIcon.svg';
+  static const String profileEmail = '$iconsRoute/profileEmail.svg';
+  static const String profileCalendar = '$iconsRoute/profileCalendar.svg';
+  static const String arrowBackWhite = '$iconsRoute/arrowBackWhite.svg';
 }

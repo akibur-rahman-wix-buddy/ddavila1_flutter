@@ -1,6 +1,6 @@
 // ignore_for_file: constant_identifier_names
 class AppImages {
-  /*assets route*/
+  // * assets route */
   static const String imageRoute = 'assets/images';
 
   /*all assets here*/
@@ -11,6 +11,7 @@ class AppImages {
 
   // * ================> Home Screen Assets <================
   static const String profileIcon = '$imageRoute/profileIcon.png';
+  static const String profile = '$imageRoute/profile.png';
   static const String shoeImage = '$imageRoute/shoeImage.png';
   static const String productImage = '$imageRoute/productImage.png';
   static const String tshirtImage = '$imageRoute/tshirtImage.png';
@@ -20,4 +21,7 @@ class AppImages {
   static const String paypalPay = '$imageRoute/paypalPay.png';
   static const String googlePay = '$imageRoute/googlePay.png';
   static const String applePay = '$imageRoute/applePay.png';
+
+  // * ================> Settings Screen Assets <================
+  static const String settingImage = '$imageRoute/settingImage.png';
 }
