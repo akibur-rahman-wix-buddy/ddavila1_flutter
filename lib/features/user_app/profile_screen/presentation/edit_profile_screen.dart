@@ -1,12 +1,14 @@
 // ignore_for_file: use_key_in_widget_constructors
 import 'package:ddavila/assets_helper/app_colors.dart';
 import 'package:ddavila/assets_helper/app_icons.dart';
+import 'package:ddavila/assets_helper/app_image.dart';
 import 'package:ddavila/assets_helper/text_font_style.dart';
 import 'package:ddavila/common_widgets/custom_button.dart';
 import 'package:ddavila/common_widgets/custom_textfiled.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
 
 class EditProfileScreen extends StatefulWidget {
   @override
@@ -14,6 +16,48 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
+  final ImagePicker _picker = ImagePicker();
+  XFile? _selectedImage;
+
+  Future<void> _pickImage() async {
+    final XFile? image = await showDialog<XFile>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Select Image'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.photo_library),
+              title: const Text('Gallery'),
+              onTap: () async {
+                final pickedFile =
+                    await _picker.pickImage(source: ImageSource.gallery);
+                Navigator.pop(context, pickedFile);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.camera_alt),
+              title: const Text('Camera'),
+              onTap: () async {
+                final pickedFile =
+                    await _picker.pickImage(source: ImageSource.camera);
+                Navigator.pop(context, pickedFile);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (image != null) {
+      setState(() {
+        _selectedImage = image;
+      });
+      print('Selected image path: ${image.path}'); // Prints the file path
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,9 +69,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 color: AppColor.c4275F6,
                 height: MediaQuery.of(context).size.height -
                     kToolbarHeight -
-                    MediaQuery.of(context)
-                        .padding
-                        .top, // * Adjust for AppBar and status bar
+                    MediaQuery.of(context).padding.top,
                 child: Column(
                   children: [
                     Expanded(
@@ -39,7 +81,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     Expanded(
                       flex: 3,
                       child: Container(
-                        color: Colors.white, // * Removed fixed height
+                        color: AppColor.cF6F8FA,
                       ),
                     ),
                   ],
@@ -55,7 +97,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 children: [
-                  // * App Bar
                   Row(
                     children: [
                       SvgPicture.asset(AppIcons.arrowBackWhite),
@@ -76,12 +117,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ],
                   ),
                   UIHelper.verticalSpace(70),
-                  // * Container
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
-                      color: Colors
-                          .white, // Overwrites Colors.green for consistency
+                      color: Colors.white,
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -90,6 +129,34 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                       child: Column(
                         children: [
+                          Stack(
+                            children: [
+                              ClipOval(
+                                child: Image.asset(
+                                  _selectedImage?.path ?? AppImages.profile,
+                                  width: 80,
+                                  height: 80,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              Positioned(
+                                top: 40,
+                                left: 42,
+                                child: GestureDetector(
+                                  onTap: _pickImage,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: CircleAvatar(
+                                      radius: 15,
+                                      backgroundColor: AppColor.c4275f6,
+                                      child:
+                                          SvgPicture.asset(AppIcons.cameraIcon),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
@@ -113,9 +180,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             ),
                             prefixIcon: Padding(
                               padding: const EdgeInsets.all(4.0),
-                              child: SvgPicture.asset(
-                                AppIcons.editProfileIcon,
-                              ),
+                              child: SvgPicture.asset(AppIcons.editProfileIcon),
                             ),
                           ),
                           UIHelper.verticalSpace(16),
@@ -142,9 +207,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             ),
                             prefixIcon: Padding(
                               padding: const EdgeInsets.all(4.0),
-                              child: SvgPicture.asset(
-                                AppIcons.profileEmail,
-                              ),
+                              child: SvgPicture.asset(AppIcons.profileEmail),
                             ),
                           ),
                           UIHelper.verticalSpace(16),
@@ -171,9 +234,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             ),
                             prefixIcon: Padding(
                               padding: const EdgeInsets.all(4.0),
-                              child: SvgPicture.asset(
-                                AppIcons.profileCalendar,
-                              ),
+                              child: SvgPicture.asset(AppIcons.profileCalendar),
                             ),
                           ),
                           UIHelper.verticalSpace(16),
@@ -200,9 +261,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             ),
                             prefixIcon: Padding(
                               padding: const EdgeInsets.all(4.0),
-                              child: SvgPicture.asset(
-                                AppIcons.profileCalendar,
-                              ),
+                              child: SvgPicture.asset(AppIcons.profileCalendar),
                             ),
                           ),
                           UIHelper.verticalSpace(16),
@@ -251,7 +310,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 minWidth: 160,
                               ),
                             ],
-                          )
+                          ),
                         ],
                       ),
                     ),
