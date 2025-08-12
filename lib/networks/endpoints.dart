@@ -25,5 +25,8 @@ final class Endpoints {
   static String chatterListUrl() => "/api/messages";
   static String getChatList({dynamic participantableId}) => "/api//messages/$participantableId";
   static String postSentMessage() => "/api//messages";
+  static String homeCategoryApiLink() => "/categories";
+  static String liveAuctionDataApiLink() => "/auctions/popular";
+  static String liveAuctionDetailsDataApiLink({required dynamic slug}) => "/products/$slug";
 
 }

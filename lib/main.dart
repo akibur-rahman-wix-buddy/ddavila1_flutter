@@ -97,7 +97,7 @@ class UtillScreenMobile extends StatelessWidget {
 
             // home: const LoadingScreen(),
 
-            home: ProductsBidScreen(),
+            home: LoadingScreen(),
 
           ),
         );
