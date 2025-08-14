@@ -1,7 +1,7 @@
 // ignore_for_file: constant_identifier_names
 //const String url = "http://192.168.40.86:8000";
-const String url = "https://app.thehobbynexus.com";
-const String image_url = "https://app.thehobbynexus.com/";
+const String url = "https://5edf83b28dc9.ngrok-free.app/api";
+const String image_url = "https://5edf83b28dc9.ngrok-free.app/";
 const String imageUrls = "$url/";
 
 final class NetworkConstants {
@@ -21,12 +21,15 @@ final class Endpoints {
   Endpoints._();
 
 // Authentication API
-  static String logInUrl() => "/api/login";
+  static String logInUrl() => "/login";
   static String chatterListUrl() => "/api/messages";
   static String getChatList({dynamic participantableId}) => "/api//messages/$participantableId";
   static String postSentMessage() => "/api//messages";
   static String homeCategoryApiLink() => "/categories";
+  static String popularCategoryApiLink() => "/categories/popular";
   static String liveAuctionDataApiLink() => "/auctions/popular";
   static String liveAuctionDetailsDataApiLink({required dynamic slug}) => "/products/$slug";
+  static String postBitPriceApiLink({required dynamic id}) => "/auction/bid/$id";
+  static String categoryWiseProductDataLink({required dynamic id}) => "/categories/$id/products";
 
 }

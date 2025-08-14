@@ -16,9 +16,9 @@ import 'package:ddavila/networks/endpoints.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../../assets_helper/app_colors.dart';
 import 'model/live_action_details_model.dart';
 
 class ProductsBidScreen extends StatefulWidget {
@@ -40,6 +40,7 @@ class _ProductsBidScreenState extends State<ProductsBidScreen> {
   StreamSubscription? _connectionSubs;
   StreamSubscription<ChannelReadEvent>? _channelEventSubs;
   ProductData? _currentProduct;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -52,13 +53,9 @@ class _ProductsBidScreenState extends State<ProductsBidScreen> {
     try {
       final result = await liveAuctionDetailsDataRx.liveAuctionDetailsDataInfo(
           slug: widget.slag);
-      if (result != null && result.data != null && result.data!.isNotEmpty) {
+      if (result != null && result.data != null) {
         setState(() {
-          _currentProduct = result.data!.firstWhere(
-                (product) =>
-            product.id.toString() == widget.productId.toString(),
-            orElse: () => result.data!.first,
-          );
+          _currentProduct = result.data!;
           priceController.text = _currentProduct?.highestBid?.toString() ?? "0";
         });
       } else {
@@ -124,41 +121,33 @@ class _ProductsBidScreenState extends State<ProductsBidScreen> {
 
                 final currentModel = liveAuctionDetailsDataRx.dataFetcher.value;
                 if (currentModel.data != null) {
-                  final updatedProducts = currentModel.data!.map((product) {
-                    if (product.id.toString() == widget.productId.toString()) {
-                      // Update bids and highest bid
-                      final updatedBids = List<BidData>.from(product.bids ?? [])
-                        ..insertAll(0, newBids);
-                      final updatedHighestBid = newBids.isNotEmpty
-                          ? newBids
-                          .map((bid) => bid.amount ?? 0)
-                          .reduce((a, b) => a > b ? a : b)
-                          : product.highestBid;
+                  // Update bids and highest bid
+                  final updatedBids = List<BidData>.from(currentModel.data!.bids ?? [])
+                    ..insertAll(0, newBids);
+                  final updatedHighestBid = newBids.isNotEmpty
+                      ? newBids
+                      .map((bid) => bid.amount ?? 0)
+                      .reduce((a, b) => a > b ? a : b)
+                      : currentModel.data!.highestBid;
 
-                      return product.copyWith(
-                        bids: updatedBids,
-                        highestBid: updatedHighestBid,
-                        bid: (product.bid ?? 0) + newBids.length,
-                      );
-                    }
-                    return product;
-                  }).toList();
+                  final updatedProduct = currentModel.data!.copyWith(
+                    bids: updatedBids,
+                    highestBid: updatedHighestBid,
+                    bid: (currentModel.data!.bid ?? 0) + newBids.length,
+                  );
 
                   liveAuctionDetailsDataRx.dataFetcher.add(
                     LiveAuctionDetailsApiDataModel(
                       success: currentModel.success,
                       message: currentModel.message,
                       code: currentModel.code,
-                      data: updatedProducts,
+                      data: updatedProduct,
                     ),
                   );
 
                   if (mounted) {
                     setState(() {
-                      _currentProduct = updatedProducts.firstWhere(
-                            (product) =>
-                        product.id.toString() == widget.productId.toString(),
-                      );
+                      _currentProduct = updatedProduct;
                       priceController.text =
                           _currentProduct!.highestBid?.toString() ?? "0";
                     });
@@ -211,271 +200,261 @@ class _ProductsBidScreenState extends State<ProductsBidScreen> {
               );
             } else if (snapshot.hasError) {
               return const Center(child: Text("Something went wrong!"));
-            } else if (!snapshot.hasData ||
-                snapshot.data?.data == null ||
-                snapshot.data!.data!.isEmpty) {
+            } else if (!snapshot.hasData || snapshot.data?.data == null) {
               return const Center(child: Text("No data found."));
             } else {
-              // Ensure we have the current product data
-              final product = _currentProduct ??
-                  snapshot.data!.data!.firstWhere(
-                        (p) => p.id.toString() == widget.productId.toString(),
-                    orElse: () => snapshot.data!.data!.first,
-                  );
-
+              // Use the current product data
+              final product = _currentProduct ?? snapshot.data!.data!;
               priceController.text = product.highestBid?.toString() ?? "0";
 
               return SingleChildScrollView(
                 child: Column(
-                  children: [
-                    ProductImageSlider(images: product.images ?? []),
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Container(
-                        width: double.infinity,
-                        decoration: const BoxDecoration(
-                          color: AppColor.blackColor,
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                product.title ?? "",
-                                style: TextFontStyle.textLine7w400cFFFFFFDmSans
-                                    .copyWith(
-                                  fontSize: 20.0,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: 8.0),
-                              const Row(
-                                children: [
-                                  Icon(Icons.person,
-                                      color: Colors.white70, size: 16.0),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: double.infinity,
-                      height: MediaQuery
-                          .of(context)
-                          .size
-                          .height * 0.6,
-                      decoration: const BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColor.cDCE4E6,
-                            blurRadius: 9.9,
-                            offset: Offset(0, 0.1),
-                          )
-                        ],
-                        color: AppColor.whiteColor,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(40),
-                          topRight: Radius.circular(40),
-                        ),
-                      ),
+                    children: [
+                ProductImageSlider(images: product.images ?? []),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: AppColor.blackColor,
+                      borderRadius: const BorderRadius.all(Radius.circular(20)),),
                       child: Padding(
-                        padding: const EdgeInsets.all(16.0),
+                        padding: const EdgeInsets.all(16),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                border: Border.all(color: AppColor.cF3F2F2),
-                                borderRadius: BorderRadius.circular(12.0),
-                                color: AppColor.cF3F2F2,
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(13),
-                                child: Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Starting Price',
-                                          style: TextFontStyle
-                                              .textLine7w400cFFFFFFDmSans
-                                              .copyWith(
-                                            fontSize: 14.0,
-                                            color: AppColor.c000000,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        Text(
-                                          '\$${product.startingPrice
-                                              ?.toString() ?? "0"}',
-                                          style: TextFontStyle
-                                              .textLine7w400cFFFFFFDmSans
-                                              .copyWith(
-                                            fontSize: 12.0,
-                                            color: AppColor.c000000,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 10.0),
-                                        Row(
-                                          children: [
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                border: Border.all(
-                                                  color: Colors.black,
-                                                  width: 2.0,
-                                                ),
-                                              ),
-                                              child: ClipOval(
-                                                child: Image.asset(
-                                                  AppImages.showImage,
-                                                  width: 20,
-                                                  height: 20,
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(width: 8.0),
-                                            Text(
-                                              'are live',
-                                              style: TextFontStyle
-                                                  .textLine7w400cFFFFFFDmSans
-                                                  .copyWith(
-                                                fontSize: 12.0,
-                                                color: AppColor.c000000,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Current Bid Price',
-                                          style: TextFontStyle
-                                              .textLine7w400cFFFFFFDmSans
-                                              .copyWith(
-                                            fontSize: 14.0,
-                                            color: AppColor.c000000,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        Text(
-                                          '\$${product.highestBid?.toString() ??
-                                              "0"}',
-                                          style: TextFontStyle
-                                              .textLine7w400cFFFFFFDmSans
-                                              .copyWith(
-                                            fontSize: 12.0,
-                                            color: AppColor.c000000,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 10.0),
-                                        Row(
-                                          children: [
-                                            Container(
-                                              decoration: const BoxDecoration(
-                                                shape: BoxShape.circle,
-                                              ),
-                                              child: ClipOval(
-                                                child: SvgPicture.asset(
-                                                  AppIcons.blueTimer,
-                                                  width: 20,
-                                                  height: 20,
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(width: 8.0),
-                                            StreamBuilder<String>(
-                                              stream: getLiveCountdownStream(
-                                                  isoTime: product.auctionEndAt
-                                                      ?.toString() ??
-                                                      ""),
-                                              builder: (context, snapshot) {
-                                                return Text(
-                                                  snapshot.data ?? "Loading...",
-                                                  style: TextFontStyle
-                                                      .textLine7w400cFFFFFFDmSans
-                                                      .copyWith(
-                                                    color: AppColor.c000000,
-                                                    fontSize: 10,
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                  ],
-                                ),
+                            Text(
+                              product.title ?? "",
+                              style: TextFontStyle.textLine7w400cFFFFFFDmSans
+                                  .copyWith(
+                                fontSize: 20.0,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                            const SizedBox(height: 16.0),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            const SizedBox(height: 8.0),
+                            const Row(
                               children: [
-                                Text(
-                                  'Live Auction',
-                                  style: TextFontStyle
-                                      .textLine7w400cFFFFFFDmSans
-                                      .copyWith(
-                                    fontSize: 14.0,
-                                    color: AppColor.c000000,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Text(
-                                  '${product.bid?.toString() ?? "0"} Bids made',
-                                  style: TextFontStyle
-                                      .textLine7w400cFFFFFFDmSans
-                                      .copyWith(
-                                    fontSize: 12.0,
-                                    color: AppColor.c000000,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                                Icon(Icons.person,
+                                    color: Colors.white70, size: 16.0),
                               ],
                             ),
-                            const SizedBox(height: 16.0),
-                            Expanded(
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                primary: false,
-                                itemCount: product.bids?.length ?? 0,
-                                itemBuilder: (context, index) {
-                                  return biddingPeopleList(
-                                    image:
-                                    product.bids![index].user?.avatar ?? "",
-                                    name: product.bids![index].user?.name ?? "",
-                                    value: product.bids![index].amount
-                                        ?.toString() ??
-                                        "0",
-                                  );
-                                },
-                              ),
-                            )
                           ],
                         ),
                       ),
                     ),
+                  ),
+                  Container(
+                    width: double.infinity,
+                    height: MediaQuery.of(context).size.height * 0.6,
+                    decoration: const BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColor.cDCE4E6,
+                          blurRadius: 9.9,
+                          offset: Offset(0, 0.1),
+                        )
+                      ],
+                      color: AppColor.whiteColor,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(40),
+                        topRight: Radius.circular(40),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: AppColor.cF3F2F2),
+                              borderRadius: BorderRadius.circular(12.0),
+                              color: AppColor.cF3F2F2,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(13),
+                              child: Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Starting Price',
+                                        style: TextFontStyle
+                                            .textLine7w400cFFFFFFDmSans
+                                            .copyWith(
+                                          fontSize: 14.0,
+                                          color: AppColor.c000000,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        '\$${product.startingPrice
+                                            ?.toString() ?? "0"}',
+                                        style: TextFontStyle
+                                            .textLine7w400cFFFFFFDmSans
+                                            .copyWith(
+                                          fontSize: 12.0,
+                                          color: AppColor.c000000,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 10.0),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              border: Border.all(
+                                                color: Colors.black,
+                                                width: 2.0,
+                                              ),
+                                            ),
+                                            child: ClipOval(
+                                              child: Image.asset(
+                                                AppImages.showImage,
+                                                width: 20,
+                                                height: 20,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 8.0),
+                                          Text(
+                                            'are live',
+                                            style: TextFontStyle
+                                                .textLine7w400cFFFFFFDmSans
+                                                .copyWith(
+                                              fontSize: 12.0,
+                                              color: AppColor.c000000,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Current Bid Price',
+                                        style: TextFontStyle
+                                            .textLine7w400cFFFFFFDmSans
+                                            .copyWith(
+                                          fontSize: 14.0,
+                                          color: AppColor.c000000,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        '\$${product.highestBid?.toString() ??
+                                            "0"}',
+                                        style: TextFontStyle
+                                            .textLine7w400cFFFFFFDmSans
+                                            .copyWith(
+                                          fontSize: 12.0,
+                                          color: AppColor.c000000,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 10.0),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            decoration: const BoxDecoration(
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: ClipOval(
+                                              child: SvgPicture.asset(
+                                                AppIcons.blueTimer,
+                                                width: 20,
+                                                height: 20,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 8.0),
+                                          StreamBuilder<String>(
+                                            stream: getLiveCountdownStream(
+                                                isoTime: product.auctionEndAt
+                                                    ?.toString() ??
+                                                    ""),
+                                            builder: (context, snapshot) {
+                                              return Text(
+                                                snapshot.data ?? "Loading...",
+                                                style: TextFontStyle
+                                                    .textLine7w400cFFFFFFDmSans
+                                                    .copyWith(
+                                                  color: AppColor.c000000,
+                                                  fontSize: 10,
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 16.0),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Live Auction',
+                                style: TextFontStyle
+                                    .textLine7w400cFFFFFFDmSans
+                                    .copyWith(
+                                  fontSize: 14.0,
+                                  color: AppColor.c000000,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                '${product.bid?.toString() ?? "0"} Bids made',
+                                style: TextFontStyle
+                                    .textLine7w400cFFFFFFDmSans
+                                    .copyWith(
+                                  fontSize: 12.0,
+                                  color: AppColor.c000000,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 16.0),
+                          Expanded(
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              primary: false,
+                              itemCount: product.bids?.length ?? 0,
+                              itemBuilder: (context, index) {
+                                return BiddingPeopleList(
+                                  type:product.bids?[index].user?.email.toString()??"",
+                                  image:
+                                  product.bids![index].user?.avatar ?? "",
+                                  name: product.bids![index].user?.name ?? "",
+                                  value: product.bids![index].amount
+                                      ?.toString() ??
+                                      "0",
+                                );
+                              },
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
                   ],
                 ),
               );
@@ -483,10 +462,26 @@ class _ProductsBidScreenState extends State<ProductsBidScreen> {
           },
         ),
       ),
-      floatingActionButton: Container(
-        height: 130,
+      floatingActionButton:isLoading? Container(
+        margin: EdgeInsets.only(left: 16,right: 16,bottom: 10),
+        height: 50,
+        decoration: BoxDecoration(
+          color: AppColor.c4275f6,
+          borderRadius: BorderRadius.circular(50.r),
+          border: Border.all(
+            color:AppColor.c4275f6,
+            width: 1.5
+          )
+        ),
+        child: Center(
+          child: CircularProgressIndicator(
+            color: Colors.white,
+          ),
+        ),
+      ): Container(
+        alignment: Alignment.center,
         width: double.infinity,
-        decoration: const BoxDecoration(color: AppColor.whiteColor),
+        height: 130.h,
         child: Column(
           children: [
             const SizedBox(height: 10.0),
@@ -497,7 +492,25 @@ class _ProductsBidScreenState extends State<ProductsBidScreen> {
             const SizedBox(height: 10.0),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: CustomButton(
+              child: isLoading
+                  ? const CircularProgressIndicator(
+                color: Colors.blue,
+              )
+                  : CustomButton(
+                onTap: () async {
+                  setState(() => isLoading = true);
+
+                  try {
+                    await postBitRx.postBitInfo(
+                      price: priceController.text,
+                      id: widget.productId,
+                    );
+                  } catch (e) {
+                    debugPrint("Error placing bid: $e");
+                  } finally {
+                    setState(() => isLoading = false);
+                  }
+                },
                 minWidth: double.infinity,
                 text: 'Place Bid',
                 context: context,
@@ -506,70 +519,24 @@ class _ProductsBidScreenState extends State<ProductsBidScreen> {
           ],
         ),
       ),
+
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
-
-
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-class biddingPeopleList extends StatelessWidget {
+class BiddingPeopleList extends StatelessWidget {
   final String image;
   final String name;
   final String value;
+  final String type;
 
-  const biddingPeopleList({
+  const BiddingPeopleList({
     super.key,
     required this.image,
     required this.name,
     required this.value,
+    required this.type,
   });
 
   @override
@@ -585,10 +552,9 @@ class biddingPeopleList extends StatelessWidget {
               child: Image.network(
                 height: 40,
                 width: 40,
-                image_url + image.toString() ?? "",
+                image_url + image.toString() ,
                 fit: BoxFit.cover,
                 loadingBuilder: (context, child, loadingProgress) {
-                  // Show shimmer while loading
                   if (loadingProgress == null) return child;
                   return Shimmer.fromColors(
                     baseColor: Colors.grey[300]!,
@@ -600,7 +566,6 @@ class biddingPeopleList extends StatelessWidget {
                   );
                 },
                 errorBuilder: (context, error, stackTrace) {
-                  // Fallback widget on error
                   return Container(
                     width: 40,
                     height: 40,
@@ -624,7 +589,7 @@ class biddingPeopleList extends StatelessWidget {
                 ),
               ),
               Text(
-                'Bidder',
+                type,
                 style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
                   fontSize: 12.0,
                   color: AppColor.c000000,
@@ -634,7 +599,7 @@ class biddingPeopleList extends StatelessWidget {
           ),
           Spacer(),
           Text(
-            '\$${value}',
+            '\$$value',
             style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
               fontSize: 14.0,
               color: AppColor.c000000,
@@ -650,7 +615,7 @@ class biddingPeopleList extends StatelessWidget {
 class ProductImageSlider extends StatefulWidget {
   final List<String> images;
 
-  const ProductImageSlider({Key? key, required this.images}) : super(key: key);
+  const ProductImageSlider({super.key, required this.images});
 
   @override
   _ProductImageSliderState createState() => _ProductImageSliderState();
@@ -658,7 +623,6 @@ class ProductImageSlider extends StatefulWidget {
 
 class _ProductImageSliderState extends State<ProductImageSlider> {
   int _currentIndex = 0;
-
   final PageController _pageController = PageController();
 
   @override
@@ -685,7 +649,6 @@ class _ProductImageSliderState extends State<ProductImageSlider> {
                     image_url + widget.images[index],
                     fit: BoxFit.cover,
                     loadingBuilder: (context, child, loadingProgress) {
-                      // Show shimmer while loading
                       if (loadingProgress == null) return child;
                       return Shimmer.fromColors(
                         baseColor: Colors.grey[300]!,
@@ -697,26 +660,17 @@ class _ProductImageSliderState extends State<ProductImageSlider> {
                       );
                     },
                     errorBuilder: (context, error, stackTrace) {
-                      // Fallback widget on error
                       return Container(
                         width: 90,
                         height: 90,
                         color: Colors.grey[200],
                         child:
-                            const Icon(Icons.error_outline, color: Colors.red),
+                        const Icon(Icons.error_outline, color: Colors.red),
                       );
                     },
                   ),
                 ),
               );
-
-              // return ClipRRect(
-              //   borderRadius: BorderRadius.circular(10.0),
-              //   child: Image.asset(
-              //    image_url+widget.images[index],
-              //     fit: BoxFit.cover,
-              //   ),
-              // );
             },
           ),
           Positioned(
@@ -742,8 +696,7 @@ class _ProductImageSliderState extends State<ProductImageSlider> {
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
-                      blurRadius: 9.9,
+                      color: Colors.grey.shade100,
                       offset: Offset(0, 0.1),
                     ),
                   ],
@@ -763,7 +716,7 @@ class _ProductImageSliderState extends State<ProductImageSlider> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
                 widget.images.length,
-                (index) => Container(
+                    (index) => Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
@@ -782,7 +735,7 @@ class _ProductImageSliderState extends State<ProductImageSlider> {
                       width: _currentIndex == index ? 10.0 : 6.0,
                       decoration: BoxDecoration(
                         color:
-                            _currentIndex == index ? Colors.blue : Colors.grey,
+                        _currentIndex == index ? Colors.blue : Colors.grey,
                         borderRadius: BorderRadius.circular(6.0),
                       ),
                     ),
@@ -792,41 +745,6 @@ class _ProductImageSliderState extends State<ProductImageSlider> {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class SizeButton extends StatelessWidget {
-  final String size;
-  final bool isSelected;
-  final VoidCallback onTap; // Add callback for tap handling
-
-  const SizeButton({
-    required this.size,
-    this.isSelected = false,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap, // Use the provided callback
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 4.0),
-        padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 14.0),
-        decoration: BoxDecoration(
-          color: isSelected ? AppColor.c6940C9 : Colors.grey[200],
-          borderRadius: BorderRadius.circular(12.0),
-          border: Border.all(color: AppColor.c6940C9),
-        ),
-        child: Text(
-          size,
-          style: TextStyle(
-            color: isSelected ? Colors.white : AppColor.c6940C9,
-            fontSize: 16.0,
-          ),
-        ),
       ),
     );
   }

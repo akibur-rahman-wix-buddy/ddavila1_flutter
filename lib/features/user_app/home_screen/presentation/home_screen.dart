@@ -4,8 +4,10 @@ import 'package:ddavila/assets_helper/app_image.dart';
 import 'package:ddavila/assets_helper/text_font_style.dart';
 import 'package:ddavila/common_widgets/custom_textfiled.dart';
 import 'package:ddavila/common_widgets/time_decriment_counter.dart';
+import 'package:ddavila/features/user_app/home_screen/model/category_wise_data_model.dart';
 import 'package:ddavila/features/user_app/home_screen/model/home_category_data_model.dart';
 import 'package:ddavila/features/user_app/home_screen/model/live_autction_data_model.dart';
+import 'package:ddavila/features/user_app/home_screen/model/popular_category_data_model.dart';
 import 'package:ddavila/helpers/all_routes.dart';
 import 'package:ddavila/helpers/navigation_service.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';
@@ -25,48 +27,25 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int selectedIndex = -1;
-
+  int? selectedPopularId;
   @override
   void initState() {
     getHomeCategoryRx.getHomeCategoryData();
+    getPopularCategoryRx.getPopularCategoryData();
     liveAuctionDataRx.liveAuctionDataInfo();
+
     super.initState();
   }
-  //
-  // String formatTimeRemaining({required String isoTime}) {
-  //   try {
-  //     final endTime = DateTime.parse(isoTime);
-  //     final now = DateTime.now();
-  //     final difference = endTime.difference(now);
-  //
-  //     if (difference.isNegative) {
-  //       return "Time ended";
-  //     }
-  //
-  //     final days = difference.inDays;
-  //     final hours = difference.inHours % 24;
-  //     final minutes = difference.inMinutes % 60;
-  //     final seconds = difference.inSeconds % 60;
-  //
-  //     if (days > 0) {
-  //       return "$days ${days == 1 ? 'day' : 'days'} remaining";
-  //     } else if (hours > 0) {
-  //       return "$hours ${hours == 1 ? 'hour' : 'hours'} remaining";
-  //     } else if (minutes > 0) {
-  //       return "$minutes ${minutes == 1 ? 'minute' : 'minutes'} remaining";
-  //     } else {
-  //       return "$seconds ${seconds == 1 ? 'second' : 'seconds'} remaining";
-  //     }
-  //   } catch (e) {
-  //     return "Invalid time format";
-  //   }
-  // }
 
+  String formatDate(String isoDate) {
+    // Parse the ISO date string into a DateTime object
+    DateTime date = DateTime.parse(isoDate);
 
+    // Format the DateTime object as MM/dd/yyyy
+    String formattedDate = "${date.month}/${date.day}/${date.year}";
 
-
-
-
+    return formattedDate;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -523,141 +502,288 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: 10),
-                GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 12,
-                    crossAxisSpacing: 10,
-                    childAspectRatio: 0.47, // Adjust aspect ratio as needed
-                  ),
-                  itemCount: 4, // Replace with your data count
-                  itemBuilder: (context, index) {
-                    return Center(
-                      child: GestureDetector(
-                        onTap: () {
-                          NavigationService.navigateTo(
-                            Routes.productDetailsScreen,
-                          );
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: Column(
-                            mainAxisAlignment:
-                                MainAxisAlignment.center, // Center content
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+
+
+            // Declare this at the top of your State class
+
+
+              StreamBuilder<PopularCategoryDataModel>(
+                stream: getPopularCategoryRx.dataFetcher,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return const Center(child: Text("Something went wrong!"));
+                  } else if (!snapshot.hasData || snapshot.data!.data == null) {
+                    return const Center(child: Text("No data found."));
+                  } else {
+                    final data = snapshot.data!.data;
+
+                    return SizedBox(
+                      height: 60,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: data?.length ?? 0,
+                        itemBuilder: (context, index) {
+                          final category = data![index];
+
+                           selectedPopularId = data[0].id;
+                           print(">>>>>>>>>>>>>>selected id ${selectedPopularId}");
+                          categoryWiseProductRx.categoryWiseProductData(id:selectedPopularId);
+                          final isSelected = selectedPopularId == category.id;
+
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                selectedPopularId = category.id;
+                                categoryWiseProductRx.categoryWiseProductData(id: selectedPopularId);
+                                print("Selected popular category ID: ${category.id}");
+                              });
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  // Image Section
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(12),
-                                    child: Image.asset(
-                                      AppImages.productImage,
-                                      fit: BoxFit.cover,
-                                      width: double.infinity,
-                                      height: 200,
+                                  const SizedBox(height: 8),
+                                  Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.r),
+                                      border: Border.all(
+                                        width: 1,
+                                        color: isSelected
+                                            ? AppColor.allPrimaryColor
+                                            : AppColor.buttonColor,
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  // Product Title & Price
-                                  Text(
-                                    'Yugioh Speed Duel Battle City FINALS Brand New Factory Sealed',
-                                    style: TextFontStyle
-                                        .textLine7w400cFFFFFFDmSans
-                                        .copyWith(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
+                                    child: Text(
+                                      category.title.toString(),
+                                      style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                                        color: isSelected
+                                            ? AppColor.c4275f6
+                                            : AppColor.blackColor,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      textAlign: TextAlign.center,
                                     ),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    'Pre-Owned',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.redAccent,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  // * Bid Info and Delivery
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        '\$15,000',
-                                        style: TextFontStyle
-                                            .textLine7w400cFFFFFFDmSans
-                                            .copyWith(
-                                          fontSize: 18,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'lostrav_6599.5%',
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.grey),
-                                          ),
-                                          Text(
-                                            'positive (595)',
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.grey),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 8),
-                                  // * Bid Status
-                                  Row(
-                                    children: [
-                                      Text(
-                                        '0 bids',
-                                        style: TextStyle(
-                                            fontSize: 10, color: Colors.red),
-                                      ),
-                                      Text(
-                                        ' • Ended (Today 11:50 AM)',
-                                        style: TextStyle(
-                                            fontSize: 10, color: Colors.grey),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 5),
-                                  Text(
-                                    '+\$19.15 delivery',
-                                    style: TextStyle(
-                                        fontSize: 12, color: Colors.grey),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  // *  Seller info
-                                  Text(
-                                    'From Australia',
-                                    style: TextStyle(
-                                        fontSize: 12, color: Colors.grey),
                                   ),
                                 ],
-                              )
-                            ],
-                          ),
-                        ),
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     );
+                  }
+                },
+              ),
+
+            SizedBox(height: 10),
+
+
+                StreamBuilder<CategoryWiseProductDataModel>(
+                  stream: categoryWiseProductRx.dataFetcher,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                          UIHelper.verticalSpace(10.h),
+                          const Text(
+                            "Loading...",
+                            style: TextStyle(color: Colors.red),
+                          )
+                        ],
+                      );
+                    } else if (snapshot.hasError) {
+                      return const Center(child: Text("Something went wrong!"));
+                    } else if (!snapshot.hasData || snapshot.data?.data == null) {
+                      return const Center(child: Text("No data found."));
+                    } else {
+                      final data = snapshot.data?.data?.products?.data;
+
+
+                      return GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 12,
+                          crossAxisSpacing: 10,
+                          childAspectRatio: .5, // Adjust aspect ratio as needed
+                        ),
+                        itemCount: data?.length, // Replace with your data count
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              NavigationService.navigateTo(
+                                Routes.productDetailsScreen,
+                              );
+                            },
+                            child: Container
+                              (
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12.r),
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    blurRadius: 4,
+                                    spreadRadius: 4
+                                  )
+                                ]
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Column(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.center, // Center content
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        // Image Section
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.circular(12),
+                                          child: Image.asset(
+                                            data?[index].images?.toString() ?? "", // Fallback to empty string if null
+                                            fit: BoxFit.cover,
+                                            width: double.infinity,
+                                            height: 200,
+                                            errorBuilder: (context, error, stackTrace) {
+                                              return Container(
+                                                width: double.infinity,
+                                                height: 200,
+                                                color: Colors.grey[300], // Fallback background color
+                                                child: const Icon(
+                                                  Icons.broken_image, // Fallback icon
+                                                  color: Colors.grey,
+                                                  size: 50,
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        // Product Title & Price
+                                        Text(
+                                          data?[index].title.toString()??"",
+                                          style: TextFontStyle
+                                              .textLine7w400cFFFFFFDmSans
+                                              .copyWith(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                          ),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          data?[index].type.toString()??"",
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.redAccent,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        // * Bid Info and Delivery
+                                        Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              '\$${data?[index].price.toString()??""}',
+                                              style: TextFontStyle
+                                                  .textLine7w400cFFFFFFDmSans
+                                                  .copyWith(
+                                                fontSize: 18,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            // Column(
+                                            //   crossAxisAlignment:
+                                            //   CrossAxisAlignment.start,
+                                            //   children: [
+                                            //     Text(
+                                            //       'lostrav_6599.5%',
+                                            //       style: TextStyle(
+                                            //           fontSize: 12,
+                                            //           color: Colors.grey),
+                                            //     ),
+                                            //     Text(
+                                            //       'positive (595)',
+                                            //       style: TextStyle(
+                                            //           fontSize: 12,
+                                            //           color: Colors.grey),
+                                            //     ),
+                                            //   ],
+                                            // ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 8),
+                                        // * Bid Status
+                                        Row(
+                                          children: [
+                                            Text(
+                                              '${data?[index].bid} bids',
+                                              style: TextStyle(
+                                                  fontSize: 10, color: Colors.red),
+                                            ),
+                                            UIHelper.horizontalSpace(12.h),
+                                            Text(
+                                              'Posted : ${formatDate(data?[index].createdAt.toString()??"")}',
+                                              style: TextStyle(
+                                                  fontSize: 10, color: Colors.grey),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 5),
+
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    }
                   },
                 ),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
               ],
             ),
           ),
