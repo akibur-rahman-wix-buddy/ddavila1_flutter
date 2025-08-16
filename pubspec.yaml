@@ -2,7 +2,7 @@ name: ddavila
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -91,6 +91,9 @@ dependencies:
   flutter_widget_from_html:
   flutter_plugin_android_lifecycle: ^2.0.17
 
+
+  path_provider: ^2.0.15
+  path: ^1.8.3
 
   # flutter_screenutil: ^5.9.3
   # permission_handler: ^11.3.1

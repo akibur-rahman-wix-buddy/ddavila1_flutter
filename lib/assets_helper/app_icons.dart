@@ -58,4 +58,11 @@ class AppIcons {
   static const String profileEmail = '$iconsRoute/profileEmail.svg';
   static const String profileCalendar = '$iconsRoute/profileCalendar.svg';
   static const String arrowBackWhite = '$iconsRoute/arrowBackWhite.svg';
+  static const String cameraIcon = '$iconsRoute/cameraIcon.svg';
+
+  // * Nav Icons
+  static const String navHome = '$iconsRoute/navHome.svg';
+  static const String navMessage = '$iconsRoute/navMessage.svg';
+  static const String navNote = '$iconsRoute/navNote.svg';
+  static const String navProfile = '$iconsRoute/navProfile.svg';
 }

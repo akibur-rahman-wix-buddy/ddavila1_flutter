@@ -121,11 +121,9 @@
 //   }
 // }
 
-
-
-
 import 'package:ddavila/features/chat/presentation/chat_screen.dart';
 import 'package:ddavila/helpers/navigation_service.dart';
+import 'package:ddavila/navigation_screen.dart';
 import 'package:ddavila/welcome_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -145,7 +143,6 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
-
   bool _isLoading = true;
 
   @override
@@ -154,43 +151,51 @@ class _LoadingScreenState extends State<LoadingScreen> {
     super.initState();
   }
 
-
-
   loadInitialData() async {
     await Future.delayed(const Duration(seconds: 2));
     await setInitValue();
 
     bool isLoggedIn = appData.read(kKeyIsLoggedIn) ?? false;
-    bool firstTime = appData.read(kKeyIsFirstTime)?? false;
+    bool firstTime = appData.read(kKeyIsFirstTime) ?? false;
     if (isLoggedIn) {
       String token = appData.read(kKeyAccessToken);
       DioSingleton.instance.update(token);
-      print(">>>>>>>>>>>>>>>>>>>> here is the access info :${appData.read(kKeyIsLoggedIn)}");
+      print(
+          ">>>>>>>>>>>>>>>>>>>> here is the access info :${appData.read(kKeyIsLoggedIn)}");
       appData.write(kKeyIsLoggedIn, true);
+<<<<<<< HEAD
       print(">>>>>>>>>>>>>>>>>>>> here is the access info :${appData.read(kKeyIsLoggedIn)}");
       Navigator.pushReplacement( context ,
         MaterialPageRoute(builder: (context) => HomeScreen()),
+=======
+      print(
+          ">>>>>>>>>>>>>>>>>>>> here is the access info :${appData.read(kKeyIsLoggedIn)}");
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => NavigationScreen()),
+>>>>>>> 95a54a13728cac623ddf88bfae369e6a3f9a4e57
       );
-    }else {
+    } else {
       // Navigate to LoginScreen if not logged in
       NavigationService.navigateToReplacement(Routes.loginScreen);
     }
 
-    setState(() {
-    });
+    setState(() {});
   }
-
-
 
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
       return const WelcomeScreen();
     } else {
-
-      print(">>>>>>>>>>>>>>>>>>>> here is the access info :${appData.read(kKeyIsLoggedIn)}");
+      print(
+          ">>>>>>>>>>>>>>>>>>>> here is the access info :${appData.read(kKeyIsLoggedIn)}");
       return appData.read(kKeyIsLoggedIn)
+<<<<<<< HEAD
           ? const HomeScreen()
+=======
+          ? const NavigationScreen()
+>>>>>>> 95a54a13728cac623ddf88bfae369e6a3f9a4e57
           : const LoginScreen();
     }
   }
