@@ -269,8 +269,8 @@ class _SignInScreenState extends State<SignInScreen> {
 
       try {
       bool success =  await signInApiRx.signIn(
-          email: _emailController.text.trim(),
-          password: _passwordController.text.trim(),
+          email: _emailController.text,
+          password: _passwordController.text,
         );
       if(success){
 

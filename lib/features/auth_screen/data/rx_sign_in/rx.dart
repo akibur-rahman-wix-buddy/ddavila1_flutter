@@ -17,7 +17,7 @@ final class SignInApiRx extends RxResponseInt<Map<String, dynamic>> {
   ValueStream get getFileData => dataFetcher.stream;
 
   Future<bool> signIn({
-    required String email,
+    required dynamic email,
     required dynamic password,
   }) async {
     try {
