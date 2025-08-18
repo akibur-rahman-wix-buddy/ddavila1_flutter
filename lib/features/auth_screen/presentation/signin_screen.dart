@@ -269,13 +269,13 @@ class _SignInScreenState extends State<SignInScreen> {
 
       try {
       bool success =  await signInApiRx.signIn(
-          email: _emailController.text.trim(),
-          password: _passwordController.text.trim(),
+          email: _emailController.text,
+          password: _passwordController.text,
         );
       if(success){
 
         // Navigate to home screen or next screen after successful login
-        NavigationService.navigateTo(Routes.homeScreen);
+        NavigationService.navigateTo(Routes.navigationScreen);
       }else{
         ToastUtil.showLongToast(" login failed");
       }

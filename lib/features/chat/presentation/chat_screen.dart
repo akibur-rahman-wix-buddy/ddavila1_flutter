@@ -21,16 +21,23 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   void initState() {
-    getAllChatListRx.getChatListInfo(chatType: "private");
+    getAllChatListRx.getChatListInfo();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        leading: SizedBox(),
+        centerTitle: true,
+        title: Text("Chat",style: TextFontStyle.textLine20w400cFFFFFFDvSans,),
+
+        backgroundColor: Colors.black,
+      ),
       body: Padding(
-        padding: const EdgeInsets.only(top: 28, right: 16),
+        padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 16),
         child: StreamBuilder<ChatListModelData>(
           stream: getAllChatListRx.dataFetcher,
           builder: (context, snapshot) {
@@ -60,6 +67,7 @@ class _ChatScreenState extends State<ChatScreen> {
               return const Center(child: Text("No conversations found."));
             } else {
               return ListView.builder(
+                padding: EdgeInsets.only(bottom: 80),
                 itemCount: snapshot.data!.data!.conversations?.length ?? 0,
                 itemBuilder: (context, index) {
                   final conversation =
@@ -122,15 +130,23 @@ class _ChatScreenState extends State<ChatScreen> {
                                 height: 53,
                                 width: 53,
                                 fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container(
+                                    height: 53,
+                                    width: 53,
+                                    color: Colors.grey,
+                                    child: const Icon(Icons.person, color: Colors.white),
+                                  );
+                                },
                               )
                                   : Container(
                                 height: 53,
                                 width: 53,
                                 color: Colors.grey,
-                                child: const Icon(Icons.person,
-                                    color: Colors.white),
+                                child: const Icon(Icons.person, color: Colors.white),
                               ),
                             ),
+
                             UIHelper.horizontalSpace(10),
                             Expanded(
                               child: Column(
@@ -143,12 +159,12 @@ class _ChatScreenState extends State<ChatScreen> {
                                     children: [
                                       Expanded(
                                         child: Text(
-                                          participantName,
+                                          participantName??"",
                                           style:
                                           TextFontStyle.buttonTextStyle.copyWith(
                                             fontWeight: FontWeight.w600,
                                             fontSize: 16,
-                                            color: AppColor.whiteColor,
+                                            color: AppColor.blackColor,
                                           ),
                                           overflow: TextOverflow.ellipsis,
                                         ),
@@ -158,8 +174,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                         style: TextFontStyle.buttonTextStyle.copyWith(
                                           fontWeight: FontWeight.w400,
                                           fontSize: 12,
-                                          color: AppColor.whiteColor
-                                              .withOpacity(0.6),
+                                          color: AppColor.blackColor                                              .withOpacity(0.6),
                                         ),
                                       )
                                     ],
@@ -180,9 +195,9 @@ class _ChatScreenState extends State<ChatScreen> {
                                               fontSize: 12,
                                               color: selectedIndexes
                                                   .contains(index)
-                                                  ? AppColor.whiteColor
+                                                  ? AppColor.blackColor
                                                   .withOpacity(0.7)
-                                                  : AppColor.whiteColor),
+                                                  : AppColor.blackColor),
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                         ),
@@ -194,7 +209,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                           backgroundColor: Colors.blue,
                                         )
                                     ],
-                                  )
+                                  ),
+
                                 ],
                               ),
                             ),

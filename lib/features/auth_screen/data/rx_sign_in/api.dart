@@ -15,7 +15,7 @@ final class SignInApi {
 
   static  SignInApi get instance => _singleton;
 
-  Future<Map<String, dynamic>> signInApi({required String email, required dynamic password}) async {
+  Future<Map<String, dynamic>> signInApi({required dynamic email, required dynamic password}) async {
     try {
       // Create the request data map
       Map<String, dynamic> data = {

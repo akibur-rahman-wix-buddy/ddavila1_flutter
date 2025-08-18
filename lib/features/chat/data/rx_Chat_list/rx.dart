@@ -19,19 +19,14 @@ final class GetAllChatListRx extends RxResponseInt<ChatListModelData> {
 
   ValueStream get getAvailableItemsStream => dataFetcher.stream;
 
-
-
-  Future<ChatListModelData?> getChatListInfo({required dynamic chatType}) async {
+  Future<ChatListModelData?> getChatListInfo() async {
     try {
-      final  data = await api.getChatListApi(chatType:chatType );
+      final  data = await api.getChatListApi();
       return handleSuccessWithReturn(data);
     } catch (error) {
       return handleErrorWithReturn(error);
     }
   }
-
-
-
 
   @override
   handleErrorWithReturn(dynamic error) {

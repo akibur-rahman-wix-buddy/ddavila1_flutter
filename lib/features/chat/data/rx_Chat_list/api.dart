@@ -18,7 +18,7 @@ final class GetAllChatLIstApi {
 
 
 
-  Future<ChatListModelData> getChatListApi({required dynamic chatType}) async {
+  Future<ChatListModelData> getChatListApi() async {
     try {
 
 

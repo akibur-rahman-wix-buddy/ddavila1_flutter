@@ -182,8 +182,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
     if (_isLoading) {
       return const WelcomeScreen();
     } else {
-      print(
-          ">>>>>>>>>>>>>>>>>>>> here is the access info :${appData.read(kKeyIsLoggedIn)}");
+
+
+      print(">>>>>>>>>>>>>>>>>>>> here is the access info :${appData.read(kKeyIsLoggedIn)}");
+
+
       return appData.read(kKeyIsLoggedIn)
           ? const NavigationScreen()
           : const LoginScreen();

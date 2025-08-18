@@ -7,7 +7,9 @@ import 'package:ddavila/features/auth_screen/presentation/success_screen.dart';
 import 'package:ddavila/features/user_app/filter_screen/presentation/filter_screen.dart';
 import 'package:ddavila/features/user_app/home_screen/presentation/home_screen.dart';
 import 'package:ddavila/features/user_app/home_screen/presentation/search_screen.dart';
+import 'package:ddavila/features/user_app/products_screen/product_bid_screen.dart';
 import 'package:ddavila/features/user_app/products_screen/products_screen.dart';
+import 'package:ddavila/navigation_screen.dart';
 import 'package:flutter/cupertino.dart';
 
 final class Routes {
@@ -35,6 +37,8 @@ final class Routes {
   static const String homeScreen = '/homeScreen';
   static const String filterScreen = '/filterScreen';
   static const String searchScreen = '/searchScreen';
+  static const String productsBidScreen = '/productsBidScreen';
+  static const String  navigationScreen = '/navigationScreen';
 
   // * =============> Cart navigation <============= */
   static const String productDetailsScreen = '/productDetailsScreen';
@@ -80,6 +84,14 @@ final class RouteGenerator {
                 settings: settings)
             : CupertinoPageRoute(builder: (context) => const SignUpScreen());
 
+      // * Sign In Screen
+      case Routes.navigationScreen:
+        return Platform.isIOS
+            ? UltimateSmoothTransitionRoute(
+                widget: const ScreenTitle(widget: NavigationScreen()),
+                settings: settings)
+            : CupertinoPageRoute(builder: (context) => const NavigationScreen());
+
       // * Success Screen
       case Routes.successScreen:
         return Platform.isIOS
@@ -120,6 +132,27 @@ final class RouteGenerator {
                 widget: const ScreenTitle(widget: ProductsScreen()),
                 settings: settings)
             : CupertinoPageRoute(builder: (context) => const ProductsScreen());
+
+
+      case Routes.productsBidScreen:
+        final Map args = settings.arguments as Map;
+        return Platform.isAndroid
+            ? UltimateSmoothTransitionRoute(
+            widget: ProductsBidScreen(
+              productId: args['productId'],
+              slag: args['slag'],
+            ),
+            settings: settings)
+            : CupertinoPageRoute(
+            builder: (context) => ProductsBidScreen(
+              slag: args['slag'],
+              productId: args['productId'],
+            ));
+
+
+
+
+
 
       default:
         return null;
