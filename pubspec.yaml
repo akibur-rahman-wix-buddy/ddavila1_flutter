@@ -90,6 +90,7 @@ dependencies:
   shimmer: ^3.0.0
   flutter_widget_from_html:
   flutter_plugin_android_lifecycle: ^2.0.17
+  flutter_expandable_fab: ^2.5.2
 
 
   path_provider: ^2.0.15

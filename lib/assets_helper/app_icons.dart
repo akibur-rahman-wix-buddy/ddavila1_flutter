@@ -60,6 +60,11 @@ class AppIcons {
   static const String arrowBackWhite = '$iconsRoute/arrowBackWhite.svg';
   static const String cameraIcon = '$iconsRoute/cameraIcon.svg';
 
+
+  static const String orderIcon = '$iconsRoute/orderIcon.svg';
+  static const String addIcon = '$iconsRoute/addIcon.svg';
+  static const String crossIcon = '$iconsRoute/crossIcon.svg';
+
   // * Nav Icons
   static const String navHome = '$iconsRoute/navHome.svg';
   static const String navMessage = '$iconsRoute/navMessage.svg';
