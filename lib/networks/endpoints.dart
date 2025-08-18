@@ -22,8 +22,9 @@ final class Endpoints {
 
 // Authentication API
   static String logInUrl() => "/login";
-  static String chatterListUrl() => "/api/messages";
-  static String getChatList({dynamic participantableId}) => "/api//messages/$participantableId";
+  static String signUpUrl() => "/register";
+  static String chatterListUrl() => "/messages";
+  static String getChatList({dynamic participantableId}) => "/messages/$participantableId";
   static String postSentMessage() => "/api//messages";
   static String homeCategoryApiLink() => "/categories";
   static String popularCategoryApiLink() => "/categories/popular";
@@ -31,5 +32,8 @@ final class Endpoints {
   static String liveAuctionDetailsDataApiLink({required dynamic slug}) => "/products/$slug";
   static String postBitPriceApiLink({required dynamic id}) => "/auction/bid/$id";
   static String categoryWiseProductDataLink({required dynamic id}) => "/categories/$id/products";
+  static String logoutApiLink() => "/logout";
+  static String getFilterApiLink() => "/products/filter/items";
+  static String postFilterApiLink() => "/all/products/auction/filter";
 
 }

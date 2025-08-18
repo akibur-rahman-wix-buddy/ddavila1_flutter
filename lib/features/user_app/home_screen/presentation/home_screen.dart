@@ -811,6 +811,7 @@ import 'package:ddavila/features/user_app/home_screen/model/category_wise_data_m
 import 'package:ddavila/features/user_app/home_screen/model/home_category_data_model.dart';
 import 'package:ddavila/features/user_app/home_screen/model/live_autction_data_model.dart';
 import 'package:ddavila/features/user_app/home_screen/model/popular_category_data_model.dart';
+import 'package:ddavila/features/user_app/home_screen/widget/category_wise_card.dart';
 import 'package:ddavila/helpers/all_routes.dart';
 import 'package:ddavila/helpers/navigation_service.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';
@@ -819,6 +820,8 @@ import 'package:ddavila/networks/endpoints.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:shimmer/shimmer.dart';
 
 
@@ -841,6 +844,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _loadInitialData();
+    print(">>>>>>>>>>>>>>> hello world");
   }
 
   Future<void> _loadInitialData() async {
@@ -851,8 +855,8 @@ class _HomeScreenState extends State<HomeScreen> {
       liveAuctionDataRx.liveAuctionDataInfo(),
     ]);
     // Set initial category data fetch for 0th index
-    if (getHomeCategoryRx.dataFetcher.value?.data?.isNotEmpty ?? false) {
-      final firstCategoryId = getHomeCategoryRx.dataFetcher.value!.data![0].id;
+    if (getHomeCategoryRx.dataFetcher.value.data?.isNotEmpty ?? false) {
+      final firstCategoryId = getHomeCategoryRx.dataFetcher.value.data![0].id;
       await categoryWiseProductRx.categoryWiseProductData(id: firstCategoryId);
     }
     setState(() => isLoading = false);
@@ -902,6 +906,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 isCategoryLoading
                     ? _buildLoadingIndicator()
                     : _buildCategoryProducts(),
+                const SizedBox(height: 80),
               ],
             ),
           ),
@@ -1012,9 +1017,20 @@ class _HomeScreenState extends State<HomeScreen> {
               return GestureDetector(
                 onTap: () async {
                   setState(() {
-                    selectedIndex = isSelected ? -1 : index;
-                    isCategoryLoading = true; // Show loading when category changes
+
+                    Get.to(
+                        CategoryProductsWidget(
+                          id: data?[index].id,
+                          screenName: data?[index].title,
+                        )
+                    );
+
+                    // selectedIndex = isSelected ? -1 : index;
+                    isCategoryLoading = true;
+
                   });
+
+
                   final categoryId = data?[index].id;
                   if (categoryId != null) {
                     await categoryWiseProductRx.categoryWiseProductData(id: categoryId);

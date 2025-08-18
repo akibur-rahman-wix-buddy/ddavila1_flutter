@@ -9,6 +9,7 @@ import 'package:ddavila/features/user_app/home_screen/presentation/home_screen.d
 import 'package:ddavila/features/user_app/home_screen/presentation/search_screen.dart';
 import 'package:ddavila/features/user_app/products_screen/product_bid_screen.dart';
 import 'package:ddavila/features/user_app/products_screen/products_screen.dart';
+import 'package:ddavila/navigation_screen.dart';
 import 'package:flutter/cupertino.dart';
 
 final class Routes {
@@ -37,6 +38,7 @@ final class Routes {
   static const String filterScreen = '/filterScreen';
   static const String searchScreen = '/searchScreen';
   static const String productsBidScreen = '/productsBidScreen';
+  static const String  navigationScreen = '/navigationScreen';
 
   // * =============> Cart navigation <============= */
   static const String productDetailsScreen = '/productDetailsScreen';
@@ -81,6 +83,14 @@ final class RouteGenerator {
                 widget: const ScreenTitle(widget: SignUpScreen()),
                 settings: settings)
             : CupertinoPageRoute(builder: (context) => const SignUpScreen());
+
+      // * Sign In Screen
+      case Routes.navigationScreen:
+        return Platform.isIOS
+            ? UltimateSmoothTransitionRoute(
+                widget: const ScreenTitle(widget: NavigationScreen()),
+                settings: settings)
+            : CupertinoPageRoute(builder: (context) => const NavigationScreen());
 
       // * Success Screen
       case Routes.successScreen:

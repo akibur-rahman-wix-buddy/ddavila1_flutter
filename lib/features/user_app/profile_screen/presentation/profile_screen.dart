@@ -2,7 +2,10 @@ import 'package:ddavila/assets_helper/app_colors.dart';
 import 'package:ddavila/assets_helper/app_icons.dart';
 import 'package:ddavila/assets_helper/app_image.dart';
 import 'package:ddavila/assets_helper/text_font_style.dart';
+import 'package:ddavila/helpers/all_routes.dart';
+import 'package:ddavila/helpers/navigation_service.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';
+import 'package:ddavila/networks/api_acess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -271,7 +274,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 UIHelper.verticalSpace(8),
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () async {
+
+
+                    bool success =await postLogOutRX.logOut();
+                    if(success){
+                      NavigationService.navigateToRemoveuntil(Routes.loginScreen);
+                    }
+
+
+                  },
                   child: Container(
                     decoration: BoxDecoration(
                       color: AppColor.cECEFF3,

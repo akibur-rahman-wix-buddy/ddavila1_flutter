@@ -275,7 +275,7 @@ class _SignInScreenState extends State<SignInScreen> {
       if(success){
 
         // Navigate to home screen or next screen after successful login
-        NavigationService.navigateTo(Routes.homeScreen);
+        NavigationService.navigateTo(Routes.navigationScreen);
       }else{
         ToastUtil.showLongToast(" login failed");
       }

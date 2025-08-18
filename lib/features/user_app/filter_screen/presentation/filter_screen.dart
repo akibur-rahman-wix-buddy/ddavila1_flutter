@@ -2,9 +2,17 @@ import 'package:ddavila/assets_helper/app_colors.dart';
 import 'package:ddavila/assets_helper/app_icons.dart';
 import 'package:ddavila/assets_helper/text_font_style.dart';
 import 'package:ddavila/common_widgets/custom_button.dart';
+import 'package:ddavila/common_widgets/custom_textfiled.dart';
+import 'package:ddavila/features/user_app/filter_screen/model/cetagory_wise_sub_category_model_data.dart';
+import 'package:ddavila/features/user_app/filter_screen/model/filter_fatch_data_model.dart';
+import 'package:ddavila/features/user_app/filter_screen/presentation/filter_result_screen.dart';
+import 'package:ddavila/features/user_app/home_screen/model/home_category_data_model.dart';
 import 'package:ddavila/helpers/all_routes.dart';
 import 'package:ddavila/helpers/navigation_service.dart';
+import 'package:ddavila/helpers/ui_helpers.dart';
+import 'package:ddavila/networks/api_acess.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class FilterScreen extends StatefulWidget {
@@ -15,407 +23,291 @@ class FilterScreen extends StatefulWidget {
 }
 
 class _FilterScreenState extends State<FilterScreen> {
-  bool _isGradedExpanded = false;
-  bool _isSetExpanded = false;
-  bool _isRarityExpanded = false;
+  bool _isCategoriesExpanded = false;
+  Map<dynamic, bool> selectedSubCategories = {};
+  Map<String, bool> selectedItems = {};
 
-  // * List of card titles or data for the list view
-  final List<String> cardTitles = [
-    'CCG Individual Cards',
-    'CCG Sealed Packs',
-    'CCG Supplies & Accessories',
-    'CCG Mix Card Lots',
-    'More',
-  ];
+  TextEditingController maxController = TextEditingController();
+  TextEditingController minController = TextEditingController();
 
-  // * Checkbox values for the Graded section
-  final List<Map<String, dynamic>> _checkboxValues = [
-    {'label': 'No', 'value': false},
-    {'label': 'Yes', 'value': false},
-    {'label': 'Not Specified', 'value': false},
-  ];
+  @override
+  void initState() {
+    filterCategoryRx.filterCategoryData();
+    super.initState();
+  }
 
-  // * List of checkboxes for Sets
-  final List<Map<String, dynamic>> _checkboxSetValues = [
-    {'label': 'Base Set', 'setvalue': false},
-    {'label': 'Sword & Shield', 'setvalue': false},
-    {'label': 'Scarlet & Violet', 'setvalue': false},
-    {'label': 'XY', 'setvalue': false},
-    {'label': 'Team Rocket', 'setvalue': false},
-    {'label': 'Crown Zenith', 'setvalue': false},
-    {'label': 'Fossil', 'setvalue': false},
-    {'label': 'Abyss Rising', 'setvalue': false},
-  ];
+  Widget _buildFilterSection(String title, List<String> items) {
+    return ExpansionTile(
+      title: Text(title, style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700)),
+      children: items.map((item) {
+        final isChecked = selectedItems[item] ?? false;
+        return CheckboxListTile(
+          value: isChecked,
+          title: Text(item),
+          onChanged: (val) {
+            setState(() {
+              selectedItems[item] = val ?? false;
+            });
+          },
+        );
+      }).toList(),
+    );
+  }
 
-  // * List of checkboxes for Rarity (example data)
-  final List<Map<String, dynamic>> _checkboxRarityValues = [
-    {'label': 'Black Star Promo', 'rarityvalue': false},
-    {'label': 'Common', 'rarityvalue': false},
-    {'label': 'Holo Rare', 'rarityvalue': false},
-    {'label': 'Rare', 'rarityvalue': false},
-    {'label': 'Secret Rare', 'rarityvalue': false},
-    {'label': 'Ultra Rare', 'rarityvalue': false},
-  ];
+  Future<void> _applyFilters() async {
+    List<dynamic> selectedSubCatIds = selectedSubCategories.entries
+        .where((entry) => entry.value)
+        .map((entry) => entry.key)
+        .toList();
 
-  // Toggles the Graded section visibility
-  void _toggleGradedList() {
+    List<dynamic> selectedValues = selectedItems.entries
+        .where((entry) => entry.value)
+        .map((entry) => entry.key)
+        .toList();
+
+    bool success = await rxFilterPostRx.rxFilterPostInfo(
+      max: maxController.text,
+      min: minController.text,
+      subCat: selectedSubCatIds,
+      value: selectedValues,
+    );
+
+    if (success) {
+      // Get the filtered data from the stream
+      final filteredData = rxFilterPostRx.getFileData.value;
+      final productData = FilterProductDataModel.fromJson(filteredData);
+
+      // Navigate to the results screen
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => FilteredResultsScreen(
+            filteredProducts: productData,
+          ),
+        ),
+      );
+    }
+  }
+
+  void _resetFilters() {
     setState(() {
-      _isGradedExpanded = !_isGradedExpanded;
+      selectedSubCategories.clear();
+      selectedItems.clear();
     });
+    print("All filters have been reset");
   }
 
-  // Toggles the Set section visibility
-  void _toggleSetList() {
-    setState(() {
-      _isSetExpanded = !_isSetExpanded;
-    });
-  }
-
-  // Toggles the Rarity section visibility
-  void _toggleRarityList() {
-    setState(() {
-      _isRarityExpanded = !_isRarityExpanded;
-    });
-  }
-
-  // * Print selected checkbox values in the Graded section
-  void _logSelectedValues() {
-    List<String> selectedValues = [];
-    for (var item in _checkboxValues) {
-      if (item['value']) {
-        selectedValues.add(item['label']);
-      }
-    }
-
-    if (selectedValues.isNotEmpty) {
-      print('Selected Graded Values: ${selectedValues.join(", ")}');
-    } else {
-      print('No Graded values selected.');
-    }
-  }
-
-  // * Print selected checkbox values in the Set section
-  void _logSelectedSetValues() {
-    List<String> selectedValues = [];
-    for (var item in _checkboxSetValues) {
-      if (item['setvalue']) {
-        selectedValues.add(item['label']);
-      }
-    }
-
-    if (selectedValues.isNotEmpty) {
-      print('Selected Set Values: ${selectedValues.join(", ")}');
-    } else {
-      print('No Set values selected.');
-    }
-  }
-
-  // * Print selected checkbox values in the Rarity section
-  void _logSelectedRarityValues() {
-    List<String> selectedValues = [];
-    for (var item in _checkboxRarityValues) {
-      if (item['rarityvalue']) {
-        selectedValues.add(item['label']);
-      }
-    }
-
-    if (selectedValues.isNotEmpty) {
-      print('Selected Rarity Values: ${selectedValues.join(", ")}');
-    } else {
-      print('No Rarity values selected.');
-    }
-  }
-
+  @override
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.all(20),
-            child: Column(
-              children: [
-                // * Header with back arrow and search icon
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    GestureDetector(
-                      onTap: () => Navigator.of(context).pop(),
-                      child: SvgPicture.asset(
-                        AppIcons.arrowBack,
-                        width: 32,
-                        height: 32,
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    GestureDetector(
-                      onTap: () {
-                        NavigationService.navigateTo(Routes.searchScreen);
-                      },
-                      child: SvgPicture.asset(
-                        AppIcons.searchIcon,
-                        width: 24,
-                        height: 24,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Categories',
-                    style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header with back arrow and search icon
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  GestureDetector(
+                    onTap: () => Navigator.of(context).pop(),
+                    child: SvgPicture.asset(
+                      AppIcons.arrowBack,
+                      width: 32,
+                      height: 32,
                     ),
                   ),
-                ),
-                SizedBox(height: 10),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'All',
-                    style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 10),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Collectible Card Games',
-                    style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 10),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: ListView.builder(
-                    shrinkWrap: true, // Prevent it from taking up full space
-                    physics:
-                        NeverScrollableScrollPhysics(), // Disable scrolling for this listview (so parent scrolls)
-                    itemCount: cardTitles.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 5.0),
-                        child: Text(
-                          cardTitles[index],
-                          style:
-                              TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                            color: AppColor.c3988FF,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      );
+                  const SizedBox(width: 10),
+                  GestureDetector(
+                    onTap: () {
+                      NavigationService.navigateTo(Routes.searchScreen);
                     },
+                    child: SvgPicture.asset(
+                      AppIcons.searchIcon,
+                      width: 24,
+                      height: 24,
+                    ),
                   ),
-                ),
+                ],
+              ),
+              const SizedBox(height: 20),
+        
+              // Categories Section
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      // Header Row
+                      Row(
+                        children: [
+                          const Expanded(
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                'Categories',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _isCategoriesExpanded = !_isCategoriesExpanded;
+                              });
+                            },
+                            icon: Icon(
+                              _isCategoriesExpanded
+                                  ? Icons.keyboard_arrow_up
+                                  : Icons.keyboard_arrow_down,
+                            ),
+                          ),
+                        ],
+                      ),
+                          
+                      // Collapsible Content
+                      AnimatedCrossFade(
+                        duration: const Duration(milliseconds: 300),
+                        crossFadeState: _isCategoriesExpanded
+                            ? CrossFadeState.showFirst
+                            : CrossFadeState.showSecond,
+                        firstChild: StreamBuilder<HomeCategoryApiDataModel>(
+                          stream: getHomeCategoryRx.dataFetcher,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            }
+                          
+                            if (!snapshot.hasData || snapshot.data?.data == null) {
+                              return const Center(child: Text("No Categories Found"));
+                            }
+                          
+                            final categories = snapshot.data!.data!;
+                          
+                            return ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: categories.length,
+                              itemBuilder: (context, index) {
+                                final category = categories[index];
+                                return ExpansionTile(
+                                  title: Text(category.title ?? ""),
+                                  children: [
+                                    if (category.subcategories != null)
+                                      ...category.subcategories!.map((sub) {
+                                        final isChecked =
+                                            selectedSubCategories[sub.id ?? 0] ??
+                                                false;
+                                        return CheckboxListTile(
+                                          value: isChecked,
+                                          title: Text(sub.title ?? ""),
+                                          onChanged: (val) {
+                                            setState(() {
+                                              selectedSubCategories[sub.id ?? 0] =
+                                                  val ?? false;
+                                            });
+                                          },
+                                        );
+                                      }),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                        ),
+                        secondChild: const SizedBox.shrink(),
+                      ),
+                      const SizedBox(height: 20),
+                      const Divider(color: Colors.grey, thickness: 1, height: 20),
 
-                // * Graded Section
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Graded',
-                          style:
-                              TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                        IconButton(
-                          icon: Icon(
-                              _isGradedExpanded ? Icons.remove : Icons.add),
-                          onPressed: _toggleGradedList,
-                        ),
-                      ],
-                    ),
-                    if (_isGradedExpanded)
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: _checkboxValues.length,
-                        itemBuilder: (context, index) {
-                          return Row(
+                      // Filters Section
+                      StreamBuilder<ProductFIlterModelData>(
+                        stream: filterCategoryRx.dataFetcher,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const Center(child: CircularProgressIndicator());
+                          }
+
+                          if (!snapshot.hasData || snapshot.data?.data == null) {
+                            return const Center(child: Text("No Filters Found"));
+                          }
+
+                          final filters = snapshot.data!.data!;
+
+                          return ListView(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
                             children: [
-                              Checkbox(
-                                value: _checkboxValues[index]['value'],
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    _checkboxValues[index]['value'] =
-                                        value ?? false;
-                                    _logSelectedValues(); // Log selected values
-                                  });
-                                },
-                              ),
-                              Text(
-                                _checkboxValues[index]['label'],
-                                style: TextFontStyle.textLine7w400cFFFFFFDmSans
-                                    .copyWith(
-                                  color: AppColor.c000000,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
+                              _buildFilterSection("Grade", filters.grade ?? []),
+                              _buildFilterSection("Rarity", filters.rarity ?? []),
+                              _buildFilterSection("Stage", filters.stage ?? []),
                             ],
                           );
                         },
                       ),
-                  ],
-                ),
-                Divider(
-                  color: Colors.grey,
-                  thickness: 1,
-                  height: 20,
-                ),
-                // * Set Section
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Set',
-                          style:
-                              TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                        IconButton(
-                          icon: Icon(_isSetExpanded ? Icons.remove : Icons.add),
-                          onPressed: _toggleSetList,
-                        ),
-                      ],
-                    ),
-                    if (_isSetExpanded)
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: _checkboxSetValues.length,
-                        itemBuilder: (context, index) {
-                          return Row(
-                            children: [
-                              Checkbox(
-                                value: _checkboxSetValues[index]['setvalue'],
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    _checkboxSetValues[index]['setvalue'] =
-                                        value ?? false;
-                                    _logSelectedSetValues(); // Log selected values
-                                  });
-                                },
-                              ),
-                              Text(
-                                _checkboxSetValues[index]['label'],
-                                style: TextFontStyle.textLine7w400cFFFFFFDmSans
-                                    .copyWith(
-                                  color: AppColor.c000000,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          );
-                        },
+
+                      const SizedBox(height: 20),
+
+                      Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(" Custom range",style: TextStyle(fontSize: 20.h,fontWeight: FontWeight.w700),)),
+
+                      UIHelper.verticalSpace(12.h),
+
+                      Row(
+                        children: [
+                          CustomTextField(fieldWidth: 150.w,hintText: "Min range ",inputType: TextInputType.number,),
+                          UIHelper.horizontalSpace(20.w),
+                          CustomTextField(fieldWidth: 150.w,hintText: "Max range ",inputType: TextInputType.number),
+
+                        ],
                       ),
-                  ],
-                ),
-                Divider(
-                  color: Colors.grey,
-                  thickness: 1,
-                  height: 20,
-                ),
-                // * Rarity Section
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Rarity',
-                          style:
-                              TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                      UIHelper.verticalSpace(12.h),
+
+
+
+                      // Apply and Reset buttons
+                      Row(
+                        children: [
+                          Expanded(
+                            child: CustomButton(
+                              minWidth: double.infinity,
+                              text: 'Reset',
+                              context: context,
+                              color: Colors.grey,
+                              onTap: _resetFilters,
+                            ),
                           ),
-                        ),
-                        IconButton(
-                          icon: Icon(
-                              _isRarityExpanded ? Icons.remove : Icons.add),
-                          onPressed: _toggleRarityList,
-                        ),
-                      ],
-                    ),
-                    if (_isRarityExpanded)
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: _checkboxRarityValues.length,
-                        itemBuilder: (context, index) {
-                          return Row(
-                            children: [
-                              Checkbox(
-                                value: _checkboxRarityValues[index]
-                                    ['rarityvalue'],
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    _checkboxRarityValues[index]
-                                        ['rarityvalue'] = value ?? false;
-                                    _logSelectedRarityValues(); // Log selected values
-                                  });
-                                },
-                              ),
-                              Text(
-                                _checkboxRarityValues[index]['label'],
-                                style: TextFontStyle.textLine7w400cFFFFFFDmSans
-                                    .copyWith(
-                                  color: AppColor.c000000,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          );
-                        },
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: CustomButton(
+                              minWidth: double.infinity,
+                              text: 'Apply',
+                              context: context,
+                              onTap: _applyFilters,
+                            ),
+                          ),
+                        ],
                       ),
-                  ],
+                    ],
+                  ),
+
                 ),
-                Divider(
-                  color: Colors.grey,
-                  thickness: 1,
-                  height: 20,
-                ),
-                SizedBox(height: 20),
-                CustomButton(
-                  minWidth: double.infinity,
-                  text: 'Reset Filter',
-                  context: context,
-                  onTap: () {},
-                ),
-              ],
-            ),
+              ),
+        
+
+            ],
           ),
         ),
       ),
     );
   }
+
 }

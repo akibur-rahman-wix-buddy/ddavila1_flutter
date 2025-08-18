@@ -5,11 +5,15 @@
 // ########################################################
 
 
+import 'package:ddavila/features/auth_screen/data/rx_sign_up/rx.dart';
 import 'package:ddavila/features/chat/data/rx_get_chat/rx.dart';
 import 'package:ddavila/features/chat/data/rx_send_message/rx.dart';
 import 'package:ddavila/features/chat/model/chat_list_data_model.dart';
 import 'package:ddavila/features/chat/data/rx_Chat_list/rx.dart';
 import 'package:ddavila/features/chat/model/chat_to_person.dart';
+import 'package:ddavila/features/user_app/filter_screen/data/product_filter_category_Data/rx.dart';
+import 'package:ddavila/features/user_app/filter_screen/data/rx_post_filter/rx.dart';
+import 'package:ddavila/features/user_app/filter_screen/model/cetagory_wise_sub_category_model_data.dart';
 import 'package:ddavila/features/user_app/home_screen/data/category_wise_product_Data/rx.dart';
 import 'package:ddavila/features/user_app/home_screen/data/live_auction_rx/rx.dart';
 import 'package:ddavila/features/user_app/home_screen/data/rx_popular_category_Data/rx.dart';
@@ -20,6 +24,7 @@ import 'package:ddavila/features/user_app/home_screen/model/popular_category_dat
 import 'package:ddavila/features/user_app/products_screen/data/live_auction_details_rx/rx.dart';
 import 'package:ddavila/features/user_app/products_screen/data/post_bit_price/rx.dart';
 import 'package:ddavila/features/user_app/products_screen/model/live_action_details_model.dart';
+import 'package:ddavila/features/user_app/profile_screen/data/rx_logout/rx.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:ddavila/features/auth_screen/data/rx_sign_in/rx.dart';
 
@@ -38,6 +43,22 @@ SendMessageRx sendMessageRx = SendMessageRx(
 
 
 PostBitRx postBitRx = PostBitRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+PostLogOutRX postLogOutRX = PostLogOutRX(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+SignUpApiRx signUpApiRx = SignUpApiRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+
+RxFilterPostRx rxFilterPostRx = RxFilterPostRx(
   empty: <String, dynamic>{},
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );
@@ -75,4 +96,8 @@ CategoryWiseProductRx categoryWiseProductRx = CategoryWiseProductRx(
 final liveAuctionDetailsDataRx = LiveAuctionDetailsDataRx(
   empty: LiveAuctionDetailsApiDataModel(),
   dataFetcher: BehaviorSubject<LiveAuctionDetailsApiDataModel>(),
+);
+FilterCategoryRx filterCategoryRx = FilterCategoryRx(
+  empty: ProductFIlterModelData(),
+  dataFetcher: BehaviorSubject<ProductFIlterModelData>(),
 );

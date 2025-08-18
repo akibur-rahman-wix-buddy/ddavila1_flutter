@@ -8,6 +8,7 @@ class AppImages {
   static const String splashOne = '$imageRoute/splashOne.png';
   static const String splashTwo = '$imageRoute/splashTwo.png';
   static const String splashThree = '$imageRoute/splashThree.png';
+  static const String placeholder = '$imageRoute/placeholder.png';
 
   // * ================> Home Screen Assets <================
   static const String profileIcon = '$imageRoute/profileIcon.png';

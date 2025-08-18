@@ -163,17 +163,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
       print(
           ">>>>>>>>>>>>>>>>>>>> here is the access info :${appData.read(kKeyIsLoggedIn)}");
       appData.write(kKeyIsLoggedIn, true);
-<<<<<<< HEAD
-      print(">>>>>>>>>>>>>>>>>>>> here is the access info :${appData.read(kKeyIsLoggedIn)}");
-      Navigator.pushReplacement( context ,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
-=======
       print(
           ">>>>>>>>>>>>>>>>>>>> here is the access info :${appData.read(kKeyIsLoggedIn)}");
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => NavigationScreen()),
->>>>>>> 95a54a13728cac623ddf88bfae369e6a3f9a4e57
       );
     } else {
       // Navigate to LoginScreen if not logged in
@@ -188,14 +182,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
     if (_isLoading) {
       return const WelcomeScreen();
     } else {
-      print(
-          ">>>>>>>>>>>>>>>>>>>> here is the access info :${appData.read(kKeyIsLoggedIn)}");
+
+
+      print(">>>>>>>>>>>>>>>>>>>> here is the access info :${appData.read(kKeyIsLoggedIn)}");
+
+
       return appData.read(kKeyIsLoggedIn)
-<<<<<<< HEAD
-          ? const HomeScreen()
-=======
           ? const NavigationScreen()
->>>>>>> 95a54a13728cac623ddf88bfae369e6a3f9a4e57
           : const LoginScreen();
     }
   }
