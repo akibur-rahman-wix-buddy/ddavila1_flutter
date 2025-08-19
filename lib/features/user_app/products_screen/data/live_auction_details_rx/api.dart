@@ -1,13 +1,4 @@
-
-
-
-
-
-
 import 'dart:developer';
-
-import 'package:ddavila/features/user_app/home_screen/model/home_category_data_model.dart';
-import 'package:ddavila/features/user_app/home_screen/model/live_autction_data_model.dart';
 import 'package:ddavila/features/user_app/products_screen/model/live_action_details_model.dart';
 import 'package:ddavila/networks/dio/dio.dart';
 import 'package:ddavila/networks/endpoints.dart';

@@ -17,8 +17,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shimmer/shimmer.dart';
-
-import '../../../assets_helper/app_colors.dart';
 import 'model/live_action_details_model.dart';
 
 class ProductsBidScreen extends StatefulWidget {

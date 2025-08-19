@@ -1,11 +1,11 @@
 import 'package:ddavila/assets_helper/text_font_style.dart';
-import 'package:ddavila/common_widgets/custom_appbar.dart';
 import 'package:ddavila/features/user_app/home_screen/model/category_wise_data_model.dart';
 import 'package:ddavila/helpers/all_routes.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';
 import 'package:ddavila/networks/api_acess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 import '../../../../helpers/navigation_service.dart' show NavigationService;
 
@@ -86,8 +86,17 @@ class _CategoryProductsWidgetState extends State<CategoryProductsWidget> {
 
   Widget _buildProductItem(BuildContext context, ProductData product) {
     return GestureDetector(
-      onTap: () => NavigationService.navigateTo(Routes.productDetailsScreen),
+
+      onTap: (){
+        // Get.to(
+        //
+        // );
+      },
+
+
+      // onTap: () => NavigationService.navigateTo(Routes.productDetailsScreen),/
       child: Container(
+
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12.r),
           color: Colors.white,

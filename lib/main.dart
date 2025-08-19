@@ -1,5 +1,7 @@
 import 'dart:developer';
 import 'package:auto_animated/auto_animated.dart';
+import 'package:ddavila/features/admin_app/dashboard_screen/admin_dashboard_screen.dart';
+import 'package:ddavila/features/user_app/products_screen/auction/auction_screen.dart';
 import 'package:ddavila/loading_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,7 +13,6 @@ import 'package:ddavila/networks/dio/dio.dart';
 import 'package:provider/provider.dart';
 import '/helpers/all_routes.dart';
 import 'constants/custome_theme.dart';
-import 'features/user_app/home_screen/presentation/search_screen.dart';
 import 'helpers/helper_methods.dart';
 import 'helpers/navigation_service.dart';
 import 'helpers/register_provider.dart';
@@ -95,7 +96,6 @@ class UtillScreenMobile extends StatelessWidget {
             onGenerateRoute: RouteGenerator.generateRoute,
             // * Main Screen
             home: LoadingScreen(),
-
           ),
         );
       },
