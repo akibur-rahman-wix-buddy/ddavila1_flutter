@@ -1,8 +1,5 @@
 import 'dart:developer';
-
 import 'package:ddavila/features/user_app/home_screen/model/category_wise_data_model.dart';
-import 'package:ddavila/features/user_app/home_screen/model/home_category_data_model.dart';
-import 'package:ddavila/features/user_app/home_screen/model/popular_category_data_model.dart';
 import 'package:ddavila/networks/dio/dio.dart';
 import 'package:ddavila/networks/endpoints.dart';
 import 'package:ddavila/networks/exception_handler/data_source.dart';

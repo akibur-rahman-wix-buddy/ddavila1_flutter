@@ -110,26 +110,7 @@
 //   withValues({required double alpha}) {}
 // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ///>>>>>>>>>>>>>>>>>> zobayer vai new code >>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-
-
 
 // ignore_for_file: unused_element, library_private_types_in_public_api
 import 'package:ddavila/assets_helper/app_colors.dart';
@@ -144,26 +125,21 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'assets_helper/app_icons.dart';
 
-
 class NavigationScreen extends StatefulWidget {
   const NavigationScreen({super.key});
-
 
   @override
   _NavigationScreenState createState() => _NavigationScreenState();
 }
 
-
 // class _NavigationScreenState extends State<NavigationScreen> {
 //   bool showOverlay = true;
 //   int selectedIndex = 0;
-
 
 //   @override
 //   void initState() {
 //     super.initState();
 //   }
-
 
 //   // * Screen List
 //   final List<Widget> _screens = [
@@ -172,7 +148,6 @@ class NavigationScreen extends StatefulWidget {
 //     const ChatScreen(),
 //     const ProfileScreen(),
 //   ];
-
 
 //   @override
 //   Widget build(BuildContext context) {
@@ -223,10 +198,8 @@ class NavigationScreen extends StatefulWidget {
 //     );
 //   }
 
-
 //   Widget _buildNavItem(String icon, int index) {
 //     bool isSelected = selectedIndex == index;
-
 
 //     return GestureDetector(
 //       onTap: () {
@@ -257,14 +230,12 @@ class NavigationScreen extends StatefulWidget {
 class _NavigationScreenState extends State<NavigationScreen> {
   int selectedIndex = 0;
 
-
   final List<Widget> _screens = [
     const HomeScreen(),
     const ProductsScreen(),
     const ChatScreen(),
     const ProfileScreen(),
   ];
-
 
   @override
   Widget build(BuildContext context) {
@@ -273,7 +244,6 @@ class _NavigationScreenState extends State<NavigationScreen> {
         index: selectedIndex,
         children: _screens,
       ),
-
 
       // ✅ ExpandableFab ঠিকভাবে কাজ করবে
       floatingActionButton: ExpandableFab(
@@ -388,7 +358,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
                     onPressed: () {
                       debugPrint("Whitelist");
                     },
-                    child: SvgPicture.asset(AppIcons.orderIcon),
+                    child: SvgPicture.asset(AppIcons.whiteLoveIcon),
                   ),
                 ],
               ),
@@ -420,7 +390,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
                     onPressed: () {
                       debugPrint("Bid History");
                     },
-                    child: SvgPicture.asset(AppIcons.orderIcon),
+                    child: SvgPicture.asset(AppIcons.bidIcon),
                   ),
                 ],
               ),
@@ -452,7 +422,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
                     onPressed: () {
                       debugPrint("My Auction");
                     },
-                    child: SvgPicture.asset(AppIcons.orderIcon),
+                    child: SvgPicture.asset(AppIcons.auctionIcon),
                   ),
                 ],
               ),
@@ -484,7 +454,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
                     onPressed: () {
                       debugPrint("Dashboard");
                     },
-                    child: SvgPicture.asset(AppIcons.orderIcon),
+                    child: SvgPicture.asset(AppIcons.dasbIcon),
                   ),
                 ],
               ),
@@ -493,7 +463,6 @@ class _NavigationScreenState extends State<NavigationScreen> {
         ],
       ),
       floatingActionButtonLocation: ExpandableFab.location,
-
 
       // ✅ custom bottom navigation
       bottomNavigationBar: Padding(
@@ -519,10 +488,8 @@ class _NavigationScreenState extends State<NavigationScreen> {
     );
   }
 
-
   Widget _buildNavItem(String icon, int index) {
     bool isSelected = selectedIndex == index;
-
 
     return GestureDetector(
       onTap: () {
@@ -551,10 +518,6 @@ class _NavigationScreenState extends State<NavigationScreen> {
   }
 }
 
-
 extension on Color {
   withValues({required double alpha}) {}
 }
-
-
-

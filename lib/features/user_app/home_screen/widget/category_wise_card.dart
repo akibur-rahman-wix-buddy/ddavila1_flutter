@@ -1,5 +1,4 @@
 import 'package:ddavila/assets_helper/text_font_style.dart';
-import 'package:ddavila/common_widgets/custom_appbar.dart';
 import 'package:ddavila/features/user_app/home_screen/model/category_wise_data_model.dart';
 import 'package:ddavila/helpers/all_routes.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';

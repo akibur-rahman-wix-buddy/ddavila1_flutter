@@ -60,7 +60,6 @@ class AppIcons {
   static const String arrowBackWhite = '$iconsRoute/arrowBackWhite.svg';
   static const String cameraIcon = '$iconsRoute/cameraIcon.svg';
 
-
   static const String orderIcon = '$iconsRoute/orderIcon.svg';
   static const String addIcon = '$iconsRoute/addIcon.svg';
   static const String crossIcon = '$iconsRoute/crossIcon.svg';
@@ -70,4 +69,12 @@ class AppIcons {
   static const String navMessage = '$iconsRoute/navMessage.svg';
   static const String navNote = '$iconsRoute/navNote.svg';
   static const String navProfile = '$iconsRoute/navProfile.svg';
+  static const String bidIcon = '$iconsRoute/bidIcon.svg';
+  static const String auctionIcon = '$iconsRoute/auctionIcon.svg';
+  static const String dasbIcon = '$iconsRoute/dasbIcon.svg';
+
+  // admin dashboard
+  static const String bagIcon = '$iconsRoute/bagIcon.svg';
+  static const String moneyIcon = '$iconsRoute/moneyIcon.svg';
+  static const String soldIcon = '$iconsRoute/soldIcon.svg';
 }

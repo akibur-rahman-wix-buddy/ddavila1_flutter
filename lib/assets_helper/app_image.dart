@@ -25,4 +25,5 @@ class AppImages {
 
   // * ================> Settings Screen Assets <================
   static const String settingImage = '$imageRoute/settingImage.png';
+  static const String doneIcon = '$imageRoute/doneIcon.png';
 }
