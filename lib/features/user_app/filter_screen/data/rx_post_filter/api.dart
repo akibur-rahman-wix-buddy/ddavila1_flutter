@@ -19,10 +19,18 @@ final class RxFilterPostApi {
     required List<dynamic> value,
   }) async {
     try {
+
+
+      print(">>>>>>>>>>>>>>> here is the max ${max.toString()}");
+      print(">>>>>>>>>>>>>>> here is the min ${min.toString()}");
+      print(">>>>>>>>>>>>>>> here is the sub catagory ${subCat.toString()}");
+      print(">>>>>>>>>>>>>>> here is the sub value ${value.toString()}");
+
+
       // Create the request data map
       Map<String, dynamic> data = {
-        "subcat[]": subCat,
-        "values[]": value,
+        "subcat": subCat,
+        "values": value,
         "max": max,
         "min": max,
       };
@@ -31,7 +39,6 @@ final class RxFilterPostApi {
 
       if (response.statusCode == 200) {
         final data = json.decode(json.encode(response.data));
-        ToastUtil.showShortToast('Login Successfully');
         return data;
       } else {
         throw DataSource.DEFAULT.getFailure();

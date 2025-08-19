@@ -65,6 +65,10 @@ class _FilterScreenState extends State<FilterScreen> {
         .map((entry) => entry.key)
         .toList();
 
+
+
+
+
     bool success = await rxFilterPostRx.rxFilterPostInfo(
       max: maxController.text,
       min: minController.text,
@@ -241,14 +245,26 @@ class _FilterScreenState extends State<FilterScreen> {
 
                           final filters = snapshot.data!.data!;
 
-                          return ListView(
+                          return ListView.builder(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
-                            children: [
-                              _buildFilterSection("Grade", filters.grade ?? []),
-                              _buildFilterSection("Rarity", filters.rarity ?? []),
-                              _buildFilterSection("Stage", filters.stage ?? []),
-                            ],
+                            itemBuilder: (BuildContext context, int index) {
+                              return
+
+
+
+                                _buildFilterSection(filters.toString(), filters.rarity ?? []);
+
+                            },
+                            // children: [
+                            //
+                            //
+                            //
+                            //
+                            //   _buildFilterSection("Grade", filters.grade ?? []),
+                            //   _buildFilterSection("Rarity", filters.rarity ?? []),
+                            //   _buildFilterSection("Stage", filters.stage ?? []),
+                            // ],
                           );
                         },
                       ),
@@ -263,9 +279,9 @@ class _FilterScreenState extends State<FilterScreen> {
 
                       Row(
                         children: [
-                          CustomTextField(fieldWidth: 150.w,hintText: "Min range ",inputType: TextInputType.number,),
+                          CustomTextField(controller: minController,fieldWidth: 150.w,hintText: "Min range ",inputType: TextInputType.number,),
                           UIHelper.horizontalSpace(20.w),
-                          CustomTextField(fieldWidth: 150.w,hintText: "Max range ",inputType: TextInputType.number),
+                          CustomTextField(controller:maxController, fieldWidth: 150.w,hintText: "Max range ",inputType: TextInputType.number),
 
                         ],
                       ),
