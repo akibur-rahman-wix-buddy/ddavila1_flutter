@@ -95,7 +95,7 @@ class UtillScreenMobile extends StatelessWidget {
             navigatorKey: NavigationService.navigatorKey,
             onGenerateRoute: RouteGenerator.generateRoute,
             // * Main Screen
-            home: LoadingScreen(),
+            home: AdminDashboardScreen(),
           ),
         );
       },
