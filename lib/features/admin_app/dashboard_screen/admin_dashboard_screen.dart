@@ -3,6 +3,7 @@ import 'package:ddavila/assets_helper/app_icons.dart';
 import 'package:ddavila/assets_helper/text_font_style.dart';
 import 'package:ddavila/common_widgets/custom_appbar.dart';
 import 'package:ddavila/common_widgets/custom_button.dart';
+import 'package:ddavila/features/admin_app/widget/admin_table.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -332,6 +333,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 UIHelper.verticalSpace(
                   10,
                 ),
+
+
+                AuctionDataGridData()
               ],
             ),
           ),

@@ -6,12 +6,14 @@ import 'package:flutter_svg/svg.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String text;
+  final bool? isCenterTitle;
 
-  const CustomAppBar({super.key, required this.text});
+  const CustomAppBar({super.key, required this.text,  this.isCenterTitle});
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      centerTitle: isCenterTitle,
       title: Text(
         text,
         style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(

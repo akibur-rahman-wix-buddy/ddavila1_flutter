@@ -91,6 +91,7 @@ dependencies:
   flutter_widget_from_html:
   flutter_plugin_android_lifecycle: ^2.0.17
   flutter_expandable_fab: ^2.5.2
+  syncfusion_flutter_datagrid: ^30.2.6
 
 
   path_provider: ^2.0.15
