@@ -458,6 +458,8 @@ class _ProductAuctionScreenState extends State<ProductAuctionScreen> {
                           text: 'Proceed To Payment',
                           context: context,
                         ),
+                        
+                        UIHelper.verticalSpace(100)
                       ],
                     ),
                   ),

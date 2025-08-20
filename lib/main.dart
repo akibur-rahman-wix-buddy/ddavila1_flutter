@@ -1,7 +1,8 @@
 import 'dart:developer';
 import 'package:auto_animated/auto_animated.dart';
 import 'package:ddavila/features/admin_app/dashboard_screen/admin_dashboard_screen.dart';
-import 'package:ddavila/features/admin_app/dashboard_screen/widget/chart_admin_screen.dart';
+import 'package:ddavila/features/user_app/products_screen/auction/auction_screen.dart';
+import 'package:ddavila/features/user_app/test.dart';
 import 'package:ddavila/loading_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -95,7 +96,9 @@ class UtillScreenMobile extends StatelessWidget {
             navigatorKey: NavigationService.navigatorKey,
             onGenerateRoute: RouteGenerator.generateRoute,
             // * Main Screen
-            home: AdminDashboardScreen(),
+            home: AdminDashboardScreen(
+
+            ),
           ),
         );
       },
