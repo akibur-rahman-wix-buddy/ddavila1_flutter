@@ -102,11 +102,13 @@ class _TextEditorScreenState extends State<TextEditorScreen> {
   }
 
   void _addImage() async {
+    final urlController = TextEditingController();
     final url = await showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text('Enter Image URL'),
         content: TextField(
+          controller: urlController,
           decoration:
               InputDecoration(hintText: 'https://example.com/image.jpg'),
         ),
@@ -116,7 +118,7 @@ class _TextEditorScreenState extends State<TextEditorScreen> {
             child: Text('Cancel'),
           ),
           TextButton(
-            onPressed: () => Navigator.pop(context, _controller.text),
+            onPressed: () => Navigator.pop(context, urlController.text),
             child: Text('OK'),
           ),
         ],
@@ -130,11 +132,13 @@ class _TextEditorScreenState extends State<TextEditorScreen> {
   }
 
   void _addLink() async {
+    final urlController = TextEditingController();
     final url = await showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text('Enter Link URL'),
         content: TextField(
+          controller: urlController,
           decoration: InputDecoration(hintText: 'https://example.com'),
         ),
         actions: [
@@ -143,7 +147,7 @@ class _TextEditorScreenState extends State<TextEditorScreen> {
             child: Text('Cancel'),
           ),
           TextButton(
-            onPressed: () => Navigator.pop(context, _controller.text),
+            onPressed: () => Navigator.pop(context, urlController.text),
             child: Text('OK'),
           ),
         ],
@@ -172,89 +176,94 @@ class _TextEditorScreenState extends State<TextEditorScreen> {
         children: [
           // Toolbar
           Container(
-            padding: EdgeInsets.all(8.0),
+            padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
             color: Colors.grey[200],
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                DropdownButton<String>(
-                  value: fontStyle,
-                  items: <String>['Calibri', 'Arial', 'Times New Roman']
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      fontStyle = newValue!;
-                    });
-                  },
-                ),
-                DropdownButton<double>(
-                  value: fontSize,
-                  items: [12.0, 14.0, 16.0, 18.0, 20.0]
-                      .map<DropdownMenuItem<double>>((double value) {
-                    return DropdownMenuItem<double>(
-                      value: value,
-                      child: Text('$value'),
-                    );
-                  }).toList(),
-                  onChanged: (double? newValue) {
-                    setState(() {
-                      fontSize = newValue!;
-                    });
-                  },
-                ),
-                IconButton(
-                  icon: Icon(Icons.format_bold),
-                  onPressed: _toggleBold,
-                  color: _isBold ? Colors.black : Colors.grey,
-                ),
-                IconButton(
-                  icon: Icon(Icons.format_italic),
-                  onPressed: _toggleItalic,
-                  color: _isItalic ? Colors.black : Colors.grey,
-                ),
-                IconButton(
-                  icon: Icon(Icons.format_underlined),
-                  onPressed: _toggleUnderline,
-                  color: _isUnderlined ? Colors.black : Colors.grey,
-                ),
-                IconButton(
-                  icon: Icon(Icons.image),
-                  onPressed: _addImage,
-                ),
-                IconButton(
-                  icon: Icon(Icons.link),
-                  onPressed: _addLink,
-                ),
-                DropdownButton<TextAlign>(
-                  value: _alignment,
-                  items: [
-                    DropdownMenuItem(
-                      value: TextAlign.left,
-                      child: Text('Left'),
-                    ),
-                    DropdownMenuItem(
-                      value: TextAlign.center,
-                      child: Text('Center'),
-                    ),
-                    DropdownMenuItem(
-                      value: TextAlign.right,
-                      child: Text('Right'),
-                    ),
-                  ],
-                  onChanged: (TextAlign? newValue) {
-                    if (newValue != null) {
-                      _setAlignment(newValue);
-                    }
-                  },
-                ),
-              ],
+            height: 48, // fixed ছোট height
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  DropdownButton<String>(
+                    value: fontStyle,
+                    items: <String>['Calibri', 'Arial', 'Times New Roman']
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value, style: TextStyle(fontSize: 14)),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        fontStyle = newValue!;
+                      });
+                    },
+                  ),
+                  SizedBox(width: 4),
+                  DropdownButton<double>(
+                    value: fontSize,
+                    items: [12.0, 14.0, 16.0, 18.0, 20.0]
+                        .map<DropdownMenuItem<double>>((double value) {
+                      return DropdownMenuItem<double>(
+                        value: value,
+                        child: Text('$value', style: TextStyle(fontSize: 14)),
+                      );
+                    }).toList(),
+                    onChanged: (double? newValue) {
+                      setState(() {
+                        fontSize = newValue!;
+                      });
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.format_bold, size: 20),
+                    onPressed: _toggleBold,
+                    color: _isBold ? Colors.black : Colors.grey,
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.format_italic, size: 20),
+                    onPressed: _toggleItalic,
+                    color: _isItalic ? Colors.black : Colors.grey,
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.format_underlined, size: 20),
+                    onPressed: _toggleUnderline,
+                    color: _isUnderlined ? Colors.black : Colors.grey,
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.image, size: 20),
+                    onPressed: _addImage,
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.link, size: 20),
+                    onPressed: _addLink,
+                  ),
+                  DropdownButton<TextAlign>(
+                    value: _alignment,
+                    items: [
+                      DropdownMenuItem(
+                        value: TextAlign.left,
+                        child: Text('Left'),
+                      ),
+                      DropdownMenuItem(
+                        value: TextAlign.center,
+                        child: Text('Center'),
+                      ),
+                      DropdownMenuItem(
+                        value: TextAlign.right,
+                        child: Text('Right'),
+                      ),
+                    ],
+                    onChanged: (TextAlign? newValue) {
+                      if (newValue != null) {
+                        _setAlignment(newValue);
+                      }
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
+
           // Text Input Area
           Expanded(
             child: Padding(
