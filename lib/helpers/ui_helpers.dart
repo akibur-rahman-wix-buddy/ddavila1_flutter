@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'navigation_service.dart';
 
-/// Contains useful consts to reduce boilerplate and duplicate code
 final class UIHelper {
   UIHelper._();
   // Vertical spacing constants. Adjust to your liking.
   static final double _verticalSpaceSmall = 10.0.w;
   static final double _verticalSpaceMedium = 20.0.w;
+  
   // ignore: unused_field
   static final double _verticalSpaceMediumLarge = 25.0.w;
   static final double _verticalSpaceSemiLarge = 40.0.w;
