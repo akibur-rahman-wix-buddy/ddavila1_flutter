@@ -1,9 +1,10 @@
 // ignore_for_file: unused_element, library_private_types_in_public_api, deprecated_member_use
 import 'package:ddavila/assets_helper/app_colors.dart';
+import 'package:ddavila/assets_helper/app_icons.dart';
 import 'package:ddavila/assets_helper/text_font_style.dart';
-import 'package:ddavila/features/chat/presentation/chat_screen.dart';
-import 'package:ddavila/features/user_app/home_screen/presentation/home_screen.dart';
-import 'package:ddavila/features/user_app/products_screen/products_screen.dart';
+import 'package:ddavila/features/admin_app/auction_screen/my_auction_screen.dart';
+import 'package:ddavila/features/admin_app/dashboard_screen/admin_dashboard_screen.dart';
+import 'package:ddavila/features/admin_app/wishlist_screen/admin_wishlist_screen.dart';
 import 'package:ddavila/features/user_app/profile_screen/presentation/profile_screen.dart';
 import 'package:ddavila/helpers/all_routes.dart';
 import 'package:ddavila/helpers/navigation_service.dart';
@@ -12,22 +13,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'assets_helper/app_icons.dart';
 
-class NavigationScreen extends StatefulWidget {
-  const NavigationScreen({super.key});
+class AdminNavigationScreen extends StatefulWidget {
+  const AdminNavigationScreen({super.key});
 
   @override
-  _NavigationScreenState createState() => _NavigationScreenState();
+  _AdminNavigationScreenState createState() => _AdminNavigationScreenState();
 }
 
-class _NavigationScreenState extends State<NavigationScreen> {
+class _AdminNavigationScreenState extends State<AdminNavigationScreen> {
   int selectedIndex = 0;
 
   final List<Widget> _screens = [
-    const HomeScreen(),
-    const ProductsScreen(),
-    const ChatScreen(),
+    const AdminDashboardScreen(),
+    const AuctionScreen(),
+    const AdminWishListScreen(),
     const ProfileScreen(),
   ];
 
@@ -223,8 +223,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
             ),
           ),
           GestureDetector(
-            onTap: () =>
-                NavigationService.navigateTo(Routes.adminNavigationScreen),
+            onTap: () => NavigationService.navigateTo(Routes.adminDashboard),
             child: Container(
               decoration: BoxDecoration(
                 color: AppColor.cFFFFFF,
@@ -277,8 +276,8 @@ class _NavigationScreenState extends State<NavigationScreen> {
             children: [
               _buildNavItem(AppIcons.navHome, 0),
               _buildNavItem(AppIcons.navNote, 1),
-              _buildNavItem(AppIcons.navMessage, 2),
-              _buildNavItem(AppIcons.navProfile, 3),
+              _buildNavItem(AppIcons.navLove, 2),
+              _buildNavItem(AppIcons.profileNav, 3),
             ],
           ),
         ),
