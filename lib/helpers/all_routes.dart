@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:ddavila/features/admin_app/admin_navigation.dart';
+import 'package:ddavila/features/admin_app/dashboard_screen/admin_dashboard_screen.dart';
 import 'package:ddavila/features/auth_screen/presentation/login_screen.dart';
 import 'package:ddavila/features/auth_screen/presentation/role_screen.dart';
 import 'package:ddavila/features/auth_screen/presentation/signin_screen.dart';
@@ -38,10 +40,15 @@ final class Routes {
   static const String filterScreen = '/filterScreen';
   static const String searchScreen = '/searchScreen';
   static const String productsBidScreen = '/productsBidScreen';
-  static const String  navigationScreen = '/navigationScreen';
+  static const String navigationScreen = '/navigationScreen';
 
   // * =============> Cart navigation <============= */
   static const String productDetailsScreen = '/productDetailsScreen';
+
+  // * ############################## Admin Dashboard ###########################################
+  // * ##########################################################################################
+  static const String adminNavigationScreen = '/adminNavigationScreen';
+  static const String adminDashboard = '/adminDashboard';
 }
 
 final class RouteGenerator {
@@ -90,7 +97,8 @@ final class RouteGenerator {
             ? UltimateSmoothTransitionRoute(
                 widget: const ScreenTitle(widget: NavigationScreen()),
                 settings: settings)
-            : CupertinoPageRoute(builder: (context) => const NavigationScreen());
+            : CupertinoPageRoute(
+                builder: (context) => const NavigationScreen());
 
       // * Success Screen
       case Routes.successScreen:
@@ -133,26 +141,45 @@ final class RouteGenerator {
                 settings: settings)
             : CupertinoPageRoute(builder: (context) => const ProductsScreen());
 
-
       case Routes.productsBidScreen:
         final Map args = settings.arguments as Map;
         return Platform.isAndroid
             ? UltimateSmoothTransitionRoute(
-            widget: ProductsBidScreen(
-              productId: args['productId'],
-              slag: args['slag'],
-            ),
-            settings: settings)
+                widget: ProductsBidScreen(
+                  productId: args['productId'],
+                  slag: args['slag'],
+                ),
+                settings: settings)
             : CupertinoPageRoute(
-            builder: (context) => ProductsBidScreen(
-              slag: args['slag'],
-              productId: args['productId'],
-            ));
+                builder: (context) => ProductsBidScreen(
+                      slag: args['slag'],
+                      productId: args['productId'],
+                    ));
 
+      // * #################################################### Admin Flow #######################################
+      // * #######################################################################################################
+      // * #######################################################################################################
+      case Routes.adminNavigationScreen:
+        return Platform.isIOS
+            ? UltimateSmoothTransitionRoute(
+                widget: const ScreenTitle(
+                  widget: AdminNavigationScreen(),
+                ),
+                settings: settings)
+            : CupertinoPageRoute(
+                builder: (context) => const AdminNavigationScreen(),
+              );
 
-
-
-
+      case Routes.adminDashboard:
+        return Platform.isIOS
+            ? UltimateSmoothTransitionRoute(
+                widget: const ScreenTitle(
+                  widget: AdminDashboardScreen(),
+                ),
+                settings: settings)
+            : CupertinoPageRoute(
+                builder: (context) => const AdminDashboardScreen(),
+              );
 
       default:
         return null;
