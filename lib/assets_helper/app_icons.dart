@@ -81,4 +81,5 @@ class AppIcons {
   static const String soldIcon = '$iconsRoute/soldIcon.svg';
   static const String lineIcon = '$iconsRoute/lineIcon.svg';
   static const String gallerImage = '$iconsRoute/gallerImage.svg';
+  static const String heart = '$iconsRoute/heart.svg';
 }

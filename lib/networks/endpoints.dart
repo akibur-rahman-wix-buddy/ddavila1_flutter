@@ -36,4 +36,9 @@ final class Endpoints {
   static String getFilterApiLink() => "/products/filter/items";
   static String postFilterApiLink() => "/all/products/auction/filter";
 
+
+  static String wishList() => "/bookmark";
+  static String auctionComplete(dynamic pageNum) => "/auctions/completed?page=$pageNum";
+  static String auctionRunning(dynamic pageNum) => "/auctions/running?page=$pageNum";
+
 }

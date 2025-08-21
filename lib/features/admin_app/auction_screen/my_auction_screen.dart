@@ -1,3 +1,8 @@
+import 'package:ddavila/features/admin_app/auction_screen/model/auction_model.dart';
+import 'package:ddavila/features/admin_app/auction_screen/model/auction_running_model.dart';
+import 'package:ddavila/features/admin_app/auction_screen/widget/auction_complete.dart';
+import 'package:ddavila/features/admin_app/auction_screen/widget/auction_running.dart';
+import 'package:ddavila/networks/api_acess.dart';
 import 'package:flutter/material.dart';
 
 class AuctionScreen extends StatefulWidget {
@@ -9,25 +14,21 @@ class AuctionScreen extends StatefulWidget {
 
 class _AuctionScreenState extends State<AuctionScreen> {
   int selectedIndex = 0;
+  var ongoingMaxPage = 1;
+  var completeMaxPage = 1;
 
-  // দুইটা আলাদা ডেমো ডেটা
-  final List<Map<String, dynamic>> products = [
-    {
-      "name": "Pokemon All Cards",
-      "price": "\$707",
-      "image": "https://picsum.photos/400/250?random=1"
-    },
-    {
-      "name": "Vintage Radio",
-      "price": "\$520",
-      "image": "https://picsum.photos/400/250?random=2"
-    },
-  ];
+  int ongoingCurrentPage = 1;
+  int completeCurrentPage = 1;
+
+  @override
+  void initState() {
+    auctionOngoingApiRxObj.getAuctionOngoing(ongoingCurrentPage);
+    auctionCompleteApiRxObj.getAuctionComplete(completeCurrentPage);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final product = products[selectedIndex]; // ট্যাব অনুযায়ী product change হবে
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -52,141 +53,164 @@ class _AuctionScreenState extends State<AuctionScreen> {
               ),
               const SizedBox(height: 16),
 
-              /// Auction Card
+              /// Auction List
               Expanded(
-                child: SingleChildScrollView(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.grey.shade300),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
-                          blurRadius: 4,
-                          offset: const Offset(0, 2),
-                        )
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        /// Image
-                        ClipRRect(
-                          borderRadius: const BorderRadius.vertical(
-                            top: Radius.circular(12),
+                child: selectedIndex == 1
+                    ? StreamBuilder<AuctionModel>(
+                    stream: auctionCompleteApiRxObj.dataFetcher,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return const Center(
+                            child: CircularProgressIndicator());
+                      }
+
+                      if (snapshot.hasError) {
+                        return Center(
+                            child: Text('Error: ${snapshot.error}'));
+                      }
+
+                      if (!snapshot.hasData || snapshot.data?.data == null) {
+                        return const Center(
+                            child: Text('No profile data available.'));
+                      }
+                      completeMaxPage = snapshot.data?.data?.lastPage ?? 1;
+
+                      return Column(
+                        children: [
+                          Expanded(
+                            child: ListView.builder(
+                              padding: EdgeInsets.zero,
+                              shrinkWrap: true,
+                              itemCount:
+                              snapshot.data?.data?.data?.length ?? 0,
+                              itemBuilder: (context, index) {
+                                final value =
+                                snapshot.data?.data?.data?[index];
+
+                                return AuctionCompleteView(
+                                  price: value?.price ?? 00,
+                                  title: value?.title,
+                                  image:
+                                  value?.images?.first.toString() ?? "",
+                                  endDate: value?.auctionEndAt,
+                                  winner: value?.winner,
+                                );
+                              },
+                            ),
                           ),
-                          child: Image.network(
-                            product["image"],
-                            height: 200,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
+
+                          /// Pagination
+                          _buildPagination(
+                            completeCurrentPage,
+                            completeMaxPage,
+                                (page) {
+                              setState(() => completeCurrentPage = page);
+                              auctionCompleteApiRxObj
+                                  .getAuctionComplete(page);
+                            },
+                          )
+                        ],
+                      );
+                    })
+                    : StreamBuilder<AuctionRunningModel>(
+                    stream: auctionOngoingApiRxObj.dataFetcher,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return const Center(
+                            child: CircularProgressIndicator());
+                      }
+
+                      if (snapshot.hasError) {
+                        return Center(
+                            child: Text('Error: ${snapshot.error}'));
+                      }
+
+                      if (!snapshot.hasData || snapshot.data?.data == null) {
+                        return const Center(
+                            child: Text('No profile data available.'));
+                      }
+
+                      ongoingMaxPage = snapshot.data?.data?.lastPage ?? 1;
+                      final items = snapshot.data?.data?.items;
+
+                      return Column(
+                        children: [
+                          Expanded(
+                            child: ListView.builder(
+                              padding: EdgeInsets.zero,
+                              shrinkWrap: true,
+                              itemCount: items?.length ?? 0,
+                              itemBuilder: (context, index) {
+                                final value = items?[index];
+
+                                return AuctionRunningView(
+                                  currentBid: value?.highestBid ?? 00,
+                                  title: value?.title,
+                                  image:
+                                  value?.images?.first.toString() ?? "",
+                                  timeLeft: value?.auctionEndAt,
+                                );
+                              },
+                            ),
                           ),
-                        ),
 
-                        Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              /// Title + Action Button
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      product["name"],
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.black87,
-                                      ),
-                                    ),
-                                  ),
-
-                                  /// Button text depends on tab
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      if (selectedIndex == 0) {
-                                        // On going → Edit
-                                        print("Edit tapped");
-                                      } else {
-                                        // Completed → View Details
-                                        print("View Details tapped");
-                                      }
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.blue,
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 16, vertical: 8),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                    ),
-                                    child: Text(
-                                      selectedIndex == 0
-                                          ? "Edit"
-                                          : "View Details",
-                                      style:
-                                          const TextStyle(color: Colors.white),
-                                    ),
-                                  )
-                                ],
-                              ),
-                              const SizedBox(height: 6),
-
-                              /// Current Bid
-                              Row(
-                                children: [
-                                  const Text(
-                                    "Current Bid ",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  Text(
-                                    product["price"],
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black87,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 12),
-
-                              /// Time Left
-                              const Text(
-                                "Time left",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.blue,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              const Text(
-                                "30 hour : 40 min : 30 sec",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              )
+                          /// Pagination
+                          _buildPagination(
+                            ongoingCurrentPage,
+                            ongoingMaxPage,
+                                (page) {
+                              setState(() => ongoingCurrentPage = page);
+                              auctionOngoingApiRxObj.getAuctionOngoing(page);
+                            },
+                          )
+                        ],
+                      );
+                    }),
+              ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  /// 🔹 Page Selector Builder
+  Widget _buildPagination(
+      int currentPage, int maxPage, Function(int) onPageSelected) {
+    if (maxPage <= 1) return const SizedBox();
+
+    return Container(
+      margin: const EdgeInsets.only(top: 8),
+      height: 50,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: maxPage,
+        itemBuilder: (context, index) {
+          final page = index + 1;
+          final isSelected = currentPage == page;
+
+          return GestureDetector(
+            onTap: () => onPageSelected(page),
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 4),
+              padding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              decoration: BoxDecoration(
+                color: isSelected ? Colors.blue : Colors.grey.shade200,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                "$page",
+                style: TextStyle(
+                  color: isSelected ? Colors.white : Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }
