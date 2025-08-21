@@ -19,14 +19,15 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // * change by nurnabi + nayem
-  // * #########################
-  // await PurchaseHelper.init();
-  // * #########################
+  // * ############################
+  // * await PurchaseHelper.init();
+  // * ############################
   await GetStorage.init();
   diSetup();
   initiInternetChecker();
   DioSingleton.instance.create();
   log("Device Id: ======>>>>>>>>${appData.read(kKeyDeviceID)}");
+  
   // await NotificationService().initNotification();
   runApp(const MyApp());
 }
@@ -93,10 +94,9 @@ class UtillScreenMobile extends StatelessWidget {
             navigatorKey: NavigationService.navigatorKey,
             onGenerateRoute: RouteGenerator.generateRoute,
             // * Main Screen
-            // home: CreateAuctionScreen(
-            //   onNotification: (String) {},
-            // ),
+            
             home: LoadingScreen(),
+
           ),
         );
       },

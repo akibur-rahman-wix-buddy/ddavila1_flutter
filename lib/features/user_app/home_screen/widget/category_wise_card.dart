@@ -5,6 +5,7 @@ import 'package:ddavila/helpers/ui_helpers.dart';
 import 'package:ddavila/networks/api_acess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 import '../../../../helpers/navigation_service.dart' show NavigationService;
 
@@ -85,8 +86,17 @@ class _CategoryProductsWidgetState extends State<CategoryProductsWidget> {
 
   Widget _buildProductItem(BuildContext context, ProductData product) {
     return GestureDetector(
-      onTap: () => NavigationService.navigateTo(Routes.productDetailsScreen),
+
+      onTap: (){
+        // Get.to(
+        //
+        // );
+      },
+
+
+      // onTap: () => NavigationService.navigateTo(Routes.productDetailsScreen),/
       child: Container(
+
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12.r),
           color: Colors.white,
