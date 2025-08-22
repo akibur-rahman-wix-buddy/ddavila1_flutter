@@ -4,6 +4,7 @@ import 'package:ddavila/features/admin_app/auction_screen/my_action_history.dart
 import 'package:ddavila/features/admin_app/dashboard_screen/admin_dashboard_screen.dart';
 import 'package:ddavila/features/admin_app/seling/presentation/selling_order.dart';
 import 'package:ddavila/features/user_app/products_screen/auction/auction_screen.dart';
+import 'package:ddavila/features/user_app/products_screen/products_screen.dart';
 import 'package:ddavila/features/user_app/test.dart';
 import 'package:ddavila/loading_screen.dart';
 import 'package:flutter/material.dart';
@@ -99,7 +100,7 @@ class UtillScreenMobile extends StatelessWidget {
             navigatorKey: NavigationService.navigatorKey,
             onGenerateRoute: RouteGenerator.generateRoute,
             // * Main Screen
-            home: BuyingOrder(
+            home: ProductsScreen(
 
             ),
           ),
