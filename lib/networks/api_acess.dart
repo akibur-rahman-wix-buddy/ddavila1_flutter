@@ -6,6 +6,8 @@
 
 
 import 'package:ddavila/features/admin_app/auction_screen/model/auction_model.dart';
+import 'package:ddavila/features/admin_app/dashboard_screen/data/admindash_rx.dart';
+import 'package:ddavila/features/admin_app/dashboard_screen/model/admin_dash_model.dart';
 import 'package:ddavila/features/admin_app/wishlist_screen/model/wishlist_model.dart';
 import 'package:ddavila/features/auth_screen/data/rx_sign_up/rx.dart';
 import 'package:ddavila/features/chat/data/rx_get_chat/rx.dart';
@@ -121,4 +123,9 @@ AuctionCompleteApiRx auctionCompleteApiRxObj = AuctionCompleteApiRx(
 AuctionOngoingApiRx auctionOngoingApiRxObj = AuctionOngoingApiRx(
   empty: AuctionRunningModel(),
   dataFetcher: BehaviorSubject<AuctionRunningModel>(),
+);
+
+AdminDashAPIRX adminDashAPIRXObj = AdminDashAPIRX(
+  empty: AdminDashModel(),
+  dataFetcher: BehaviorSubject<AdminDashModel>(),
 );

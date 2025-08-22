@@ -4,7 +4,9 @@ import 'package:ddavila/assets_helper/app_icons.dart';
 import 'package:ddavila/assets_helper/text_font_style.dart';
 import 'package:ddavila/common_widgets/custom_appbar.dart';
 import 'package:ddavila/common_widgets/custom_button.dart';
+import 'package:ddavila/features/admin_app/dashboard_screen/model/admin_dash_model.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';
+import 'package:ddavila/networks/api_acess.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -18,6 +20,28 @@ class AdminDashboardScreen extends StatefulWidget {
 
 class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   @override
+  void initState() {
+    super.initState();
+    adminDashAPIRXObj.getAdminDashRX();
+  }
+
+  // মাসগুলোর ক্রম ঠিক রাখতে একটা লিস্ট
+  final months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec"
+  ];
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(text: 'Dashboard'),
@@ -27,314 +51,477 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             padding: EdgeInsets.all(
               16,
             ),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      children: [
-                        Container(
-                          width: 165,
-                          padding: EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: AppColor.c4275F6,
-                              width: 1,
-                            ),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+            child: StreamBuilder<AdminDashModel>(
+                stream: adminDashAPIRXObj.dataFetcher,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+
+                  if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  }
+
+                  final data = snapshot.data;
+
+                  final dailyData = data?.dailyData as Map<String, dynamic>;
+
+                  // * For Top Auctions
+                  final spots =
+                      dailyData.entries.toList().asMap().entries.map((entry) {
+                    final index = entry.key.toDouble(); // x axis (0,1,2…)
+                    final value = (entry.value.value ?? 0).toDouble(); // y axis
+                    return FlSpot(index, value);
+                  }).toList();
+
+                  // * For Monthly Earnings
+                  final earningSpots = months.asMap().entries.map((entry) {
+                    final index = entry.key.toDouble(); // X-axis index
+                    final month = entry.value;
+                    final value =
+                        (data?.earning?[month] ?? 0).toDouble(); // Y-axis value
+                    return FlSpot(index, value);
+                  }).toList();
+
+                  return Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
                             children: [
-                              SvgPicture.asset(
-                                height: 46,
-                                width: 46,
-                                AppIcons.bagIcon,
-                              ),
-                              UIHelper.verticalSpace(15),
-                              Text(
-                                '12,960',
-                                style: TextFontStyle.textLine7w400cFFFFFFDmSans
-                                    .copyWith(
-                                  color: AppColor.blackColor,
-                                  fontSize: 22,
-                                ),
-                              ),
-                              Text(
-                                'Atal Auction ',
-                                style: TextFontStyle.textLine7w400cFFFFFFDmSans
-                                    .copyWith(
-                                  color: AppColor.blackColor,
-                                  fontSize: 14,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Container(
-                          width: 165,
-                          padding: EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: AppColor.c4275F6,
-                              width: 1,
-                            ),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SvgPicture.asset(
-                                height: 46,
-                                width: 46,
-                                AppIcons.bagIcon,
-                              ),
-                              UIHelper.verticalSpace(15),
-                              Text(
-                                '12,960',
-                                style: TextFontStyle.textLine7w400cFFFFFFDmSans
-                                    .copyWith(
-                                  color: AppColor.blackColor,
-                                  fontSize: 22,
-                                ),
-                              ),
-                              Text(
-                                'Atal Auction ',
-                                style: TextFontStyle.textLine7w400cFFFFFFDmSans
-                                    .copyWith(
-                                  color: AppColor.blackColor,
-                                  fontSize: 14,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                UIHelper.verticalSpace(20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      children: [
-                        Container(
-                          width: 165,
-                          padding: EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: AppColor.c4275F6,
-                              width: 1,
-                            ),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SvgPicture.asset(
-                                height: 46,
-                                width: 46,
-                                AppIcons.moneyIcon,
-                              ),
-                              UIHelper.verticalSpace(15),
-                              Text(
-                                '12,960',
-                                style: TextFontStyle.textLine7w400cFFFFFFDmSans
-                                    .copyWith(
-                                  color: AppColor.blackColor,
-                                  fontSize: 22,
-                                ),
-                              ),
-                              Text(
-                                'Total Earning',
-                                style: TextFontStyle.textLine7w400cFFFFFFDmSans
-                                    .copyWith(
-                                  color: AppColor.blackColor,
-                                  fontSize: 14,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Container(
-                          width: 165,
-                          padding: EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: AppColor.c4275F6,
-                              width: 1,
-                            ),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SvgPicture.asset(
-                                height: 46,
-                                width: 46,
-                                AppIcons.soldIcon,
-                              ),
-                              UIHelper.verticalSpace(15),
-                              Text(
-                                '12,960',
-                                style: TextFontStyle.textLine7w400cFFFFFFDmSans
-                                    .copyWith(
-                                  color: AppColor.blackColor,
-                                  fontSize: 22,
-                                ),
-                              ),
-                              Text(
-                                'Item Sold',
-                                style: TextFontStyle.textLine7w400cFFFFFFDmSans
-                                    .copyWith(
-                                  color: AppColor.blackColor,
-                                  fontSize: 14,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                UIHelper.verticalSpaceMedium,
-                CustomButton(
-                  text: 'Create an Auction',
-                  context: context,
-                  minWidth: double.infinity,
-                  borderRadius: 10,
-                ),
-                UIHelper.verticalSpace(
-                  10,
-                ),
-                Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  elevation: 2,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        Text(
-                          "Top Auction Overview",
-                          style:
-                              TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                            color: AppColor.blackColor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w800,
-                          ),
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          "Apr 30 - May 1",
-                          style:
-                              TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                            color: AppColor.c666666,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w800,
-                          ),
-                        ),
-                        SizedBox(height: 20),
-                        SizedBox(
-                          height: 200,
-                          child: LineChart(
-                            LineChartData(
-                              gridData: FlGridData(show: false),
-                              titlesData: FlTitlesData(show: false),
-                              borderData: FlBorderData(show: false),
-                              lineBarsData: [
-                                LineChartBarData(
-                                  spots: [
-                                    FlSpot(0, 1),
-                                    FlSpot(1, 1.3),
-                                    FlSpot(2, 1.2),
-                                    FlSpot(3, 1.8),
-                                    FlSpot(4, 3),
-                                    FlSpot(5, 2.5),
-                                    FlSpot(6, 2.8),
-                                    FlSpot(7, 2.2),
-                                  ],
-                                  isCurved: true,
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      AppColor.c4275f6,
-                                      AppColor.c4275f6
-                                    ],
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
+                              Container(
+                                width: 165,
+                                padding: EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: AppColor.c4275F6,
+                                    width: 1,
                                   ),
-                                  barWidth: 2,
-                                  isStrokeCapRound: true,
-                                  belowBarData: BarAreaData(
-                                    show: true,
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        AppColor.c4275f6.withOpacity(0.3),
-                                        Colors.white
-                                      ],
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SvgPicture.asset(
+                                      height: 46,
+                                      width: 46,
+                                      AppIcons.bagIcon,
                                     ),
-                                  ),
-                                  dotData: FlDotData(show: false),
+                                    UIHelper.verticalSpace(15),
+                                    Text(
+                                      data?.auctionsAll?.toString() ?? '0',
+                                      style: TextFontStyle
+                                          .textLine7w400cFFFFFFDmSans
+                                          .copyWith(
+                                        color: AppColor.blackColor,
+                                        fontSize: 22,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Total Auction Listings',
+                                      style: TextFontStyle
+                                          .textLine7w400cFFFFFFDmSans
+                                          .copyWith(
+                                        color: AppColor.blackColor,
+                                        fontSize: 14,
+                                      ),
+                                    )
+                                  ],
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              Container(
+                                width: 165,
+                                padding: EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: AppColor.c4275F6,
+                                    width: 1,
+                                  ),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SvgPicture.asset(
+                                      height: 46,
+                                      width: 46,
+                                      AppIcons.bagIcon,
+                                    ),
+                                    UIHelper.verticalSpace(15),
+                                    Text(
+                                      data?.auctionsOnGoing?.toString() ?? '0',
+                                      style: TextFontStyle
+                                          .textLine7w400cFFFFFFDmSans
+                                          .copyWith(
+                                        color: AppColor.blackColor,
+                                        fontSize: 22,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Total Ongoing Auction',
+                                      style: TextFontStyle
+                                          .textLine7w400cFFFFFFDmSans
+                                          .copyWith(
+                                        color: AppColor.blackColor,
+                                        fontSize: 14,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      UIHelper.verticalSpace(20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            children: [
+                              Container(
+                                width: 165,
+                                padding: EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: AppColor.c4275F6,
+                                    width: 1,
+                                  ),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SvgPicture.asset(
+                                      height: 46,
+                                      width: 46,
+                                      AppIcons.moneyIcon,
+                                    ),
+                                    UIHelper.verticalSpace(15),
+                                    Text(
+                                      data?.totalEarning?.toString() ?? '0',
+                                      style: TextFontStyle
+                                          .textLine7w400cFFFFFFDmSans
+                                          .copyWith(
+                                        color: AppColor.blackColor,
+                                        fontSize: 22,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Total Earning',
+                                      style: TextFontStyle
+                                          .textLine7w400cFFFFFFDmSans
+                                          .copyWith(
+                                        color: AppColor.blackColor,
+                                        fontSize: 14,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              Container(
+                                width: 165,
+                                padding: EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: AppColor.c4275F6,
+                                    width: 1,
+                                  ),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SvgPicture.asset(
+                                      height: 46,
+                                      width: 46,
+                                      AppIcons.soldIcon,
+                                    ),
+                                    UIHelper.verticalSpace(15),
+                                    Text(
+                                      data?.soldItems?.toString() ?? '0',
+                                      style: TextFontStyle
+                                          .textLine7w400cFFFFFFDmSans
+                                          .copyWith(
+                                        color: AppColor.blackColor,
+                                        fontSize: 22,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Item Sold',
+                                      style: TextFontStyle
+                                          .textLine7w400cFFFFFFDmSans
+                                          .copyWith(
+                                        color: AppColor.blackColor,
+                                        fontSize: 14,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      UIHelper.verticalSpaceMedium,
+                      CustomButton(
+                        text: 'Create an Auction',
+                        context: context,
+                        minWidth: double.infinity,
+                        borderRadius: 10,
+                      ),
+                      UIHelper.verticalSpace(
+                        10,
+                      ),
+
+                      // * auction graph
+                      Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        elevation: 2,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            children: [
+                              Text(
+                                "Top Auction Overview",
+                                style: TextFontStyle.textLine7w400cFFFFFFDmSans
+                                    .copyWith(
+                                  color: AppColor.blackColor,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                              SizedBox(height: 4),
+                              Text(
+                                "Apr 30 - May 1",
+                                style: TextFontStyle.textLine7w400cFFFFFFDmSans
+                                    .copyWith(
+                                  color: AppColor.c666666,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                              SizedBox(height: 20),
+                              SizedBox(
+                                height: 200,
+                                child: LineChart(
+                                  LineChartData(
+                                    gridData: FlGridData(show: false),
+                                    titlesData: FlTitlesData(show: false),
+                                    borderData: FlBorderData(show: false),
+                                    lineBarsData: [
+                                      LineChartBarData(
+                                        spots: spots,
+                                        isCurved: true,
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            AppColor.c4275f6,
+                                            AppColor.c4275f6
+                                          ],
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter,
+                                        ),
+                                        barWidth: 2,
+                                        isStrokeCapRound: true,
+                                        belowBarData: BarAreaData(
+                                          show: true,
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              AppColor.c4275f6.withOpacity(0.3),
+                                              Colors.white,
+                                            ],
+                                            begin: Alignment.topCenter,
+                                            end: Alignment.bottomCenter,
+                                          ),
+                                        ),
+                                        dotData: FlDotData(show: false),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-                UIHelper.verticalSpace(
-                  10,
-                ),
-                Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  elevation: 2,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Top Bidder",
-                          style:
-                              TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                            color: AppColor.blackColor,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w800,
+                      ),
+
+                      UIHelper.verticalSpace(
+                        10,
+                      ),
+
+                      Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        elevation: 2,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Top Bidder",
+                                style: TextFontStyle.textLine7w400cFFFFFFDmSans
+                                    .copyWith(
+                                  color: AppColor.blackColor,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+
+                              // এখানে ListView.builder ব্যবহার করছি
+                              SizedBox(
+                                height:
+                                    200, // Fixed height দিতে হবে যাতে ListView কাজ করে
+                                child: ListView.builder(
+                                  itemCount: data?.topBidder?.length,
+                                  itemBuilder: (context, index) {
+                                    final bidder = data?.topBidder?[index];
+                                    final user = bidder?.user?.toJson() ?? {};
+
+                                    return Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 12.0),
+                                      child: _bidderItem(
+                                        user['name'] ?? "N/A", // Name
+                                        user['country'] ?? "", // Sub text
+                                        bidder?.maxBid.toString() ??
+                                            "0".toString(), // Bid amount
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        const SizedBox(height: 16),
-                        _bidderItem("AMZN", "Amazon Inc", "16,890"),
-                        const SizedBox(height: 12),
-                        _bidderItem("AMZN", "Amazon Inc", "16,890"),
-                        const SizedBox(height: 12),
-                        _bidderItem("AMZN", "Amazon Inc", "16,890"),
-                      ],
-                    ),
-                  ),
-                ),
-                UIHelper.verticalSpace(
-                  10,
-                ),
-              ],
-            ),
+                      ),
+
+                      UIHelper.verticalSpace(
+                        10,
+                      ),
+
+                      Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        elevation: 2,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            children: [
+                              Text(
+                                "Top Auction Overview",
+                                style: TextFontStyle.textLine7w400cFFFFFFDmSans
+                                    .copyWith(
+                                  color: AppColor.blackColor,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                              SizedBox(height: 4),
+                              Text(
+                                "Apr 30 - May 1",
+                                style: TextFontStyle.textLine7w400cFFFFFFDmSans
+                                    .copyWith(
+                                  color: AppColor.c666666,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                              SizedBox(height: 20),
+                              SizedBox(
+                                height: 200,
+                                child: LineChart(
+                                  LineChartData(
+                                    gridData: FlGridData(show: false),
+                                    borderData: FlBorderData(show: false),
+                                    titlesData: FlTitlesData(
+                                      leftTitles: AxisTitles(
+                                        // 👈 Y-axis hide
+                                        sideTitles:
+                                            SideTitles(showTitles: false),
+                                      ),
+                                      rightTitles: AxisTitles(
+                                        // optional: right side
+                                        sideTitles:
+                                            SideTitles(showTitles: false),
+                                      ),
+                                      topTitles: AxisTitles(
+                                        // optional: top side
+                                        sideTitles:
+                                            SideTitles(showTitles: false),
+                                      ),
+                                      bottomTitles: AxisTitles(
+                                        // 👈 শুধু X-axis (Month) দেখাবে
+                                        sideTitles: SideTitles(
+                                          showTitles: true,
+                                          interval: 1,
+                                          getTitlesWidget: (value, meta) {
+                                            int index = value.toInt();
+                                            if (index >= 0 &&
+                                                index < months.length) {
+                                              return Text(
+                                                months[index],
+                                                style: const TextStyle(
+                                                    fontSize: 10),
+                                              );
+                                            }
+                                            return const SizedBox();
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    lineBarsData: [
+                                      LineChartBarData(
+                                        spots: earningSpots,
+                                        isCurved: true,
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            AppColor.c4275f6,
+                                            AppColor.c4275f6
+                                          ],
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter,
+                                        ),
+                                        barWidth: 2,
+                                        isStrokeCapRound: true,
+                                        belowBarData: BarAreaData(
+                                          show: true,
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              AppColor.c4275f6.withOpacity(0.3),
+                                              Colors.white,
+                                            ],
+                                            begin: Alignment.topCenter,
+                                            end: Alignment.bottomCenter,
+                                          ),
+                                        ),
+                                        dotData: FlDotData(show: false),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }),
           ),
         ),
       ),
@@ -353,7 +540,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               symbol,
               style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
                 color: AppColor.blackColor,
-                fontSize: 12,
+                fontSize: 14,
                 fontWeight: FontWeight.w800,
               ),
             ),
@@ -361,47 +548,11 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               name,
               style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
                 color: AppColor.blackColor,
-                fontSize: 14,
+                fontSize: 11,
                 fontWeight: FontWeight.w800,
               ),
             ),
           ],
-        ),
-
-        // Middle: Sparkline chart
-        SizedBox(
-          width: 80,
-          height: 40,
-          child: LineChart(
-            LineChartData(
-              gridData: FlGridData(show: false),
-              titlesData: FlTitlesData(show: false),
-              borderData: FlBorderData(show: false),
-              lineBarsData: [
-                LineChartBarData(
-                  spots: [
-                    FlSpot(0, 1),
-                    FlSpot(1, 1.2),
-                    FlSpot(2, 1.1),
-                    FlSpot(3, 1.3),
-                    FlSpot(4, 1.8),
-                    FlSpot(5, 1.5),
-                    FlSpot(6, 1.7),
-                    FlSpot(7, 1.1),
-                  ],
-                  isCurved: true,
-                  color: Colors.green,
-                  barWidth: 2,
-                  isStrokeCapRound: true,
-                  dotData: FlDotData(show: false),
-                  belowBarData: BarAreaData(
-                    show: true,
-                    color: Colors.green.withOpacity(0.2),
-                  ),
-                ),
-              ],
-            ),
-          ),
         ),
 
         // Right: Price + arrow

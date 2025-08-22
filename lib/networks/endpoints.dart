@@ -24,21 +24,26 @@ final class Endpoints {
   static String logInUrl() => "/login";
   static String signUpUrl() => "/register";
   static String chatterListUrl() => "/messages";
-  static String getChatList({dynamic participantableId}) => "/messages/$participantableId";
+  static String getChatList({dynamic participantableId}) =>
+      "/messages/$participantableId";
   static String postSentMessage() => "/api//messages";
   static String homeCategoryApiLink() => "/categories";
   static String popularCategoryApiLink() => "/categories/popular";
   static String liveAuctionDataApiLink() => "/auctions/popular";
-  static String liveAuctionDetailsDataApiLink({required dynamic slug}) => "/products/$slug";
-  static String postBitPriceApiLink({required dynamic id}) => "/auction/bid/$id";
-  static String categoryWiseProductDataLink({required dynamic id}) => "/categories/$id/products";
+  static String liveAuctionDetailsDataApiLink({required dynamic slug}) =>
+      "/products/$slug";
+  static String postBitPriceApiLink({required dynamic id}) =>
+      "/auction/bid/$id";
+  static String categoryWiseProductDataLink({required dynamic id}) =>
+      "/categories/$id/products";
   static String logoutApiLink() => "/logout";
   static String getFilterApiLink() => "/products/filter/items";
   static String postFilterApiLink() => "/all/products/auction/filter";
 
-
   static String wishList() => "/bookmark";
-  static String auctionComplete(dynamic pageNum) => "/auctions/completed?page=$pageNum";
-  static String auctionRunning(dynamic pageNum) => "/auctions/running?page=$pageNum";
-
+  static String auctionComplete(dynamic pageNum) =>
+      "/auctions/completed?page=$pageNum";
+  static String auctionRunning(dynamic pageNum) =>
+      "/auctions/running?page=$pageNum";
+  static String adminDashboard() => "/seller/dashboard/index";
 }
