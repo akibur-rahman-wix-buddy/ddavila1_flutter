@@ -416,7 +416,7 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
               ),
               // * TEXT TO HTML Editor
               Padding(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(5),
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.grey[100],
@@ -629,6 +629,230 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
+                  'Core Features',
+                  style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                    color: AppColor.blackColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+              // * TEXT TO HTML Editor
+              Padding(
+                padding: const EdgeInsets.all(5),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey[100],
+                    border: Border.all(color: Colors.red, width: 1),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: SingleChildScrollView(
+                    // Added to prevent overflow
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 4, vertical: 2),
+                            color: Colors.grey[200],
+                            height: 48,
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: [
+                                  DropdownButton<String>(
+                                    value: fontStyle,
+                                    items: <String>[
+                                      'Calibri',
+                                      'Arial',
+                                      'Times New Roman'
+                                    ]
+                                        .map<DropdownMenuItem<String>>(
+                                          (String value) =>
+                                              DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value,
+                                                style: const TextStyle(
+                                                    fontSize: 14)),
+                                          ),
+                                        )
+                                        .toList(),
+                                    onChanged: (String? newValue) =>
+                                        setState(() => fontStyle = newValue!),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  DropdownButton<double>(
+                                    value: fontSize,
+                                    items: [12.0, 14.0, 16.0, 18.0, 20.0]
+                                        .map<DropdownMenuItem<double>>(
+                                          (double value) =>
+                                              DropdownMenuItem<double>(
+                                            value: value,
+                                            child: Text('$value',
+                                                style: const TextStyle(
+                                                    fontSize: 14)),
+                                          ),
+                                        )
+                                        .toList(),
+                                    onChanged: (double? newValue) =>
+                                        setState(() => fontSize = newValue!),
+                                  ),
+                                  IconButton(
+                                    icon:
+                                        const Icon(Icons.format_bold, size: 20),
+                                    onPressed: _toggleBold,
+                                    color: _isBold ? Colors.black : Colors.grey,
+                                    tooltip: 'Bold',
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.format_italic,
+                                        size: 20),
+                                    onPressed: _toggleItalic,
+                                    color:
+                                        _isItalic ? Colors.black : Colors.grey,
+                                    tooltip: 'Italic',
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.format_underlined,
+                                        size: 20),
+                                    onPressed: _toggleUnderline,
+                                    color: _isUnderlined
+                                        ? Colors.black
+                                        : Colors.grey,
+                                    tooltip: 'Underline',
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.photo_library,
+                                        size: 20),
+                                    onPressed: _pickImageFromGallery,
+                                    tooltip: 'Add image from Gallery',
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.image, size: 20),
+                                    onPressed: _addImageFromUrl,
+                                    tooltip: 'Add image from URL',
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.link, size: 20),
+                                    onPressed: _addCustomLink,
+                                    tooltip: 'Wrap image with custom link',
+                                  ),
+                                  DropdownButton<TextAlign>(
+                                    value: _alignment,
+                                    items: const [
+                                      DropdownMenuItem(
+                                          value: TextAlign.left,
+                                          child: Text('Left')),
+                                      DropdownMenuItem(
+                                          value: TextAlign.center,
+                                          child: Text('Center')),
+                                      DropdownMenuItem(
+                                          value: TextAlign.right,
+                                          child: Text('Right')),
+                                    ],
+                                    onChanged: (TextAlign? newValue) {
+                                      if (newValue != null)
+                                        _setAlignment(newValue);
+                                    },
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.done, size: 20),
+                                    onPressed: _saveText,
+                                    color: Colors.green,
+                                    tooltip: 'Done',
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.delete_outline,
+                                        size: 20),
+                                    onPressed: _resetFile,
+                                    color: Colors.red,
+                                    tooltip: 'Delete',
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          if (hasAnyImage)
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 6),
+                              child: Column(
+                                children: _images.asMap().entries.map((entry) {
+                                  final index = entry.key + 1;
+                                  final image = entry.value;
+                                  return Row(
+                                    children: [
+                                      Text('Image $index:',
+                                          style: const TextStyle(fontSize: 12)),
+                                      const SizedBox(width: 8),
+                                      Expanded(
+                                        child: Text(
+                                          image['src']!.startsWith('data:')
+                                              ? 'Gallery image (base64)'
+                                              : image['src']!,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.black54),
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () => setState(() {
+                                          _images.removeAt(index - 1);
+                                          _controller.text = _controller.text
+                                              .replaceAll('[image$index]', '');
+                                          _imageCounter = _images.length;
+                                        }),
+                                        child: const Text('Remove'),
+                                      ),
+                                    ],
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Material(
+                              // Added Material widget
+                              child: TextField(
+                                controller: _controller,
+                                maxLines: null, // Dynamic height
+                                minLines: 20, // Minimum 1 line
+                                textAlign: _alignment,
+                                decoration: const InputDecoration(
+                                  hintText: 'Write here...',
+                                  border: OutlineInputBorder(),
+                                ),
+                                style: TextStyle(
+                                  fontFamily: fontStyle,
+                                  fontSize: fontSize,
+                                  fontWeight: _isBold
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
+                                  fontStyle: _isItalic
+                                      ? FontStyle.italic
+                                      : FontStyle.normal,
+                                  decoration: _isUnderlined
+                                      ? TextDecoration.underline
+                                      : TextDecoration.none,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              UIHelper.verticalSpace(10),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
                   'Item Details',
                   style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
                     color: AppColor.blackColor,
@@ -758,7 +982,7 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                   CustomButton(
                     text: 'Back',
                     context: context,
-                    minWidth: 200,
+                    minWidth: 170,
                     color: AppColor.cF3F2F2,
                     textStyle:
                         TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
@@ -770,7 +994,13 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                   CustomButton(
                     text: 'Next',
                     context: context,
-                    minWidth: 200,
+                    minWidth: 170,
+                    textStyle:
+                        TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                      color: AppColor.cFFFFFF,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                    ),
                   )
                 ],
               ),
