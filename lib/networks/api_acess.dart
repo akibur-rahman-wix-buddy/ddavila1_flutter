@@ -6,8 +6,12 @@
 
 
 import 'package:ddavila/features/admin_app/auction_screen/model/auction_model.dart';
+import 'package:ddavila/features/admin_app/buying/data/get_buying_data/buying_order_rx.dart';
+import 'package:ddavila/features/admin_app/buying/model/buying_order_data_model.dart';
 import 'package:ddavila/features/admin_app/dashboard_screen/data/admindash_rx.dart';
 import 'package:ddavila/features/admin_app/dashboard_screen/model/admin_dash_model.dart';
+import 'package:ddavila/features/admin_app/seling/data/selling_order_data/buying_order_rx.dart';
+import 'package:ddavila/features/admin_app/seling/model/selling_order_data_model.dart';
 import 'package:ddavila/features/admin_app/wishlist_screen/model/wishlist_model.dart';
 import 'package:ddavila/features/auth_screen/data/rx_sign_up/rx.dart';
 import 'package:ddavila/features/chat/data/rx_get_chat/rx.dart';
@@ -79,6 +83,16 @@ GetAllChatListRx getAllChatListRx = GetAllChatListRx(
 GetChatMessageRx getChatMessageRx = GetChatMessageRx(
   empty: PersonalChatScreenDataModel(),
   dataFetcher: BehaviorSubject<PersonalChatScreenDataModel>(),
+);
+
+GetBuyingOrderRX getBuyingOrderRX = GetBuyingOrderRX(
+  empty: BuyingOrderDataModel(),
+  dataFetcher: BehaviorSubject<BuyingOrderDataModel>(),
+);
+
+GetSellingOrderRX getSellingOrderRX = GetSellingOrderRX(
+  empty: SellingOrderDataModel(),
+  dataFetcher: BehaviorSubject<SellingOrderDataModel>(),
 );
 
 GetPopularCategoryRx getPopularCategoryRx = GetPopularCategoryRx(

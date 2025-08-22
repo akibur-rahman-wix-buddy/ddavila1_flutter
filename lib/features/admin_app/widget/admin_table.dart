@@ -1,81 +1,57 @@
-import 'package:ddavila/helpers/ui_helpers.dart';
+import 'package:ddavila/features/admin_app/dashboard_screen/model/admin_dash_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
-class AdminAuctionData {
-  final int orderId;
-  final String title;
-  final String status;
-  final int bids;
-  final String timeLeft;
-  final String dueDate;
-  final String imageUrl;
-
-  AdminAuctionData(this.orderId, this.title, this.status, this.bids, this.timeLeft, this.dueDate, this.imageUrl);
-}
-
 class AuctionDataGridData extends StatefulWidget {
+  final List<RecentAuction> data;
+
+  const AuctionDataGridData({super.key, required this.data});
+
   @override
   _AuctionDataGridDataState createState() => _AuctionDataGridDataState();
 }
 
 class _AuctionDataGridDataState extends State<AuctionDataGridData> {
-  late List<AdminAuctionData> auctionData;
+  late AuctionDataSource _dataSource;
   late DataGridController _dataGridController;
 
   @override
   void initState() {
     super.initState();
-    auctionData = [
-      AdminAuctionData(118, 'Pokemon All Cards', 'Live', 21, '1h 12m', 'Aug 9, 2025', ''),
-      AdminAuctionData(112, 'Jason vs Leatherface #1-1995 Topps Comics–Low Grade Reader Copy', 'Live', 1, '1h 12m', 'Aug 13, 2025', ''),
-      AdminAuctionData(109, 'Sport', 'Live', 3, '1h 12m', 'Jul 31, 2025', ''),
-      AdminAuctionData(102, 'USA Comics #17 Captain America WWII Golden Age Marvel Timely Comic', 'Live', 833, '1h 12m', 'Jul 31, 2025', ''),
-      AdminAuctionData(98, 'based on this Baseball 20 Autographs', 'Live', 212, '1h 12m', 'Jul 29, 2025', ''),
-    ];
+    _dataSource = AuctionDataSource(widget.data);
     _dataGridController = DataGridController();
   }
 
   @override
   Widget build(BuildContext context) {
-    return  Container(
-      padding: EdgeInsets.all(12),
+    return Container(
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.grey[100],
         borderRadius: BorderRadius.circular(15),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        
-        
-        
         children: [
-
-          Text(
-            'Recent Auction ',
+          const Text(
+            'Recent Auctions',
             style: TextStyle(
-              color: const Color(0xFF0B0C18),
               fontSize: 20,
-              fontFamily: 'DM Sans',
               fontWeight: FontWeight.w600,
-              height: 1.10,
-              letterSpacing: 0.20,
             ),
           ),
-          UIHelper.verticalSpace(12.h),
-          
+          const SizedBox(height: 12),
           SfDataGrid(
             gridLinesVisibility: GridLinesVisibility.horizontal,
             headerGridLinesVisibility: GridLinesVisibility.horizontal,
-            source: AuctionDataSource(auctionData),
+            source: _dataSource,
             columnWidthMode: ColumnWidthMode.fill,
             controller: _dataGridController,
             columns: [
               GridColumn(
-                columnName: 'orderId',
+                columnName: 'id',
                 width: 100,
-                label: _buildHeader('ORDER ID', Alignment.center),
+                label: _buildHeader('ID', Alignment.center),
               ),
               GridColumn(
                 columnName: 'image',
@@ -88,14 +64,9 @@ class _AuctionDataGridDataState extends State<AuctionDataGridData> {
                 label: _buildHeader('TITLE', Alignment.centerLeft),
               ),
               GridColumn(
-                columnName: 'status',
-                width: 100,
-                label: _buildHeader('STATUS', Alignment.center),
-              ),
-              GridColumn(
-                columnName: 'bids',
-                width: 80,
-                label: _buildHeader('BIDS', Alignment.centerRight),
+                columnName: 'startingPrice',
+                width: 120,
+                label: _buildHeader('START PRICE', Alignment.centerRight),
               ),
               GridColumn(
                 columnName: 'timeLeft',
@@ -103,9 +74,9 @@ class _AuctionDataGridDataState extends State<AuctionDataGridData> {
                 label: _buildHeader('TIME LEFT', Alignment.center),
               ),
               GridColumn(
-                columnName: 'dueDate',
+                columnName: 'endDate',
                 width: 120,
-                label: _buildHeader('DUE DATE', Alignment.center),
+                label: _buildHeader('END DATE', Alignment.center),
               ),
             ],
           ),
@@ -116,7 +87,7 @@ class _AuctionDataGridDataState extends State<AuctionDataGridData> {
 
   Widget _buildHeader(String text, Alignment alignment) {
     return Container(
-      padding: EdgeInsets.all(12.0),
+      padding: const EdgeInsets.all(12.0),
       alignment: alignment,
       child: Text(
         text,
@@ -130,20 +101,31 @@ class _AuctionDataGridDataState extends State<AuctionDataGridData> {
 }
 
 class AuctionDataSource extends DataGridSource {
-  List<AdminAuctionData> auctionData;
+  final List<RecentAuction> auctions;
 
-  AuctionDataSource(this.auctionData);
+  AuctionDataSource(this.auctions);
 
   @override
-  List<DataGridRow> get rows => auctionData.map<DataGridRow>((data) {
+  List<DataGridRow> get rows => auctions.map<DataGridRow>((auction) {
     return DataGridRow(cells: [
-      DataGridCell<int>(columnName: 'orderId', value: data.orderId),
-      DataGridCell<String>(columnName: 'image', value: data.imageUrl),
-      DataGridCell<String>(columnName: 'title', value: data.title),
-      DataGridCell<String>(columnName: 'status', value: data.status),
-      DataGridCell<int>(columnName: 'bids', value: data.bids),
-      DataGridCell<String>(columnName: 'timeLeft', value: data.timeLeft),
-      DataGridCell<String>(columnName: 'dueDate', value: data.dueDate),
+      DataGridCell<int>(columnName: 'id', value: auction.id ?? 0),
+      DataGridCell<String>(
+          columnName: 'image',
+          value: auction.images?.isNotEmpty == true
+              ? auction.images!.first
+              : ''),
+      DataGridCell<String>(
+          columnName: 'title', value: auction.title ?? 'Untitled'),
+      DataGridCell<int>(
+          columnName: 'startingPrice', value: auction.startingPrice ?? 0),
+      DataGridCell<String>(
+          columnName: 'timeLeft',
+          value: _calculateTimeLeft(auction.auctionEndAt)),
+      DataGridCell<String>(
+          columnName: 'endDate',
+          value: auction.auctionEndAt != null
+              ? _formatDate(auction.auctionEndAt!)
+              : ''),
     ]);
   }).toList();
 
@@ -160,33 +142,52 @@ class AuctionDataSource extends DataGridSource {
       cells: row.getCells().map<Widget>((dataCell) {
         Widget cellContent;
 
-        if (dataCell.columnName == 'status') {
-          final status = dataCell.value.toString();
-          cellContent = Container(
-            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: Colors.green.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Text(
-              status,
-              style: TextStyle(color: Colors.green, fontWeight: FontWeight.w500),
-            ),
-          );
-        } else if (dataCell.columnName == 'bids') {
-          cellContent = Text(
-            dataCell.value.toString(),
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue[800]),
-            textAlign: TextAlign.right,
-          );
-        } else if (dataCell.columnName == 'image') {
+        if (dataCell.columnName == 'image') {
           cellContent = dataCell.value != ''
-              ? Image.network(dataCell.value, width: 30, height: 30, fit: BoxFit.cover)
+              ? ClipRRect(
+            borderRadius: BorderRadius.circular(6),
+            child: Image.network(
+              dataCell.value,
+              width: 30,
+              height: 30,
+              fit: BoxFit.cover,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+                return Container(
+                  width: 30,
+                  height: 30,
+                  alignment: Alignment.center,
+                  child: const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                );
+              },
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  width: 30,
+                  height: 30,
+                  color: Colors.grey[300],
+                  child: const Icon(Icons.broken_image,
+                      color: Colors.grey, size: 18),
+                );
+              },
+            ),
+          )
               : Container(
             width: 30,
             height: 30,
             color: Colors.grey[300],
-            child: Icon(Icons.image, color: Colors.grey[600], size: 18),
+            child: const Icon(Icons.image,
+                color: Colors.grey, size: 18),
+          );
+        } else if (dataCell.columnName == 'startingPrice') {
+          cellContent = Text(
+            "\$${dataCell.value}",
+            style: const TextStyle(
+                fontWeight: FontWeight.bold, color: Colors.blue),
+            textAlign: TextAlign.right,
           );
         } else {
           cellContent = Text(
@@ -196,8 +197,8 @@ class AuctionDataSource extends DataGridSource {
         }
 
         return Container(
-          padding: EdgeInsets.all(12.0),
-          alignment: dataCell.columnName == 'bids'
+          padding: const EdgeInsets.all(12.0),
+          alignment: dataCell.columnName == 'startingPrice'
               ? Alignment.centerRight
               : (dataCell.columnName == 'title'
               ? Alignment.centerLeft
@@ -206,5 +207,18 @@ class AuctionDataSource extends DataGridSource {
         );
       }).toList(),
     );
+  }
+
+  static String _calculateTimeLeft(DateTime? endTime) {
+    if (endTime == null) return '';
+    final diff = endTime.difference(DateTime.now());
+    if (diff.isNegative) return "Ended";
+    final hours = diff.inHours;
+    final minutes = diff.inMinutes % 60;
+    return "${hours}h ${minutes}m";
+  }
+
+  static String _formatDate(DateTime date) {
+    return "${date.day}-${date.month}-${date.year}";
   }
 }

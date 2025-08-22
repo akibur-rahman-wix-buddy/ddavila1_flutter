@@ -1,6 +1,8 @@
 // ignore_for_file: unused_element, library_private_types_in_public_api, deprecated_member_use
 import 'package:ddavila/assets_helper/app_colors.dart';
 import 'package:ddavila/assets_helper/text_font_style.dart';
+import 'package:ddavila/features/admin_app/buying/presention/buying_order.dart';
+import 'package:ddavila/features/admin_app/seling/presentation/selling_order.dart';
 import 'package:ddavila/features/chat/presentation/chat_screen.dart';
 import 'package:ddavila/features/user_app/home_screen/presentation/home_screen.dart';
 import 'package:ddavila/features/user_app/products_screen/products_screen.dart';
@@ -12,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'assets_helper/app_icons.dart';
 
 class NavigationScreen extends StatefulWidget {
@@ -62,67 +65,79 @@ class _NavigationScreenState extends State<NavigationScreen> {
           backgroundColor: Colors.white,
         ),
         children: [
-          Container(
-            decoration: BoxDecoration(
-              color: AppColor.cFFFFFF,
-              borderRadius: BorderRadius.circular(99.r),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Row(
-                children: [
-                  const SizedBox(width: 6),
-                  Text(
-                    'Buying Order',
-                    style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                      color: AppColor.c000000,
+
+          GestureDetector(
+          onTap: (){
+            Get.to(BuyingOrderScreen());
+          },
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppColor.cFFFFFF,
+                borderRadius: BorderRadius.circular(99.r),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  children: [
+                    const SizedBox(width: 6),
+                    Text(
+                      'Buying Order',
+                      style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                        color: AppColor.c000000,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 10),
-                  FloatingActionButton.small(
-                    heroTag: 'remind',
-                    backgroundColor: AppColor.cFFFFFF,
-                    foregroundColor: AppColor.cFFFFFF,
-                    disabledElevation: 0,
-                    elevation: 0,
-                    onPressed: () {
-                      debugPrint("Buying Order");
-                    },
-                    child: SvgPicture.asset(AppIcons.orderIcon),
-                  ),
-                ],
+                    const SizedBox(width: 10),
+                    FloatingActionButton.small(
+                      heroTag: 'remind',
+                      backgroundColor: AppColor.cFFFFFF,
+                      foregroundColor: AppColor.cFFFFFF,
+                      disabledElevation: 0,
+                      elevation: 0,
+                      onPressed: () {
+                        debugPrint("Buying Order");
+                      },
+                      child: SvgPicture.asset(AppIcons.orderIcon),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-          Container(
-            decoration: BoxDecoration(
-              color: AppColor.cFFFFFF,
-              borderRadius: BorderRadius.circular(99.r),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Row(
-                children: [
-                  const SizedBox(width: 10),
-                  Text(
-                    'Selling Order',
-                    style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                      color: AppColor.c000000,
+          GestureDetector(
+
+            onTap: (){
+              Get.to(SellingOrder());
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppColor.cFFFFFF,
+                borderRadius: BorderRadius.circular(99.r),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  children: [
+                    const SizedBox(width: 10),
+                    Text(
+                      'Selling Order',
+                      style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                        color: AppColor.c000000,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 10),
-                  FloatingActionButton.small(
-                    heroTag: 'remind',
-                    backgroundColor: AppColor.cFFFFFF,
-                    foregroundColor: AppColor.cFFFFFF,
-                    disabledElevation: 0,
-                    elevation: 0,
-                    onPressed: () {
-                      debugPrint("Selling Order");
-                    },
-                    child: SvgPicture.asset(AppIcons.orderIcon),
-                  ),
-                ],
+                    const SizedBox(width: 10),
+                    FloatingActionButton.small(
+                      heroTag: 'remind',
+                      backgroundColor: AppColor.cFFFFFF,
+                      foregroundColor: AppColor.cFFFFFF,
+                      disabledElevation: 0,
+                      elevation: 0,
+                      onPressed: () {
+                        debugPrint("Selling Order");
+                      },
+                      child: SvgPicture.asset(AppIcons.orderIcon),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
