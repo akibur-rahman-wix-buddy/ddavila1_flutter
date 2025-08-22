@@ -5,10 +5,12 @@ import 'package:ddavila/assets_helper/text_font_style.dart';
 import 'package:ddavila/common_widgets/custom_appbar.dart';
 import 'package:ddavila/common_widgets/custom_button.dart';
 import 'package:ddavila/features/admin_app/dashboard_screen/model/admin_dash_model.dart';
+import 'package:ddavila/features/admin_app/widget/admin_table.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';
 import 'package:ddavila/networks/api_acess.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
@@ -68,7 +70,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
 
                   // * For Top Auctions
                   final spots =
-                      dailyData.entries.toList().asMap().entries.map((entry) {
+                  dailyData.entries.toList().asMap().entries.map((entry) {
                     final index = entry.key.toDouble(); // x axis (0,1,2…)
                     final value = (entry.value.value ?? 0).toDouble(); // y axis
                     return FlSpot(index, value);
@@ -79,7 +81,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     final index = entry.key.toDouble(); // X-axis index
                     final month = entry.value;
                     final value =
-                        (data?.earning?[month] ?? 0).toDouble(); // Y-axis value
+                    (data?.earning?[month] ?? 0).toDouble(); // Y-axis value
                     return FlSpot(index, value);
                   }).toList();
 
@@ -384,7 +386,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                               // এখানে ListView.builder ব্যবহার করছি
                               SizedBox(
                                 height:
-                                    200, // Fixed height দিতে হবে যাতে ListView কাজ করে
+                                200, // Fixed height দিতে হবে যাতে ListView কাজ করে
                                 child: ListView.builder(
                                   itemCount: data?.topBidder?.length,
                                   itemBuilder: (context, index) {
@@ -393,7 +395,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
 
                                     return Padding(
                                       padding:
-                                          const EdgeInsets.only(bottom: 12.0),
+                                      const EdgeInsets.only(bottom: 12.0),
                                       child: _bidderItem(
                                         user['name'] ?? "N/A", // Name
                                         user['country'] ?? "", // Sub text
@@ -452,17 +454,17 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                                       leftTitles: AxisTitles(
                                         // 👈 Y-axis hide
                                         sideTitles:
-                                            SideTitles(showTitles: false),
+                                        SideTitles(showTitles: false),
                                       ),
                                       rightTitles: AxisTitles(
                                         // optional: right side
                                         sideTitles:
-                                            SideTitles(showTitles: false),
+                                        SideTitles(showTitles: false),
                                       ),
                                       topTitles: AxisTitles(
                                         // optional: top side
                                         sideTitles:
-                                            SideTitles(showTitles: false),
+                                        SideTitles(showTitles: false),
                                       ),
                                       bottomTitles: AxisTitles(
                                         // 👈 শুধু X-axis (Month) দেখাবে
@@ -519,7 +521,17 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                           ),
                         ),
                       ),
+
+                      UIHelper.verticalSpace(16.h),
+                      AuctionDataGridData(data: data!.recentAuctions ?? [])
+
+
+
                     ],
+
+
+
+
                   );
                 }),
           ),

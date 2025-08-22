@@ -46,4 +46,6 @@ final class Endpoints {
   static String auctionRunning(dynamic pageNum) =>
       "/auctions/running?page=$pageNum";
   static String adminDashboard() => "/seller/dashboard/index";
+  static String buyingOrderBoard() => "/auth_buying_orders";
+  static String sellingOrderBoard() => "/auth_selling_orders";
 }
