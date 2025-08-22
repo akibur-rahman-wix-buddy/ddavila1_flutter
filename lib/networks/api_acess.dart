@@ -5,6 +5,8 @@
 // ########################################################
 
 
+import 'package:ddavila/features/admin_app/auction_screen/model/auction_model.dart';
+import 'package:ddavila/features/admin_app/wishlist_screen/model/wishlist_model.dart';
 import 'package:ddavila/features/auth_screen/data/rx_sign_up/rx.dart';
 import 'package:ddavila/features/chat/data/rx_get_chat/rx.dart';
 import 'package:ddavila/features/chat/data/rx_send_message/rx.dart';
@@ -28,6 +30,10 @@ import 'package:ddavila/features/user_app/profile_screen/data/rx_logout/rx.dart'
 import 'package:rxdart/rxdart.dart';
 import 'package:ddavila/features/auth_screen/data/rx_sign_in/rx.dart';
 
+import '../features/admin_app/auction_screen/data/auction_complete/get_rx.dart';
+import '../features/admin_app/auction_screen/data/auction_ongoing/get_rx.dart';
+import '../features/admin_app/auction_screen/model/auction_running_model.dart';
+import '../features/admin_app/wishlist_screen/data/get_rx.dart';
 import '../features/user_app/home_screen/data/rx_home_category_Data/rx.dart';
 
 SignInApiRx signInApiRx = SignInApiRx(
@@ -100,4 +106,19 @@ final liveAuctionDetailsDataRx = LiveAuctionDetailsDataRx(
 FilterCategoryRx filterCategoryRx = FilterCategoryRx(
   empty: ProductFIlterModelData(),
   dataFetcher: BehaviorSubject<ProductFIlterModelData>(),
+);
+
+GetWishlistApiRx getWishlistApiRxObj = GetWishlistApiRx(
+  empty: WishlistModel(),
+  dataFetcher: BehaviorSubject<WishlistModel>(),
+);
+
+AuctionCompleteApiRx auctionCompleteApiRxObj = AuctionCompleteApiRx(
+  empty: AuctionModel(),
+  dataFetcher: BehaviorSubject<AuctionModel>(),
+);
+
+AuctionOngoingApiRx auctionOngoingApiRxObj = AuctionOngoingApiRx(
+  empty: AuctionRunningModel(),
+  dataFetcher: BehaviorSubject<AuctionRunningModel>(),
 );

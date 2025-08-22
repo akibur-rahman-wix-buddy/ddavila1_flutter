@@ -69,6 +69,8 @@ class AppIcons {
   static const String navMessage = '$iconsRoute/navMessage.svg';
   static const String navNote = '$iconsRoute/navNote.svg';
   static const String navProfile = '$iconsRoute/navProfile.svg';
+  static const String navLove = '$iconsRoute/navLove.svg';
+  static const String profileNav = '$iconsRoute/profile.svg';
   static const String bidIcon = '$iconsRoute/bidIcon.svg';
   static const String auctionIcon = '$iconsRoute/auctionIcon.svg';
   static const String dasbIcon = '$iconsRoute/dasbIcon.svg';
@@ -77,4 +79,7 @@ class AppIcons {
   static const String bagIcon = '$iconsRoute/bagIcon.svg';
   static const String moneyIcon = '$iconsRoute/moneyIcon.svg';
   static const String soldIcon = '$iconsRoute/soldIcon.svg';
+  static const String lineIcon = '$iconsRoute/lineIcon.svg';
+  static const String gallerImage = '$iconsRoute/gallerImage.svg';
+  static const String heart = '$iconsRoute/heart.svg';
 }

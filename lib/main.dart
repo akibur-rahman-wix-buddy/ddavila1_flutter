@@ -5,7 +5,6 @@ import 'package:ddavila/features/admin_app/dashboard_screen/admin_dashboard_scre
 import 'package:ddavila/features/admin_app/seling/presentation/selling_order.dart';
 import 'package:ddavila/features/user_app/products_screen/auction/auction_screen.dart';
 import 'package:ddavila/features/user_app/products_screen/products_screen.dart';
-import 'package:ddavila/features/user_app/test.dart';
 import 'package:ddavila/loading_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -26,14 +25,15 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // * change by nurnabi + nayem
-  // * #########################
-  // await PurchaseHelper.init();
-  // * #########################
+  // * ############################
+  // * await PurchaseHelper.init();
+  // * ############################
   await GetStorage.init();
   diSetup();
   initiInternetChecker();
   DioSingleton.instance.create();
   log("Device Id: ======>>>>>>>>${appData.read(kKeyDeviceID)}");
+  
   // await NotificationService().initNotification();
   runApp(const MyApp());
 }
@@ -99,10 +99,7 @@ class UtillScreenMobile extends StatelessWidget {
             },
             navigatorKey: NavigationService.navigatorKey,
             onGenerateRoute: RouteGenerator.generateRoute,
-            // * Main Screen
-            home: ProductsScreen(
-
-            ),
+            home: LoadingScreen(),
           ),
         );
       },
