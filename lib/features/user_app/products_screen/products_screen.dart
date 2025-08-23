@@ -1,7 +1,12 @@
 // ignore_for_file: avoid_print, deprecated_member_use
 
 import 'package:ddavila/common_widgets/custom_button.dart';
+import 'package:ddavila/features/user_app/products_screen/model/sale_product_details_data_model.dart';
+import 'package:ddavila/helpers/html_text_viewer.dart';
+import 'package:ddavila/helpers/ui_helpers.dart';
+import 'package:ddavila/networks/api_acess.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ddavila/assets_helper/app_colors.dart';
 import 'package:ddavila/assets_helper/app_icons.dart';
@@ -9,22 +14,28 @@ import 'package:ddavila/assets_helper/app_image.dart';
 import 'package:ddavila/assets_helper/text_font_style.dart';
 
 class ProductsScreen extends StatefulWidget {
-  const ProductsScreen({super.key});
+  const ProductsScreen({super.key, required this.slug});
+
+  final String slug;
 
   @override
   State<ProductsScreen> createState() => _ProductsScreenState();
 }
 
 class _ProductsScreenState extends State<ProductsScreen> {
-  final List<String> items = ['17', '18', '19', '20', '21'];
 
-  // Sample color data (replace with your actual colors)
-  final List<Color> colors = [
-    AppColor.c6940C9,
-    Colors.red,
-    Colors.blue,
-    Colors.green,
-  ]; // Size data
+  bool isWhiteListing = false;
+  bool _isProcessing = false;
+
+
+  bool isLoading= false;
+
+  @override
+  void initState() {
+    productViewDetailsRx.categoryWiseProductData(slug: widget.slug);
+    super.initState();
+  }
+
 
 
 
@@ -32,163 +43,252 @@ class _ProductsScreenState extends State<ProductsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              ProductImageSlider(),
-              Container(
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height * 0.6,
-                decoration: const BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColor.cDCE4E6,
-                      blurRadius: 9.9,
-                      offset: Offset(0, 0.1),
-                    ),
-                  ],
-                  color: AppColor.whiteColor,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(40),
-                    topRight: Radius.circular(40),
+        child:StreamBuilder<ProductDetailsDataModel>(
+          stream: productViewDetailsRx.dataFetcher,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Center(
+                    child: CircularProgressIndicator(),
                   ),
-                ),
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Product Name and Rating
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Axel Arigato',
-                                  style: TextFontStyle
-                                      .textLine7w400cFFFFFFDmSans
-                                      .copyWith(
-                                    fontSize: 22.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                SizedBox(height: 4.0),
-                                Row(
-                                  children: [
-                                    Icon(Icons.star,
-                                        color: Colors.yellow, size: 18.0),
-                                    Icon(Icons.star,
-                                        color: Colors.yellow, size: 18.0),
-                                    Icon(Icons.star,
-                                        color: Colors.yellow, size: 18.0),
-                                    Icon(Icons.star,
-                                        color: Colors.yellow, size: 18.0),
-                                    Icon(Icons.star_border,
-                                        color: Colors.yellow, size: 18.0),
-                                    SizedBox(width: 5.0),
-                                    Text(
-                                      '(270 Review)',
-                                      style: TextFontStyle
-                                          .textLine7w400cFFFFFFDmSans
-                                          .copyWith(
-                                        fontSize: 14.0,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 16.0),
-                              ],
-                            ),
-                          ],
+                  UIHelper.verticalSpace(10.h),
+                  const Text(
+                    "Loading...",
+                    style: TextStyle(color: Colors.red),
+                  )
+                ],
+              );
+            } else if (snapshot.hasError) {
+              return const Center(child: Text("Something went wrong!"));
+            } else if (!snapshot.hasData || snapshot.data?.data == null) {
+              return const Center(child: Text("No data found."));
+            } else {
+
+
+              final data = snapshot.data?.data;
+
+              return  SingleChildScrollView(
+                child: Column(
+                  children: [
+                    ProductImageSlider(
+                      image: data?.productDetailsImages ??[],
+                    ),
+                    Container(
+                      width: double.infinity,
+                      height: MediaQuery.of(context).size.height * 0.6,
+                      decoration: const BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColor.cDCE4E6,
+                            blurRadius: 9.9,
+                            offset: Offset(0, 0.1),
+                          ),
+                        ],
+                        color: AppColor.whiteColor,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(40),
+                          topRight: Radius.circular(40),
                         ),
-                        SizedBox(height: 16.0),
-                        // Availability
-                        Text(
-                          'Description',
-                          style:
-                              TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                            fontSize: 16.0,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
+                      ),
+                      child: SingleChildScrollView(
+                        child: Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Product Name and Rating
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        data?.title.toString()??"",
+                                        style: TextFontStyle
+                                            .textLine7w400cFFFFFFDmSans
+                                            .copyWith(
+                                          fontSize: 22.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+
+                                      SizedBox(height: 16.0),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 16.0),
+                              // Availability
+                              Text(
+                                'Description',
+                                style:
+                                TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                                  fontSize: 16.0,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 16.0),
+                              // Description
+
+
+                              HtmlToWidgetRenderer(
+                                htmlData: data?.description.toString()??"",
+                              ),
+
+
+
+                              // Text(
+                              //   data?.description.toString()??"",
+                              //   style: TextFontStyle.textLine7w400cFFFFFFDmSans
+                              //       .copyWith(
+                              //       fontSize: 12.0,
+                              //       color: Colors.black.withOpacity(0.7)),
+                              // ),
+                              SizedBox(height: 16.0),
+                              // Price
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Total Price:',
+                                        style: TextFontStyle
+                                            .textLine7w400cFFFFFFDmSans
+                                            .copyWith(
+                                          fontSize: 12.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      Text(
+                                        "\$${data?.price.toString()??""}",
+                                        style: TextFontStyle
+                                            .textLine7w400cFFFFFFDmSans
+                                            .copyWith(
+                                          fontSize: 20.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                isLoading? CircularProgressIndicator(color: Colors.blueAccent,):  CustomButton(
+
+                                    onTap: (){
+
+                                      setState(() {
+                                        isLoading =true;
+                                      });
+
+                                      postSaleProductPaymentRx.saleProductStripePayment(productId: data?.id);
+                                      setState(() {
+                                        isLoading =false;
+                                      });
+
+                                    },
+                                    text: 'Buy Now',
+                                    context: context,
+                                    minWidth: 200,
+                                  ),
+                                ],
+                              ),
+                              UIHelper.verticalSpace(24.h),
+
+
+                        CustomButton(
+                          // text: "white list",
+                        text: isWhiteListing
+                        ? "Whitelisting..."
+                            : data?.bookmark.toString() == "true"
+                            ? "Added to whitelist"
+                            : "Add to whitelist",
+                        minWidth: double.infinity,
+                        color: Colors.white,
+                        onTap: () async {
+                          setState(() {
+                            isWhiteListing = true;
+                          });
+
+                          bool success = await postWhiteListRx.postWhiteListApiInfo(productId: data?.id);
+
+                          if (success) {
+                            await productViewDetailsRx.categoryWiseProductData(slug: widget.slug);
+                            setState(() {
+                              isWhiteListing = false;
+                            });
+                          }
+
+                          setState(() {
+                            isWhiteListing = false;
+                          });
+                        },
+                        textStyle: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 18,
+                        ),
+                        borderColor: Colors.black,
+                        context: context,
+                      ),
+
+                              // Buy Now Button
+                              UIHelper.verticalSpace(24.h),
+                              CustomButton(text: "Contact Seller",minWidth: double.infinity,
+                                  textStyle: TextStyle(color: Colors.white,fontWeight: FontWeight.w700,fontSize: 18),
+
+                                  onTap: ()  {
+
+                                   createConversationRx.createConversations(userId: data?.userId);
+                                  },
+                                  context: context)
+                              // Buy Now Button
+                            ],
                           ),
                         ),
-                        SizedBox(height: 16.0),
-                        // Description
-                        Text(
-                          'Engineered to crush any movement-based workout, these On sneakers enhance the label\'s original Cloud sneaker with cutting-edge technologies for a pair.',
-                          style: TextFontStyle.textLine7w400cFFFFFFDmSans
-                              .copyWith(
-                                  fontSize: 12.0,
-                                  color: Colors.black.withOpacity(0.7)),
-                        ),
-                        SizedBox(height: 16.0),
-                        // Price
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Total Price:',
-                                  style: TextFontStyle
-                                      .textLine7w400cFFFFFFDmSans
-                                      .copyWith(
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                                Text(
-                                  '\$245.00',
-                                  style: TextFontStyle
-                                      .textLine7w400cFFFFFFDmSans
-                                      .copyWith(
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            CustomButton(
-                              text: 'Buy Now',
-                              context: context,
-                              minWidth: 200,
-                            ),
-                          ],
-                        ),
-                        // Buy Now Button
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ),
-            ],
-          ),
+              );
+            }
+          },
         ),
       ),
     );
   }
 }
 
+// class ProductsScreen extends StatefulWidget {
+//   const ProductsScreen({super.key, required this.slug});
+//
+//   final String slug;
+//
+//   @override
+//   State<ProductsScreen> createState() => _ProductsScreenState();
+// }
+
 class ProductImageSlider extends StatefulWidget {
+
+  const ProductImageSlider({super.key, required this.image});
+
+
+ final  List image;
+
   @override
   _ProductImageSliderState createState() => _ProductImageSliderState();
 }
 
 class _ProductImageSliderState extends State<ProductImageSlider> {
   int _currentIndex = 0;
-  final List<String> _images = [
-    AppImages.showImage,
-    AppImages.showImage,
-    AppImages.showImage,
-  ];
+
   final PageController _pageController = PageController();
 
   @override
@@ -200,7 +300,7 @@ class _ProductImageSliderState extends State<ProductImageSlider> {
         children: [
           PageView.builder(
             controller: _pageController,
-            itemCount: _images.length,
+            itemCount: widget.image.length,
             onPageChanged: (index) {
               setState(() {
                 _currentIndex = index;
@@ -210,7 +310,7 @@ class _ProductImageSliderState extends State<ProductImageSlider> {
               return ClipRRect(
                 borderRadius: BorderRadius.circular(10.0),
                 child: Image.asset(
-                  _images[index],
+                  widget.image[index],
                   fit: BoxFit.cover,
                 ),
               );
@@ -259,7 +359,7 @@ class _ProductImageSliderState extends State<ProductImageSlider> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
-                _images.length,
+                widget.image.length,
                 (index) => Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,

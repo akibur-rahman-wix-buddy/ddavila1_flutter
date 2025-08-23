@@ -29,7 +29,8 @@ class _NavigationScreenState extends State<NavigationScreen> {
 
   final List<Widget> _screens = [
     const HomeScreen(),
-    const ProductsScreen(),
+    // const ProductsScreen(),
+    const ChatScreen(),
     const ChatScreen(),
     const ProfileScreen(),
   ];

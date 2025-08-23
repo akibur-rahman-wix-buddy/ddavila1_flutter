@@ -2,6 +2,7 @@ import 'package:ddavila/assets_helper/app_colors.dart';
 import 'package:ddavila/assets_helper/app_icons.dart';
 import 'package:ddavila/assets_helper/app_image.dart';
 import 'package:ddavila/assets_helper/text_font_style.dart';
+import 'package:ddavila/features/user_app/profile_screen/widget/logout_dialouge_box.dart';
 import 'package:ddavila/helpers/all_routes.dart';
 import 'package:ddavila/helpers/navigation_service.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';
@@ -277,10 +278,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   onTap: () async {
 
 
-                    bool success =await postLogOutRX.logOut();
-                    if(success){
-                      NavigationService.navigateToRemoveuntil(Routes.loginScreen);
-                    }
+                    logoutDialogueBox(context);
+
+                    // bool success =await postLogOutRX.logOut();
+                    // if(success){
+                    //   NavigationService.navigateToRemoveuntil(Routes.loginScreen);
+                    // }
 
 
                   },

@@ -133,13 +133,26 @@ final class RouteGenerator {
             : CupertinoPageRoute(
                 builder: (context) => const SearchUserScreen());
 
-      // * Products Screen
+
+
+
       case Routes.productDetailsScreen:
-        return Platform.isIOS
+        final Map args = settings.arguments as Map;
+        return Platform.isAndroid
             ? UltimateSmoothTransitionRoute(
-                widget: const ScreenTitle(widget: ProductsScreen()),
-                settings: settings)
-            : CupertinoPageRoute(builder: (context) => const ProductsScreen());
+            widget: ProductsScreen(
+              slug: args['slug'],
+            ),
+            settings: settings)
+            : CupertinoPageRoute(
+            builder: (context) => ProductsScreen(
+              slug: args['slug'],
+            ));
+
+
+
+
+
 
       case Routes.productsBidScreen:
         final Map args = settings.arguments as Map;
