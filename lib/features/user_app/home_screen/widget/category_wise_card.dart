@@ -72,7 +72,26 @@ class _CategoryProductsWidgetState extends State<CategoryProductsWidget> {
                     ),
                     itemCount: data?.length,
                     itemBuilder: (context, index) {
-                      return _buildProductItem(context, data![index]);
+                      return GestureDetector(
+                          onTap: (){
+
+
+                            print(" here is the data ${data[index].type}");
+
+                            if( data[index].type.toString() == "sale"){
+                              NavigationService.navigateToWithArgs(
+                                  Routes.productDetailsScreen,
+                                  {"slug": data[index].slug,});
+
+                            }else{
+                              NavigationService.navigateToWithArgs(
+                                Routes.productsBidScreen,
+                                {"slag": data[index].slug, "productId": data[index].id},
+                              );
+                            }
+
+                          },
+                          child: _buildProductItem(context, data![index]));
                     },
                   ),
                 );
@@ -85,41 +104,30 @@ class _CategoryProductsWidgetState extends State<CategoryProductsWidget> {
   }
 
   Widget _buildProductItem(BuildContext context, ProductData product) {
-    return GestureDetector(
+    return Container(
 
-      onTap: (){
-        // Get.to(
-        //
-        // );
-      },
-
-
-      // onTap: () => NavigationService.navigateTo(Routes.productDetailsScreen),/
-      child: Container(
-
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12.r),
-          color: Colors.white,
-          boxShadow: const [
-            BoxShadow(color: Colors.black12, blurRadius: .4, spreadRadius: .4)
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12.r),
+        color: Colors.white,
+        boxShadow: const [
+          BoxShadow(color: Colors.black12, blurRadius: .4, spreadRadius: .4)
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildProductImage(product),
+            const SizedBox(height: 8),
+            _buildProductTitle(product),
+            const SizedBox(height: 8),
+            _buildProductType(product),
+            const SizedBox(height: 8),
+            _buildProductPrice(product),
+            const SizedBox(height: 8),
+            _buildProductMetaInfo(product),
           ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildProductImage(product),
-              const SizedBox(height: 8),
-              _buildProductTitle(product),
-              const SizedBox(height: 8),
-              _buildProductType(product),
-              const SizedBox(height: 8),
-              _buildProductPrice(product),
-              const SizedBox(height: 8),
-              _buildProductMetaInfo(product),
-            ],
-          ),
         ),
       ),
     );
