@@ -178,7 +178,8 @@ GetPropertyAPIRX getPropertyAPIRXObj = GetPropertyAPIRX(
 GetSubPropertyAPIRX getSubPropertyAPIRXObj = GetSubPropertyAPIRX(
   empty: SubPropertyModel(),
   dataFetcher: BehaviorSubject<SubPropertyModel>(),
-CreateConversationRx createConversationRx = CreateConversationRx(
-  empty: ConversationCreateModelData(),
-
+);
+    CreateConversationRx createConversationRx = CreateConversationRx(
+    empty: ConversationCreateModelData(),
+// dataFetcher: BehaviorSubject<ConversationCreateModelData>(),
 );
