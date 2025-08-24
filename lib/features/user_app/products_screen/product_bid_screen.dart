@@ -756,7 +756,7 @@ class _ProductsBidScreenState extends State<ProductsBidScreen> {
                                       20,
                                     ),
                                     // * Pricing List
-                                    product.userId == myId?  Column(
+                                    product.userId == myId ?  Column(
                                       children: [
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -876,6 +876,9 @@ class _ProductsBidScreenState extends State<ProductsBidScreen> {
                                         ),
 
                                         CustomButton(
+                                          onTap: (){
+                                            print(">>>>>>>>>>>>>>>>>>>>>>> here is the bit id ${product.bids?.first.id}");
+                                          },
                                           minWidth: double.infinity,
                                           text: 'Proceed To Payment',
                                           context: context,
@@ -921,9 +924,6 @@ class _ProductsBidScreenState extends State<ProductsBidScreen> {
           },
         ),
       ),
-
-
-
 
       floatingActionButton:
 
