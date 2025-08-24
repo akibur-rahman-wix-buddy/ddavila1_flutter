@@ -60,4 +60,5 @@ final class Endpoints {
   static String saleProductStripePayment() => "/stripe/checkout";
   static String createConversation()=> "/messages/create";
   static String whiteListApiLink()=> "/bookmark";
+  static String searchResultApiLink()=> "/products/search";
 }

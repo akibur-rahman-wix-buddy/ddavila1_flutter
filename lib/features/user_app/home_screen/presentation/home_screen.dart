@@ -18,11 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:shimmer/shimmer.dart';
-
-
-
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -112,7 +108,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-
   ///>>>>>>>>>>>>>>>>>>>> here is the appbar section >>>>>>>>>>>>>>>>>>
   Widget _buildHeader() {
     return Row(
@@ -166,27 +161,28 @@ class _HomeScreenState extends State<HomeScreen> {
 
   ///>>>>>>>>>>>>>>>>>>>>> here is the search bar and filter>>>>>>>>>>>>>>>>>>>>>>>>>>>
   Widget _buildSearchField() {
-    return CustomTextField(
-      fieldWidth: double.infinity,
-      borderRadius: 58,
-      hintText: 'Search...',
-      prefixIcon: GestureDetector(
-        onTap: () => NavigationService.navigateTo(Routes.searchScreen),
-        child: Padding(
+    return GestureDetector(
+      onTap: () => NavigationService.navigateTo(Routes.searchScreen),
+      child: CustomTextField(
+        fieldWidth: double.infinity,
+        borderRadius: 58,
+        hintText: 'Search...',
+        isEnabled: false,
+
+        prefixIcon: Padding(
           padding: const EdgeInsets.all(6.0),
           child: SvgPicture.asset(AppIcons.searchIcon),
         ),
-      ),
-      suffixIcon: GestureDetector(
-        onTap: () => NavigationService.navigateTo(Routes.filterScreen),
-        child: Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: SvgPicture.asset(AppIcons.filterIcon),
+        suffixIcon: GestureDetector(
+          onTap: () => NavigationService.navigateTo(Routes.filterScreen),
+          child: Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: SvgPicture.asset(AppIcons.filterIcon),
+          ),
         ),
       ),
     );
   }
-
 
   ///>>>>>>>>>>>>>>>>>>>>>>> section title >>>>>>>>>>>>>>>>>>>>>>>>>
   Widget _buildSectionTitle(String title) {
@@ -199,7 +195,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
 
   ///>>>>>>>>>>>>>> categories list >>>>>>>>>>>>>>>>>>>>>
   Widget _buildCategoryList() {
@@ -221,23 +216,19 @@ class _HomeScreenState extends State<HomeScreen> {
               return GestureDetector(
                 onTap: () async {
                   setState(() {
-
-                    Get.to(
-                        CategoryProductsWidget(
-                          id: data?[index].id,
-                          screenName: data?[index].title,
-                        )
-                    );
+                    Get.to(CategoryProductsWidget(
+                      id: data?[index].id,
+                      screenName: data?[index].title,
+                    ));
 
                     // selectedIndex = isSelected ? -1 : index;
                     isCategoryLoading = true;
-
                   });
-
 
                   final categoryId = data?[index].id;
                   if (categoryId != null) {
-                    await categoryWiseProductRx.categoryWiseProductData(id: categoryId);
+                    await categoryWiseProductRx
+                        .categoryWiseProductData(id: categoryId);
                   }
                   setState(() => isCategoryLoading = false); // Hide loading after data fetch
                 },
@@ -253,13 +244,18 @@ class _HomeScreenState extends State<HomeScreen> {
                           borderRadius: BorderRadius.circular(10.r),
                           border: Border.all(
                             width: 1,
-                            color: isSelected ? AppColor.c4275f6 : AppColor.blackColor,
+                            color: isSelected
+                                ? AppColor.c4275f6
+                                : AppColor.blackColor,
                           ),
                         ),
                         child: Text(
                           data?[index].title.toString() ?? "",
-                          style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                            color: isSelected ? AppColor.c4275f6 : AppColor.blackColor,
+                          style: TextFontStyle.textLine7w400cFFFFFFDmSans
+                              .copyWith(
+                            color: isSelected
+                                ? AppColor.c4275f6
+                                : AppColor.blackColor,
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
@@ -275,7 +271,6 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
   }
-
 
   ///>>>>>>>>>>>>>>>>>>>>>>>>>> live action data >>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -303,12 +298,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   {"slag": data?.slug, "productId": data?.id},
                 ),
                 child: Container(
+                  width: MediaQuery.of(context).size.width * 0.85, // Added fixed width constraint
                   margin: const EdgeInsets.only(right: 8),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
                     boxShadow: const [
-                      BoxShadow(color: Colors.black12, spreadRadius: .4, blurRadius: .6)
+                      BoxShadow(
+                          color: Colors.black12,
+                          spreadRadius: .4,
+                          blurRadius: .6)
                     ],
                   ),
                   child: Padding(
@@ -324,12 +323,16 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Image.network(
                               image_url + (data?.firstImage.toString() ?? ""),
                               fit: BoxFit.cover,
-                              loadingBuilder: (context, child, loadingProgress) {
+                              loadingBuilder:
+                                  (context, child, loadingProgress) {
                                 if (loadingProgress == null) return child;
                                 return Shimmer.fromColors(
                                   baseColor: Colors.grey[300]!,
                                   highlightColor: Colors.grey[100]!,
-                                  child: Container(width: 90, height: 90, color: Colors.white),
+                                  child: Container(
+                                      width: 90,
+                                      height: 90,
+                                      color: Colors.white),
                                 );
                               },
                               errorBuilder: (context, error, stackTrace) {
@@ -337,7 +340,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   width: 90,
                                   height: 90,
                                   color: Colors.grey[200],
-                                  child: const Icon(Icons.error_outline, color: Colors.red),
+                                  child: const Icon(Icons.error_outline,
+                                      color: Colors.red),
                                 );
                               },
                             ),
@@ -351,7 +355,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: [
                               Text(
                                 data?.title.toString() ?? "",
-                                style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                                style: TextFontStyle
+                                    .textLine7w400cFFFFFFDmSans
+                                    .copyWith(
                                   color: AppColor.c000000,
                                   fontSize: 12,
                                 ),
@@ -363,7 +369,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 children: [
                                   Text(
                                     'Current bid',
-                                    style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                                    style: TextFontStyle
+                                        .textLine7w400cFFFFFFDmSans
+                                        .copyWith(
                                       color: AppColor.cF15E17,
                                       fontSize: 12,
                                     ),
@@ -371,7 +379,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   const SizedBox(width: 8),
                                   Text(
                                     '\$${data?.highestBid}',
-                                    style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                                    style: TextFontStyle
+                                        .textLine7w400cFFFFFFDmSans
+                                        .copyWith(
                                       color: AppColor.c000000,
                                       fontSize: 14,
                                     ),
@@ -381,7 +391,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               const SizedBox(height: 5),
                               Text(
                                 '${data?.bidsCount} bids',
-                                style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                                style: TextFontStyle
+                                    .textLine7w400cFFFFFFDmSans
+                                    .copyWith(
                                   color: AppColor.cF15E17,
                                   fontSize: 10,
                                 ),
@@ -389,14 +401,20 @@ class _HomeScreenState extends State<HomeScreen> {
                               const SizedBox(height: 6),
                               Row(
                                 children: [
-                                  SvgPicture.asset(AppIcons.timeIcon, width: 16, height: 16),
+                                  SvgPicture.asset(AppIcons.timeIcon,
+                                      width: 16, height: 16),
                                   const SizedBox(width: 8),
                                   StreamBuilder<String>(
-                                    stream: getLiveCountdownStream(isoTime: data?.auctionEndAt.toString() ?? ""),
+                                    stream: getLiveCountdownStream(
+                                        isoTime:
+                                        data?.auctionEndAt.toString() ??
+                                            ""),
                                     builder: (context, snapshot) {
                                       return Text(
                                         snapshot.data ?? "Loading...",
-                                        style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                                        style: TextFontStyle
+                                            .textLine7w400cFFFFFFDmSans
+                                            .copyWith(
                                           color: AppColor.c000000,
                                           fontSize: 10,
                                         ),
@@ -408,7 +426,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           ),
                         ),
-                        SvgPicture.asset(AppIcons.arrowNext, width: 36, height: 36),
+                        SvgPicture.asset(AppIcons.arrowNext,
+                            width: 36, height: 36),
                       ],
                     ),
                   ),
@@ -420,8 +439,6 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
   }
-
-
 
   ///>>>>>>>>>>>>>>>>>>>>>> popular categories data >>>>>>>>>>>>>>>>>>>>
   Widget _buildPopularMakes() {
@@ -450,7 +467,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     selectedPopularId = category.id;
                     isCategoryLoading = true; // Show loading when category changes
                   });
-                  categoryWiseProductRx.categoryWiseProductData(id: selectedPopularId).then((_) {
+                  categoryWiseProductRx
+                      .categoryWiseProductData(id: selectedPopularId)
+                      .then((_) {
                     setState(() => isCategoryLoading = false); // Hide loading after data fetch
                   });
                 },
@@ -466,13 +485,18 @@ class _HomeScreenState extends State<HomeScreen> {
                           borderRadius: BorderRadius.circular(10.r),
                           border: Border.all(
                             width: 1,
-                            color: isSelected ? AppColor.allPrimaryColor : AppColor.buttonColor,
+                            color: isSelected
+                                ? AppColor.allPrimaryColor
+                                : AppColor.buttonColor,
                           ),
                         ),
                         child: Text(
                           category.title.toString(),
-                          style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                            color: isSelected ? AppColor.c4275f6 : AppColor.blackColor,
+                          style: TextFontStyle.textLine7w400cFFFFFFDmSans
+                              .copyWith(
+                            color: isSelected
+                                ? AppColor.c4275f6
+                                : AppColor.blackColor,
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
@@ -489,14 +513,14 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-
   ///>>>>>>>>>>>>>>>>>>>>>> product categories card >>>>>>>>>>>>>>>>>>>>
 
   Widget _buildCategoryProducts() {
     return StreamBuilder<CategoryWiseProductDataModel>(
       stream: categoryWiseProductRx.dataFetcher,
       builder: (context, snapshot) {
-        if (!snapshot.hasData || (snapshot.data?.data?.products?.data?.isEmpty ?? true)) {
+        if (!snapshot.hasData ||
+            (snapshot.data?.data?.products?.data?.isEmpty ?? true)) {
           return _buildErrorWidget("No data found.");
         }
 
@@ -514,28 +538,29 @@ class _HomeScreenState extends State<HomeScreen> {
           itemBuilder: (context, index) {
             return GestureDetector(
               onTap: () {
-
                 print(" here is the data ${data?[index].type}");
 
-                if( data?[index].type.toString() == "sale"){
+                if (data?[index].type.toString() == "sale") {
                   NavigationService.navigateToWithArgs(
                     Routes.productDetailsScreen,
-                    {"slug": data?[index].slug,});
-
-                }else{
+                    {"slug": data?[index].slug},
+                  );
+                } else {
                   NavigationService.navigateToWithArgs(
                     Routes.productsBidScreen,
                     {"slag": data?[index].slug, "productId": data?[index].id},
                   );
                 }
-
               },
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12.r),
                   color: Colors.white,
                   boxShadow: const [
-                    BoxShadow(color: Colors.black12, blurRadius: 4, spreadRadius: 4)
+                    BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 4,
+                        spreadRadius: 4)
                   ],
                 ),
                 child: Padding(
@@ -555,7 +580,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               width: double.infinity,
                               height: 200,
                               color: Colors.grey[300],
-                              child: const Icon(Icons.broken_image, color: Colors.grey, size: 50),
+                              child: const Icon(Icons.broken_image,
+                                  color: Colors.grey, size: 50),
                             );
                           },
                         ),
@@ -563,7 +589,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SizedBox(height: 8),
                       Text(
                         data?[index].title.toString() ?? "",
-                        style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                        style: TextFontStyle.textLine7w400cFFFFFFDmSans
+                            .copyWith(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
@@ -586,7 +613,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           Text(
                             '\$${data?[index].price.toString() ?? ""}',
-                            style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                            style: TextFontStyle.textLine7w400cFFFFFFDmSans
+                                .copyWith(
                               fontSize: 18,
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
@@ -599,12 +627,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           Text(
                             '${data?[index].bid} bids',
-                            style: const TextStyle(fontSize: 10, color: Colors.red),
+                            style:
+                            const TextStyle(fontSize: 10, color: Colors.red),
                           ),
                           UIHelper.horizontalSpace(12.h),
                           Text(
                             'Posted : ${formatDate(data?[index].createdAt.toString() ?? "")}',
-                            style: const TextStyle(fontSize: 10, color: Colors.grey),
+                            style: const TextStyle(
+                                fontSize: 10, color: Colors.grey),
                           ),
                         ],
                       ),
@@ -619,7 +649,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-
   ///>>>>>>>>>>>>> loading indicator >>>>>>>>>>>>>>>>>>>>>>>
   Widget _buildLoadingIndicator() {
     return const Center(
@@ -627,7 +656,9 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircularProgressIndicator(color: Colors.blueAccent,),
+          CircularProgressIndicator(
+            color: Colors.blueAccent,
+          ),
           SizedBox(height: 10),
           Text("Loading...", style: TextStyle(color: Colors.blueAccent)),
         ],
@@ -636,7 +667,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildErrorWidget(String message) {
-    return Center(child: Text(message,style: TextStyle(color: Colors.black),));
+    return Center(
+        child: Text(
+          message,
+          style: TextStyle(color: Colors.black),
+        ));
   }
-
 }

@@ -243,26 +243,26 @@ class _FilterScreenState extends State<FilterScreen> {
 
                           final filters = snapshot.data!.data!;
 
-                          return ListView.builder(
+                          return ListView(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
-                            itemBuilder: (BuildContext context, int index) {
-                              return
-
-
-
-                                _buildFilterSection(filters.toString(), filters.rarity ?? []);
-
-                            },
-                            // children: [
+                            // itemBuilder: (BuildContext context, int index) {
+                            //   return
                             //
                             //
                             //
+                            //     _buildFilterSection(filters.toString(), filters.rarity ?? []);
                             //
-                            //   _buildFilterSection("Grade", filters.grade ?? []),
-                            //   _buildFilterSection("Rarity", filters.rarity ?? []),
-                            //   _buildFilterSection("Stage", filters.stage ?? []),
-                            // ],
+                            // },
+                            children: [
+
+
+
+
+                              _buildFilterSection("Grade", filters.grade ?? []),
+                              _buildFilterSection("Rarity", filters.rarity ?? []),
+                              _buildFilterSection("Stage", filters.stage ?? []),
+                            ],
                           );
                         },
                       ),

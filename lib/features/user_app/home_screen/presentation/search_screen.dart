@@ -582,18 +582,18 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
                     ),
                   ),
                   UIHelper.horizontalSpace(10.w),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _searchController.text = '';
-                        filteredServices = [];
-                      });
-                    },
-                    child: SvgPicture.asset(
-                      AppIcons.filterIcon,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
+                  // GestureDetector(
+                  //   onTap: () {
+                  //     setState(() {
+                  //       _searchController.text = '';
+                  //       filteredServices = [];
+                  //     });
+                  //   },
+                  //   child: SvgPicture.asset(
+                  //     AppIcons.filterIcon,
+                  //     fit: BoxFit.contain,
+                  //   ),
+                  // ),
                 ],
               ),
               UIHelper.verticalSpaceMedium,
