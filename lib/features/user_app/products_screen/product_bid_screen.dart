@@ -563,7 +563,7 @@ class _ProductsBidScreenState extends State<ProductsBidScreen> {
                                                                           .start,
                                                                       children: [
                                                                         Text(
-                                                                          'Jhon Doe',
+                                                                      product.bids?.first.user?.name??"",
                                                                           style: TextFontStyle
                                                                               .textLine7w400cFFFFFFDmSans
                                                                               .copyWith(
@@ -623,7 +623,7 @@ class _ProductsBidScreenState extends State<ProductsBidScreen> {
                                                                       child: Column(
                                                                         children: [
                                                                           Text(
-                                                                            'Axel Arigato',
+                                                                            'Final Price',
                                                                             style: TextFontStyle
                                                                                 .textLine7w400cFFFFFFDmSans
                                                                                 .copyWith(
@@ -637,7 +637,7 @@ class _ProductsBidScreenState extends State<ProductsBidScreen> {
                                                                             ),
                                                                           ),
                                                                           Text(
-                                                                            '\$100166.00',
+                                                                            '\$${product.bids?.first.amount.toString()??"0"}',
                                                                             style: TextFontStyle
                                                                                 .textLine7w400cFFFFFFDmSans
                                                                                 .copyWith(
@@ -904,7 +904,7 @@ class _ProductsBidScreenState extends State<ProductsBidScreen> {
                                 return BiddingPeopleList(
                                   type:product.bids?[index].user?.email.toString()??"",
                                   image:
-                                  product.bids![index].user?.avatar ?? "",
+                                  product.bids![index].user?.avatar.toString() ?? "",
                                   name: product.bids![index].user?.name ?? "",
                                   value: product.bids![index].amount
                                       ?.toString() ??

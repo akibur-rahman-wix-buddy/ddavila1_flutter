@@ -49,6 +49,9 @@ import '../features/admin_app/auction_screen/data/auction_complete/get_rx.dart';
 import '../features/admin_app/auction_screen/data/auction_ongoing/get_rx.dart';
 import '../features/admin_app/auction_screen/model/auction_running_model.dart';
 import '../features/admin_app/wishlist_screen/data/get_rx.dart';
+import '../features/auth_screen/complete_account_info/data/get_states/get_states_rx.dart';
+import '../features/auth_screen/complete_account_info/data/post_create_profile/rx.dart';
+import '../features/auth_screen/complete_account_info/model/state_model.dart';
 import '../features/user_app/home_screen/data/rx_home_category_Data/rx.dart';
 
 SignInApiRx signInApiRx = SignInApiRx(
@@ -182,4 +185,15 @@ GetSubPropertyAPIRX getSubPropertyAPIRXObj = GetSubPropertyAPIRX(
     CreateConversationRx createConversationRx = CreateConversationRx(
     empty: ConversationCreateModelData(),
 // dataFetcher: BehaviorSubject<ConversationCreateModelData>(),
+);
+
+CompleteProfileApiRx completeProfileApiRxObj = CompleteProfileApiRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+
+GetStateApiRX getStateApiRXObj = GetStateApiRX(
+  empty: StatesModel(),
+  dataFetcher: BehaviorSubject<StatesModel>(),
 );
