@@ -9,6 +9,8 @@ import 'package:ddavila/assets_helper/text_font_style.dart';
 import 'package:ddavila/common_widgets/custom_button.dart';
 import 'package:ddavila/common_widgets/custom_textfiled.dart';
 import 'package:ddavila/common_widgets/time_decriment_counter.dart';
+import 'package:ddavila/constants/app_constants.dart';
+import 'package:ddavila/helpers/di.dart';
 import 'package:ddavila/helpers/toast.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';
 import 'package:ddavila/networks/api_acess.dart';
@@ -39,12 +41,18 @@ class _ProductsBidScreenState extends State<ProductsBidScreen> {
   StreamSubscription<ChannelReadEvent>? _channelEventSubs;
   ProductData? _currentProduct;
   bool isLoading = false;
+  bool timeFinished = false;
+  dynamic myId = appData.read(kKeyUserID);
+
+
+
 
   @override
   void initState() {
     super.initState();
     _loadAuctionData();
     _initializePusher();
+
   }
 
   Future<void> _loadAuctionData() async {
@@ -204,6 +212,9 @@ class _ProductsBidScreenState extends State<ProductsBidScreen> {
               // Use the current product data
               final product = _currentProduct ?? snapshot.data!.data!;
               priceController.text = product.highestBid?.toString() ?? "0";
+
+                  timeFinished = isTimeFinished(product.auctionEndAt.toString());
+
 
               return SingleChildScrollView(
                 child: Column(
@@ -431,6 +442,459 @@ class _ProductsBidScreenState extends State<ProductsBidScreen> {
                             ],
                           ),
                           const SizedBox(height: 16.0),
+
+
+
+
+
+
+
+                          Text(timeFinished.toString()),
+
+
+
+
+
+
+                          timeFinished == false ? Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // Product Name and Rating
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                width: double.infinity,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.grey.withOpacity(0.1),
+                                                  borderRadius: BorderRadius.circular(8.0),
+                                                ),
+                                                child: Column(
+                                                  children: [
+                                                    UIHelper.verticalSpace(
+                                                      20,
+                                                    ),
+                                                    Image.asset(
+                                                      AppImages.doneIcon,
+                                                      height: 45,
+                                                      width: 45,
+                                                    ),
+                                                    Text(
+                                                      'Auction Closed',
+                                                      style: TextFontStyle
+                                                          .textLine7w400cFFFFFFDmSans
+                                                          .copyWith(
+                                                        fontSize: 18.0,
+                                                        fontWeight: FontWeight.bold,
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      'This auction has officially ended',
+                                                      style: TextFontStyle
+                                                          .textLine7w400cFFFFFFDmSans
+                                                          .copyWith(
+                                                        fontSize: 14.0,
+                                                        fontWeight: FontWeight.bold,
+                                                        color: Colors.grey,
+                                                      ),
+                                                    ),
+                                                    UIHelper.verticalSpace(
+                                                      10,
+                                                    ),
+                                                    Padding(
+                                                      padding: const EdgeInsets.symmetric(
+                                                        horizontal: 16.0,
+                                                      ),
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.all(8.0),
+                                                        child: Container(
+                                                          width: double.infinity,
+                                                          decoration: BoxDecoration(
+                                                            color: Colors.white,
+                                                            borderRadius:
+                                                            BorderRadius.circular(8.0),
+                                                          ),
+                                                          child: Padding(
+                                                            padding:
+                                                            const EdgeInsets.all(16),
+                                                            child: Column(
+                                                              children: [
+                                                                Text(
+                                                                  'Winning Bid',
+                                                                  style: TextFontStyle
+                                                                      .textLine7w400cFFFFFFDmSans
+                                                                      .copyWith(
+                                                                    fontSize: 16.0,
+                                                                    fontWeight:
+                                                                    FontWeight.bold,
+                                                                    color: Colors.black,
+                                                                  ),
+                                                                ),
+                                                                UIHelper.verticalSpace(
+                                                                  10,
+                                                                ),
+                                                                Row(
+                                                                  mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                                  children: [
+                                                                    Image.asset(
+                                                                      AppImages.profile,
+                                                                      height: 40,
+                                                                      width: 40,
+                                                                    ),
+                                                                    UIHelper
+                                                                        .horizontalSpace(
+                                                                      10,
+                                                                    ),
+                                                                    Column(
+                                                                      crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                      children: [
+                                                                        Text(
+                                                                          'Jhon Doe',
+                                                                          style: TextFontStyle
+                                                                              .textLine7w400cFFFFFFDmSans
+                                                                              .copyWith(
+                                                                            fontSize: 16.0,
+                                                                            fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                            color: Colors
+                                                                                .black,
+                                                                          ),
+                                                                        ),
+                                                                        Text(
+                                                                          'Winning Bidder',
+                                                                          style: TextFontStyle
+                                                                              .textLine7w400cFFFFFFDmSans
+                                                                              .copyWith(
+                                                                            fontSize: 12.0,
+                                                                            fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                            color:
+                                                                            Colors.grey,
+                                                                          ),
+                                                                        )
+                                                                      ],
+                                                                    )
+                                                                  ],
+                                                                ),
+                                                                UIHelper.verticalSpace(
+                                                                  10,
+                                                                ),
+                                                                UIHelper.verticalSpace(
+                                                                  10,
+                                                                ),
+                                                                Padding(
+                                                                  padding: const EdgeInsets
+                                                                      .symmetric(
+                                                                      horizontal: 16.0),
+                                                                  child: Container(
+                                                                    width: double.infinity,
+                                                                    decoration:
+                                                                    BoxDecoration(
+                                                                      color: Colors.green
+                                                                          .withOpacity(
+                                                                        0.1,
+                                                                      ),
+                                                                      borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                        8.0,
+                                                                      ),
+                                                                    ),
+                                                                    child: Padding(
+                                                                      padding:
+                                                                      const EdgeInsets
+                                                                          .all(16),
+                                                                      child: Column(
+                                                                        children: [
+                                                                          Text(
+                                                                            'Axel Arigato',
+                                                                            style: TextFontStyle
+                                                                                .textLine7w400cFFFFFFDmSans
+                                                                                .copyWith(
+                                                                              fontSize:
+                                                                              12.0.sp,
+                                                                              fontWeight:
+                                                                              FontWeight
+                                                                                  .bold,
+                                                                              color: Colors
+                                                                                  .black,
+                                                                            ),
+                                                                          ),
+                                                                          Text(
+                                                                            '\$100166.00',
+                                                                            style: TextFontStyle
+                                                                                .textLine7w400cFFFFFFDmSans
+                                                                                .copyWith(
+                                                                              fontSize:
+                                                                              12.0.sp,
+                                                                              fontWeight:
+                                                                              FontWeight
+                                                                                  .bold,
+                                                                              color: Colors
+                                                                                  .black,
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    UIHelper.verticalSpace(
+                                                      20,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              UIHelper.verticalSpace(
+                                                20,
+                                              ),
+                                              // Text(
+                                              //   'Axel Arigato',
+                                              //   style: TextFontStyle
+                                              //       .textLine7w400cFFFFFFDmSans
+                                              //       .copyWith(
+                                              //     fontSize: 22.0,
+                                              //     fontWeight: FontWeight.bold,
+                                              //     color: Colors.black,
+                                              //   ),
+                                              // ),
+                                              // SizedBox(height: 4),
+                                              // Text(
+                                              //   'FREE SHIPPING! FREE RETURNS! View Store For Coupons!',
+                                              //   style: TextFontStyle
+                                              //       .textLine7w400cFFFFFFDmSans
+                                              //       .copyWith(
+                                              //     fontSize: 14.0.sp,
+                                              //     fontWeight: FontWeight.bold,
+                                              //     color: Colors.black,
+                                              //   ),
+                                              //   softWrap: true,
+                                              // ),
+                                              // SizedBox(height: 4.0),
+                                              // Row(
+                                              //   children: [
+                                              //     Icon(Icons.star,
+                                              //         color: Colors.yellow, size: 18.0),
+                                              //     Icon(Icons.star,
+                                              //         color: Colors.yellow, size: 18.0),
+                                              //     Icon(Icons.star,
+                                              //         color: Colors.yellow, size: 18.0),
+                                              //     Icon(Icons.star,
+                                              //         color: Colors.yellow, size: 18.0),
+                                              //     Icon(Icons.star_border,
+                                              //         color: Colors.yellow, size: 18.0),
+                                              //     SizedBox(width: 5.0),
+                                              //     Text(
+                                              //       '(270 Review)',
+                                              //       style: TextFontStyle
+                                              //           .textLine7w400cFFFFFFDmSans
+                                              //           .copyWith(
+                                              //         fontSize: 14.0,
+                                              //         color: Colors.grey,
+                                              //       ),
+                                              //     ),
+                                              //   ],
+                                              // ),
+                                              // SizedBox(height: 16.0),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    
+                                    
+                                  product.userId == myId? SizedBox():  CustomButton(
+                                     onTap: ()  {
+
+                              createConversationRx.createConversations(userId: product.userId);
+                              },
+
+                                      text: "Contact to seller ", context: context,minWidth: double.infinity,),
+                                    // Text(
+                                    //   'Description',
+                                    //   style:
+                                    //   TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                                    //     fontSize: 16.0,
+                                    //     color: Colors.black,
+                                    //     fontWeight: FontWeight.bold,
+                                    //   ),
+                                    // ),
+                                    // SizedBox(height: 16.0),
+                                    // Text(
+                                    //   'Engineered to crush any movement-based workout, these On sneakers enhance the label\'s original Cloud sneaker with cutting-edge technologies for a pair.',
+                                    //   style:
+                                    //   TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                                    //     fontSize: 12.0,
+                                    //     color: Colors.black.withOpacity(
+                                    //       0.7,
+                                    //     ),
+                                    //   ),
+                                    // ),
+                                    UIHelper.verticalSpace(
+                                      20,
+                                    ),
+                                    // * Pricing List
+                                    product.userId == myId ?  Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              'Price:- ',
+                                              style: TextFontStyle
+                                                  .textLine7w400cFFFFFFDmSans
+                                                  .copyWith(
+                                                fontSize: 14.0.sp,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                            Text(
+                                              '\$245.00',
+                                              style: TextFontStyle
+                                                  .textLine7w400cFFFFFFDmSans
+                                                  .copyWith(
+                                                fontSize: 14.0.sp,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        UIHelper.verticalSpace(
+                                          10,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              'Tax:- ',
+                                              style: TextFontStyle
+                                                  .textLine7w400cFFFFFFDmSans
+                                                  .copyWith(
+                                                fontSize: 14.0.sp,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                            Text(
+                                              '\$245.00',
+                                              style: TextFontStyle
+                                                  .textLine7w400cFFFFFFDmSans
+                                                  .copyWith(
+                                                fontSize: 14.0.sp,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        UIHelper.verticalSpace(
+                                          10,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              'Shipping Price:- ',
+                                              style: TextFontStyle
+                                                  .textLine7w400cFFFFFFDmSans
+                                                  .copyWith(
+                                                fontSize: 14.0.sp,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                            Text(
+                                              '\$245.00',
+                                              style: TextFontStyle
+                                                  .textLine7w400cFFFFFFDmSans
+                                                  .copyWith(
+                                                fontSize: 14.0.sp,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Divider(
+                                          color: Colors.grey.withOpacity(0.5),
+                                          thickness: 1.0,
+                                        ),
+                                        UIHelper.verticalSpace(
+                                          10,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              'Total Price:- ',
+                                              style: TextFontStyle
+                                                  .textLine7w400cFFFFFFDmSans
+                                                  .copyWith(
+                                                fontSize: 14.0.sp,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                            Text(
+                                              '\$245.00',
+                                              style: TextFontStyle
+                                                  .textLine7w400cFFFFFFDmSans
+                                                  .copyWith(
+                                                fontSize: 14.0.sp,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        UIHelper.verticalSpace(
+                                          20,
+                                        ),
+
+                                        CustomButton(
+                                          onTap: (){
+                                            print(">>>>>>>>>>>>>>>>>>>>>>> here is the bit id ${product.bids?.first.id}");
+                                          },
+                                          minWidth: double.infinity,
+                                          text: 'Proceed To Payment',
+                                          context: context,
+                                        )
+                                      ],
+                                    ):SizedBox(),
+
+
+                                    UIHelper.verticalSpace(100)
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ):
+
+
                           Expanded(
                             child: ListView.builder(
                               shrinkWrap: true,
@@ -460,7 +924,12 @@ class _ProductsBidScreenState extends State<ProductsBidScreen> {
           },
         ),
       ),
-      floatingActionButton:isLoading? Container(
+
+      floatingActionButton:
+
+      timeFinished == true ?
+
+      isLoading? Container(
         margin: EdgeInsets.only(left: 16,right: 16,bottom: 10),
         height: 50,
         decoration: BoxDecoration(
@@ -516,7 +985,7 @@ class _ProductsBidScreenState extends State<ProductsBidScreen> {
             ),
           ],
         ),
-      ),
+      ): SizedBox(),
 
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
