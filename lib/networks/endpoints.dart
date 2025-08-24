@@ -48,4 +48,10 @@ final class Endpoints {
   static String adminDashboard() => "/seller/dashboard/index";
   static String buyingOrderBoard() => "/auth_buying_orders";
   static String sellingOrderBoard() => "/auth_selling_orders";
+
+  // * category API
+  static String categoryAPI() => "/categories";
+  static String propertyAPI() => "/seller/product/all/propertys";
+  static String subPropertyAPI(dynamic title) =>
+      "/seller/product/propertys/$title";
 }

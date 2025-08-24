@@ -1,11 +1,14 @@
-
-
 // ########################################################
 // * #### Authentication ####
 // ########################################################
 
-
+import 'package:ddavila/features/admin_app/auction_screen/data/get_category/get_category_rx.dart';
+import 'package:ddavila/features/admin_app/auction_screen/data/get_property/get_property_rx.dart';
+import 'package:ddavila/features/admin_app/auction_screen/data/get_property/get_sub_property_rx.dart';
 import 'package:ddavila/features/admin_app/auction_screen/model/auction_model.dart';
+import 'package:ddavila/features/admin_app/auction_screen/model/category_model.dart';
+import 'package:ddavila/features/admin_app/auction_screen/model/property_model.dart';
+import 'package:ddavila/features/admin_app/auction_screen/model/sub_property_model.dart';
 import 'package:ddavila/features/admin_app/buying/data/get_buying_data/buying_order_rx.dart';
 import 'package:ddavila/features/admin_app/buying/model/buying_order_data_model.dart';
 import 'package:ddavila/features/admin_app/dashboard_screen/data/admindash_rx.dart';
@@ -47,12 +50,10 @@ SignInApiRx signInApiRx = SignInApiRx(
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );
 
-
 SendMessageRx sendMessageRx = SendMessageRx(
   empty: <String, dynamic>{},
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );
-
 
 PostBitRx postBitRx = PostBitRx(
   empty: <String, dynamic>{},
@@ -68,7 +69,6 @@ SignUpApiRx signUpApiRx = SignUpApiRx(
   empty: <String, dynamic>{},
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );
-
 
 RxFilterPostRx rxFilterPostRx = RxFilterPostRx(
   empty: <String, dynamic>{},
@@ -142,4 +142,19 @@ AuctionOngoingApiRx auctionOngoingApiRxObj = AuctionOngoingApiRx(
 AdminDashAPIRX adminDashAPIRXObj = AdminDashAPIRX(
   empty: AdminDashModel(),
   dataFetcher: BehaviorSubject<AdminDashModel>(),
+);
+
+GetCategoryAPIRX getCategoryAPIRXObj = GetCategoryAPIRX(
+  empty: CategoryModel(),
+  dataFetcher: BehaviorSubject<CategoryModel>(),
+);
+
+GetPropertyAPIRX getPropertyAPIRXObj = GetPropertyAPIRX(
+  empty: PropertyModel(),
+  dataFetcher: BehaviorSubject<PropertyModel>(),
+);
+
+GetSubPropertyAPIRX getSubPropertyAPIRXObj = GetSubPropertyAPIRX(
+  empty: SubPropertyModel(),
+  dataFetcher: BehaviorSubject<SubPropertyModel>(),
 );
