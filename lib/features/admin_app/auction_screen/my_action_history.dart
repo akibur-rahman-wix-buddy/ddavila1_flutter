@@ -1,10 +1,8 @@
-import 'package:ddavila/assets_helper/text_font_style.dart';
 import 'package:ddavila/common_widgets/custom_appbar.dart';
 import 'package:ddavila/common_widgets/custom_textfiled.dart';
 import 'package:ddavila/features/admin_app/auction_screen/widget/my_auction_table.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MyActionHistory extends StatefulWidget {
   const MyActionHistory({super.key});
