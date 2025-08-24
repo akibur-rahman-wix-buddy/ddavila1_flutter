@@ -14,11 +14,13 @@ import 'package:ddavila/features/admin_app/seling/data/selling_order_data/buying
 import 'package:ddavila/features/admin_app/seling/model/selling_order_data_model.dart';
 import 'package:ddavila/features/admin_app/wishlist_screen/model/wishlist_model.dart';
 import 'package:ddavila/features/auth_screen/data/rx_sign_up/rx.dart';
+import 'package:ddavila/features/chat/data/rx_create_conversation/rx.dart';
 import 'package:ddavila/features/chat/data/rx_get_chat/rx.dart';
 import 'package:ddavila/features/chat/data/rx_send_message/rx.dart';
 import 'package:ddavila/features/chat/model/chat_list_data_model.dart';
 import 'package:ddavila/features/chat/data/rx_Chat_list/rx.dart';
 import 'package:ddavila/features/chat/model/chat_to_person.dart';
+import 'package:ddavila/features/chat/model/conversation_model_data.dart';
 import 'package:ddavila/features/user_app/filter_screen/data/product_filter_category_Data/rx.dart';
 import 'package:ddavila/features/user_app/filter_screen/data/rx_post_filter/rx.dart';
 import 'package:ddavila/features/user_app/filter_screen/model/cetagory_wise_sub_category_model_data.dart';
@@ -31,8 +33,12 @@ import 'package:ddavila/features/user_app/home_screen/model/live_autction_data_m
 import 'package:ddavila/features/user_app/home_screen/model/popular_category_data_model.dart';
 import 'package:ddavila/features/user_app/products_screen/data/live_auction_details_rx/rx.dart';
 import 'package:ddavila/features/user_app/products_screen/data/post_bit_price/rx.dart';
+import 'package:ddavila/features/user_app/products_screen/data/post_white_list_data/rx.dart';
+import 'package:ddavila/features/user_app/products_screen/data/sale_product_payment_data/rx.dart';
+import 'package:ddavila/features/user_app/products_screen/data/sate_product_detailes_data/rx.dart';
 import 'package:ddavila/features/user_app/products_screen/model/live_action_details_model.dart';
 import 'package:ddavila/features/user_app/profile_screen/data/rx_logout/rx.dart';
+import 'package:ddavila/features/user_app/products_screen/model/sale_product_details_data_model.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:ddavila/features/auth_screen/data/rx_sign_in/rx.dart';
 
@@ -75,6 +81,16 @@ RxFilterPostRx rxFilterPostRx = RxFilterPostRx(
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );
 
+PostSaleProductPaymentRx postSaleProductPaymentRx = PostSaleProductPaymentRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+PostWhiteListRx postWhiteListRx = PostWhiteListRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
 GetAllChatListRx getAllChatListRx = GetAllChatListRx(
   empty: ChatListModelData(),
   dataFetcher: BehaviorSubject<ChatListModelData>(),
@@ -98,6 +114,11 @@ GetSellingOrderRX getSellingOrderRX = GetSellingOrderRX(
 GetPopularCategoryRx getPopularCategoryRx = GetPopularCategoryRx(
   empty: PopularCategoryDataModel(),
   dataFetcher: BehaviorSubject<PopularCategoryDataModel>(),
+);
+
+ProductViewDetailsRx productViewDetailsRx = ProductViewDetailsRx(
+  empty: ProductDetailsDataModel(),
+  dataFetcher: BehaviorSubject<ProductDetailsDataModel>(),
 );
 
 GetHomeCategoryRx getHomeCategoryRx = GetHomeCategoryRx(
@@ -142,4 +163,9 @@ AuctionOngoingApiRx auctionOngoingApiRxObj = AuctionOngoingApiRx(
 AdminDashAPIRX adminDashAPIRXObj = AdminDashAPIRX(
   empty: AdminDashModel(),
   dataFetcher: BehaviorSubject<AdminDashModel>(),
+);
+
+CreateConversationRx createConversationRx = CreateConversationRx(
+  empty: ConversationCreateModelData(),
+  // dataFetcher: BehaviorSubject<ConversationCreateModelData>(),
 );

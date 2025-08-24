@@ -48,4 +48,8 @@ final class Endpoints {
   static String adminDashboard() => "/seller/dashboard/index";
   static String buyingOrderBoard() => "/auth_buying_orders";
   static String sellingOrderBoard() => "/auth_selling_orders";
+  static String productDetails({dynamic slug}) => "/products/$slug";
+  static String saleProductStripePayment() => "/stripe/checkout";
+  static String createConversation()=> "/messages/create";
+  static String whiteListApiLink()=> "/bookmark";
 }

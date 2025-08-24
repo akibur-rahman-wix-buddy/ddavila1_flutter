@@ -19,3 +19,20 @@ Stream<String> getLiveCountdownStream({required String isoTime}) {
     return formatCountdown(endTime);
   });
 }
+
+
+
+bool isTimeFinished(String dateTimeString) {
+  DateTime inputTime = DateTime.parse(dateTimeString);
+  DateTime now = DateTime.now().toUtc(); // current time in UTC
+
+  return now.isBefore(inputTime); // true = not finished, false = expired
+}
+
+// void main() {
+//   String myTime = "2025-08-02T00:00:00.000000Z";
+//
+//   bool isValid = isTimeValid(myTime);
+//
+//   print("Is time valid? $isValid");
+// }
