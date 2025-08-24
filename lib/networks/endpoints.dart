@@ -61,4 +61,6 @@ final class Endpoints {
   static String createConversation()=> "/messages/create";
   static String whiteListApiLink()=> "/bookmark";
   static String searchResultApiLink()=> "/products/search";
+  static String getStates()=> "/states";
+  static String completeProfile()=> "/profile/complete";
 }
