@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:ddavila/features/admin_app/admin_navigation.dart';
+import 'package:ddavila/features/admin_app/auction_screen/final_auction_screen.dart';
 import 'package:ddavila/features/admin_app/dashboard_screen/admin_dashboard_screen.dart';
 import 'package:ddavila/features/auth_screen/presentation/login_screen.dart';
 import 'package:ddavila/features/auth_screen/presentation/role_screen.dart';
@@ -49,6 +50,7 @@ final class Routes {
   // * ##########################################################################################
   static const String adminNavigationScreen = '/adminNavigationScreen';
   static const String adminDashboard = '/adminDashboard';
+  static const String finalAuctionScreen = '/finalAuctionScreen';
 }
 
 final class RouteGenerator {
@@ -133,26 +135,18 @@ final class RouteGenerator {
             : CupertinoPageRoute(
                 builder: (context) => const SearchUserScreen());
 
-
-
-
       case Routes.productDetailsScreen:
         final Map args = settings.arguments as Map;
         return Platform.isAndroid
             ? UltimateSmoothTransitionRoute(
-            widget: ProductsScreen(
-              slug: args['slug'],
-            ),
-            settings: settings)
+                widget: ProductsScreen(
+                  slug: args['slug'],
+                ),
+                settings: settings)
             : CupertinoPageRoute(
-            builder: (context) => ProductsScreen(
-              slug: args['slug'],
-            ));
-
-
-
-
-
+                builder: (context) => ProductsScreen(
+                      slug: args['slug'],
+                    ));
 
       case Routes.productsBidScreen:
         final Map args = settings.arguments as Map;
@@ -193,6 +187,31 @@ final class RouteGenerator {
             : CupertinoPageRoute(
                 builder: (context) => const AdminDashboardScreen(),
               );
+
+      // * ####################################################################################
+      // * ################################# Final Flow #######################################
+      // * ####################################################################################
+
+      case Routes.finalAuctionScreen:
+        final Map args = settings.arguments as Map;
+        return Platform.isAndroid
+            ? UltimateSmoothTransitionRoute(
+                widget: FinalAuctionScreen(
+                  descriptionText: args['descriptionText'],
+                  subCategory: args['subCategory'],
+                  category: args['category'],
+                  property: args['property'],
+                  imageItem: args['imageItem'],
+                ),
+                settings: settings)
+            : CupertinoPageRoute(
+                builder: (context) => FinalAuctionScreen(
+                      descriptionText: args['descriptionText'],
+                      subCategory: args['subCategory'],
+                      category: args['category'],
+                      property: args['property'],
+                      imageItem: args['imageItem'],
+                    ));
 
       default:
         return null;

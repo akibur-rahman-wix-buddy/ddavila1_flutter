@@ -1,6 +1,6 @@
 import 'dart:developer';
 import 'package:auto_animated/auto_animated.dart';
-import 'package:ddavila/features/auth_screen/presentation/card_add_in_stripe.dart';
+import 'package:ddavila/loading_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -93,7 +93,7 @@ class UtillScreenMobile extends StatelessWidget {
             },
             navigatorKey: NavigationService.navigatorKey,
             onGenerateRoute: RouteGenerator.generateRoute,
-            home: StripeCardScreen(),
+            home: LoadingScreen(),
           ),
         );
       },

@@ -5,6 +5,7 @@
 import 'package:ddavila/features/admin_app/auction_screen/data/get_category/get_category_rx.dart';
 import 'package:ddavila/features/admin_app/auction_screen/data/get_property/get_property_rx.dart';
 import 'package:ddavila/features/admin_app/auction_screen/data/get_property/get_sub_property_rx.dart';
+import 'package:ddavila/features/admin_app/auction_screen/data/post_products/post_products_rx.dart';
 import 'package:ddavila/features/admin_app/auction_screen/model/auction_model.dart';
 import 'package:ddavila/features/admin_app/auction_screen/model/category_model.dart';
 import 'package:ddavila/features/admin_app/auction_screen/model/property_model.dart';
@@ -182,8 +183,8 @@ GetSubPropertyAPIRX getSubPropertyAPIRXObj = GetSubPropertyAPIRX(
   empty: SubPropertyModel(),
   dataFetcher: BehaviorSubject<SubPropertyModel>(),
 );
-    CreateConversationRx createConversationRx = CreateConversationRx(
-    empty: ConversationCreateModelData(),
+CreateConversationRx createConversationRx = CreateConversationRx(
+  empty: ConversationCreateModelData(),
 // dataFetcher: BehaviorSubject<ConversationCreateModelData>(),
 );
 
@@ -192,8 +193,12 @@ CompleteProfileApiRx completeProfileApiRxObj = CompleteProfileApiRx(
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );
 
-
 GetStateApiRX getStateApiRXObj = GetStateApiRX(
   empty: StatesModel(),
   dataFetcher: BehaviorSubject<StatesModel>(),
+);
+
+PostProductsAPIRx postProductsAPIRxObj = PostProductsAPIRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );

@@ -49,7 +49,6 @@ final class Endpoints {
   static String buyingOrderBoard() => "/auth_buying_orders";
   static String sellingOrderBoard() => "/auth_selling_orders";
 
-
   // * category API
   static String categoryAPI() => "/categories";
   static String propertyAPI() => "/seller/product/all/propertys";
@@ -58,9 +57,11 @@ final class Endpoints {
 
   static String productDetails({dynamic slug}) => "/products/$slug";
   static String saleProductStripePayment() => "/stripe/checkout";
-  static String createConversation()=> "/messages/create";
-  static String whiteListApiLink()=> "/bookmark";
-  static String searchResultApiLink()=> "/products/search";
-  static String getStates()=> "/states";
-  static String completeProfile()=> "/profile/complete";
+  static String createConversation() => "/messages/create";
+  static String whiteListApiLink() => "/bookmark";
+  static String searchResultApiLink() => "/products/search";
+  static String getStates() => "/states";
+  static String completeProfile() => "/profile/complete";
+
+  static String postProductsSale() => "/seller/product";
 }
