@@ -7,6 +7,7 @@ import 'package:ddavila/features/admin_app/seling/presentation/selling_order.dar
 import 'package:ddavila/features/auth_screen/presentation/card_add_in_stripe.dart';
 import 'package:ddavila/features/user_app/products_screen/auction/auction_screen.dart';
 import 'package:ddavila/features/user_app/products_screen/products_screen.dart';
+
 import 'package:ddavila/loading_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,7 +19,6 @@ import 'package:ddavila/networks/dio/dio.dart';
 import 'package:provider/provider.dart';
 import '/helpers/all_routes.dart';
 import 'constants/custome_theme.dart';
-import 'features/admin_app/buying/presention/buying_order.dart';
 import 'helpers/helper_methods.dart';
 import 'helpers/navigation_service.dart';
 import 'helpers/register_provider.dart';
@@ -101,9 +101,7 @@ class UtillScreenMobile extends StatelessWidget {
             },
             navigatorKey: NavigationService.navigatorKey,
             onGenerateRoute: RouteGenerator.generateRoute,
-            home: StripeCardScreen(
-
-            ),
+            home: StripeCardScreen(),
           ),
         );
       },
