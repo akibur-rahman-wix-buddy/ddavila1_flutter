@@ -3,10 +3,7 @@ import 'package:ddavila/assets_helper/app_icons.dart';
 import 'package:ddavila/assets_helper/app_image.dart';
 import 'package:ddavila/assets_helper/text_font_style.dart';
 import 'package:ddavila/features/user_app/profile_screen/widget/logout_dialouge_box.dart';
-import 'package:ddavila/helpers/all_routes.dart';
-import 'package:ddavila/helpers/navigation_service.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';
-import 'package:ddavila/networks/api_acess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 

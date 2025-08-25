@@ -1,6 +1,5 @@
 import 'package:ddavila/assets_helper/app_colors.dart';
 import 'package:ddavila/assets_helper/app_icons.dart';
-import 'package:ddavila/assets_helper/app_image.dart';
 import 'package:ddavila/features/admin_app/wishlist_screen/model/wishlist_model.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';
 import 'package:ddavila/networks/api_acess.dart';

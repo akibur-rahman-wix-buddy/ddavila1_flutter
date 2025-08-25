@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_this, unnecessary_new, unnecessary_question_mark, prefer_collection_literals
+
 class WishlistModel {
   bool? success;
   String? message;
