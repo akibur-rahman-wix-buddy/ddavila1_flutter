@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'package:ddavila/features/admin_app/auction_screen/model/auction_model.dart';
 import 'package:dio/dio.dart';
 import '../../../../../helpers/toast.dart';
 import '../../../../../networks/rx_base.dart';

@@ -1,13 +1,10 @@
 import 'package:ddavila/assets_helper/app_colors.dart';
-import 'package:ddavila/assets_helper/app_icons.dart';
 import 'package:ddavila/assets_helper/app_image.dart';
-import 'package:ddavila/assets_helper/text_font_style.dart';
 import 'package:ddavila/common_widgets/custom_button.dart';
 import 'package:ddavila/helpers/all_routes.dart';
 import 'package:ddavila/helpers/navigation_service.dart';
 import 'package:ddavila/networks/api_acess.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});

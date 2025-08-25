@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:ddavila/networks/dio/dio.dart';
 import 'package:ddavila/networks/endpoints.dart';
 import 'package:dio/dio.dart';

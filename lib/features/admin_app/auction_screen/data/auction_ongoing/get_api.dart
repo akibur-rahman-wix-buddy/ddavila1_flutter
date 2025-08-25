@@ -1,4 +1,3 @@
-import 'package:ddavila/features/admin_app/auction_screen/model/auction_model.dart';
 import 'package:ddavila/features/admin_app/auction_screen/model/auction_running_model.dart';
 import 'package:dio/dio.dart';
 import '../../../../../networks/endpoints.dart';

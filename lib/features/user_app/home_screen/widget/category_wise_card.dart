@@ -5,7 +5,6 @@ import 'package:ddavila/helpers/ui_helpers.dart';
 import 'package:ddavila/networks/api_acess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 
 import '../../../../helpers/navigation_service.dart' show NavigationService;
 

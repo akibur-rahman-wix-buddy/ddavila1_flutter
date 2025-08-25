@@ -1,14 +1,6 @@
 import 'dart:developer';
 import 'package:auto_animated/auto_animated.dart';
-import 'package:ddavila/features/admin_app/auction_screen/my_action_history.dart';
-import 'package:ddavila/features/admin_app/auction_screen/final_auction_screen.dart';
-import 'package:ddavila/features/admin_app/dashboard_screen/admin_dashboard_screen.dart';
-import 'package:ddavila/features/admin_app/seling/presentation/selling_order.dart';
 import 'package:ddavila/features/auth_screen/presentation/card_add_in_stripe.dart';
-import 'package:ddavila/features/user_app/products_screen/auction/auction_screen.dart';
-import 'package:ddavila/features/user_app/products_screen/products_screen.dart';
-
-import 'package:ddavila/loading_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
