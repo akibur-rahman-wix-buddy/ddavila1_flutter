@@ -22,12 +22,28 @@ Stream<String> getLiveCountdownStream({required String isoTime}) {
 
 
 
-bool isTimeFinished(String dateTimeString) {
-  DateTime inputTime = DateTime.parse(dateTimeString);
-  DateTime now = DateTime.now().toUtc(); // current time in UTC
 
-  return now.isBefore(inputTime); // true = not finished, false = expired
+bool isTimeFinished(String dateTimeString) {
+  DateTime auctionEndTime = DateTime.parse(dateTimeString).toUtc();
+  DateTime now = DateTime.now().toUtc();
+  return now.isAfter(auctionEndTime);
 }
+
+
+
+
+
+
+// bool isTimeFinished(String dateTimeString) {
+//
+//
+//   print(">>>>>>>>>>>>>>>>>>>>>>>> here is the last time ${dateTimeString}");
+//
+//   DateTime inputTime = DateTime.parse(dateTimeString);
+//   DateTime now = DateTime.now().toUtc(); // current time in UTC
+//
+//   return now.isBefore(inputTime); // true = not finished, false = expired
+// }
 
 // void main() {
 //   String myTime = "2025-08-02T00:00:00.000000Z";

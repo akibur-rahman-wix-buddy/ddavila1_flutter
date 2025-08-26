@@ -1,5 +1,7 @@
 import 'package:ddavila/assets_helper/app_colors.dart';
+import 'package:ddavila/constants/app_constants.dart';
 import 'package:ddavila/features/auth_screen/complete_account_info/model/state_model.dart';
+import 'package:ddavila/helpers/di.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';
 import 'package:ddavila/networks/api_acess.dart';
 import 'package:flutter/material.dart';
@@ -313,6 +315,9 @@ class _CompleteAccountInfoScreenState extends State<CompleteAccountInfoScreen> {
 
                               if (success) {
                                 print('Profile completed successfully!');
+
+                                appData.write(kKeyOnboarding, true);
+                                mySelfRx.mySelfData();
                                 Navigator.pop(context);
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(

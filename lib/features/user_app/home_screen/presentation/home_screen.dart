@@ -4,12 +4,17 @@ import 'package:ddavila/assets_helper/app_image.dart';
 import 'package:ddavila/assets_helper/text_font_style.dart';
 import 'package:ddavila/common_widgets/custom_textfiled.dart';
 import 'package:ddavila/common_widgets/time_decriment_counter.dart';
+import 'package:ddavila/constants/app_constants.dart';
+import 'package:ddavila/features/auth_screen/complete_account_info/complete_account_info_screen.dart';
+import 'package:ddavila/features/auth_screen/presentation/card_add_in_stripe.dart';
 import 'package:ddavila/features/user_app/home_screen/model/category_wise_data_model.dart';
 import 'package:ddavila/features/user_app/home_screen/model/home_category_data_model.dart';
 import 'package:ddavila/features/user_app/home_screen/model/live_autction_data_model.dart';
 import 'package:ddavila/features/user_app/home_screen/model/popular_category_data_model.dart';
 import 'package:ddavila/features/user_app/home_screen/widget/category_wise_card.dart';
+import 'package:ddavila/features/user_app/products_screen/product_bid_screen.dart';
 import 'package:ddavila/helpers/all_routes.dart';
+import 'package:ddavila/helpers/di.dart';
 import 'package:ddavila/helpers/navigation_service.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';
 import 'package:ddavila/networks/api_acess.dart';
@@ -28,16 +33,22 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int selectedIndex = 0; // Default to 0th index
+
+
+
+  bool isStripeConnected = appData.read(kKeyCardAttributes);
+  bool isProfileConnected = appData.read(kKeyOnboarding);
+
+  int selectedIndex = 0;
   int? selectedPopularId;
-  bool isLoading = true; // Single loading state for initial data
-  bool isCategoryLoading = false; // Loading state for category-wise products
+  bool isLoading = true;
+  bool isCategoryLoading = false;
 
   @override
   void initState() {
     super.initState();
     _loadInitialData();
-    print(">>>>>>>>>>>>>>> hello world");
+    print(">>>>>>>>>>>>>>> h key card attributes $isStripeConnected");
   }
 
   Future<void> _loadInitialData() async {
@@ -293,10 +304,95 @@ class _HomeScreenState extends State<HomeScreen> {
             itemBuilder: (context, index) {
               final data = snapshot.data?.data?[index];
               return GestureDetector(
-                onTap: () => NavigationService.navigateToWithArgs(
-                  Routes.productsBidScreen,
-                  {"slag": data?.slug, "productId": data?.id},
-                ),
+
+
+
+                onTap: (){
+                  print(">>>>>>>>>>>>>>> here is the product type  after ${data?.type}");
+                  if (data?.type.toString() == "sale") {
+
+
+
+                    print(">>>>>>>>>>>>>>>>>>> here is the  stripe connected value ${isStripeConnected}");
+                    print(">>>>>>>>>>>>>>>>>>> here is the  profile connected value ${isProfileConnected}");
+                    if(isStripeConnected == true|| isProfileConnected == true){
+
+                      NavigationService.navigateToWithArgs(
+                        Routes.productDetailsScreen,
+                        {"slag": data?.slug,},
+                      );
+                    }else if(isProfileConnected == false ){
+                      Get.to(CompleteAccountInfoScreen());
+                    }else if(isProfileConnected == false ){
+                      Get.to(StripeCardScreen());
+                    }
+
+
+                    print(">>>>>>>>>>>>>>> here is the product id ${data?.id}");
+                    print(">>>>>>>>>>>>>>> here is the product type ${data?.type}");
+                    // NavigationService.navigateToWithArgs(
+                    //   Routes.productDetailsScreen,
+                    //   {"slug": data?.slug},
+                    // );
+                  } else {
+
+
+
+
+
+                    print(">>>>>>>>>>>>>>>>>>> here is the  stripe connected value ${isStripeConnected}");
+                    if(isStripeConnected == true|| isProfileConnected == true){
+
+                      NavigationService.navigateToWithArgs(
+                        Routes.productsBidScreen,
+                        {"slag": data?.slug, "productId": data?.id},
+                      );
+                    }else if(isProfileConnected == false ){
+                      Get.to(CompleteAccountInfoScreen());
+                    }else if(isProfileConnected == false ){
+                      Get.to(StripeCardScreen());
+                    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    print(">>>>>>>>>>>>>>> here is the product type ${data?.type}");
+                    print(">>>>>>>>>>>>>>> here is the not sale , and this is id product id ${data?.id}");
+                    // NavigationService.navigateToWithArgs(
+                    //   Routes.productsBidScreen,
+                    //   {"slag": product.slug, "productId": product..id},
+                    // );
+                  }
+                },
+
+
+                // onTap: () {
+                //
+                //   print(">>>>>>>>>>>>>>>>>>> here is the  stripe connected value ${isStripeConnected}");
+                //   if(isStripeConnected == true|| isProfileConnected == true){
+                //
+                //     NavigationService.navigateToWithArgs(
+                //       Routes.productsBidScreen,
+                //       {"slag": data?.slug, "productId": data?.id},
+                //     );
+                //   }else if(isStripeConnected == false ){
+                //     Get.to(StripeCardScreen());
+                //   }else if(isProfileConnected == false ){
+                //     Get.to(CompleteAccountInfoScreen());
+                //   }
+                //
+                //
+                //
+                // },
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.85, // Added fixed width constraint
                   margin: const EdgeInsets.only(right: 8),
@@ -530,26 +626,78 @@ class _HomeScreenState extends State<HomeScreen> {
           physics: const NeverScrollableScrollPhysics(),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
-            mainAxisSpacing: 12,
+            mainAxisSpacing: 10,
             crossAxisSpacing: 10,
-            childAspectRatio: .5,
+            childAspectRatio: .4,
           ),
           itemCount: data?.length,
           itemBuilder: (context, index) {
+            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> here is the image url $image_url ${data?[index].images?.first}");
             return GestureDetector(
               onTap: () {
-                print(" here is the data ${data?[index].type}");
-
+                print(">>>>>>>>>>>>>>> here is the product type  after ${data?[index].type}");
                 if (data?[index].type.toString() == "sale") {
+
+
+
+                  print(">>>>>>>>>>>>>>>>>>> here is the  stripe connected value ${isStripeConnected}");
+                  if(isStripeConnected == true|| isProfileConnected == true){
+
+                    NavigationService.navigateToWithArgs(
+                      Routes.productDetailsScreen,
+                      {"slag": data?[index].slug,},
+                    );
+                  }else if(isProfileConnected == false ){
+                    Get.to(CompleteAccountInfoScreen());
+                  }else if(isProfileConnected == false ){
+                    Get.to(StripeCardScreen());
+                  }
+
+
+                  print(">>>>>>>>>>>>>>> here is the product id ${data?[index].id}");
+                  print(">>>>>>>>>>>>>>> here is the product type ${data?[index].type}");
                   NavigationService.navigateToWithArgs(
                     Routes.productDetailsScreen,
                     {"slug": data?[index].slug},
                   );
                 } else {
-                  NavigationService.navigateToWithArgs(
-                    Routes.productsBidScreen,
-                    {"slag": data?[index].slug, "productId": data?[index].id},
-                  );
+
+
+
+
+
+                  print(">>>>>>>>>>>>>>>>>>> here is the  stripe connected value ${isStripeConnected}");
+                  if(isStripeConnected == true|| isProfileConnected == true){
+
+                    NavigationService.navigateToWithArgs(
+                      Routes.productsBidScreen,
+                      {"slag": data?[index].slug, "productId": data?[index].id},
+                    );
+                  }else if(isProfileConnected == false ){
+                    Get.to(CompleteAccountInfoScreen());
+                  }else if(isProfileConnected == false ){
+                    Get.to(StripeCardScreen());
+                  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                  print(">>>>>>>>>>>>>>> here is the product type ${data?[index].type}");
+                  print(">>>>>>>>>>>>>>> here is the not sale , and this is id product id ${data?[index].id}");
+                  // NavigationService.navigateToWithArgs(
+                  //   Routes.productsBidScreen,
+                  //   {"slag": product.slug, "productId": product..id},
+                  // );
                 }
               },
               child: Container(
@@ -571,7 +719,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(12),
                         child: Image.network(
-                          data?[index].images?.toString() ?? "",
+                          data?[index].images?.isNotEmpty == true
+                              ? image_url + data![index].images!.first
+                              : "",
+
                           fit: BoxFit.cover,
                           width: double.infinity,
                           height: 200,

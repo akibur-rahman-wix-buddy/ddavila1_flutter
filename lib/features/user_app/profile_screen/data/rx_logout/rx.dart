@@ -29,6 +29,8 @@ final class PostLogOutRX extends RxResponseInt {
   handleSuccessWithReturn(data) {
 
     appData.write(kKeyIsLoggedIn,false);
+    appData.write(kKeyOnboarding, false);
+    appData.write(kKeyCardAttributes, false);
 
     String massage = data['message'];
     ToastUtil.showLongToast(massage);

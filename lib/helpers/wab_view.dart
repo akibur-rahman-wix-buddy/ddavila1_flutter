@@ -52,7 +52,7 @@ class _WebViewLinkState extends State<WebViewLink> {
                   'https://errol.softvencefsd.xyz/api/checkout/success')) {
                 NavigationService.navigateTo(Routes.navigationScreen);
               }else if (request.url.contains(
-                  'http://localhost:5173/error')) {
+                  'https://thehobbynexus.com/error')) {
                 NavigationService.navigateTo(Routes.navigationScreen);
               }
               return NavigationDecision.navigate;

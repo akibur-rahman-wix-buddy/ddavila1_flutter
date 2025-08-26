@@ -6,14 +6,19 @@ import 'package:ddavila/assets_helper/app_icons.dart';
 import 'package:ddavila/assets_helper/app_image.dart';
 import 'package:ddavila/assets_helper/text_font_style.dart';
 import 'package:ddavila/common_widgets/common_searchbar.dart';
+import 'package:ddavila/constants/app_constants.dart';
+import 'package:ddavila/features/auth_screen/complete_account_info/complete_account_info_screen.dart';
+import 'package:ddavila/features/auth_screen/presentation/card_add_in_stripe.dart';
 import 'package:ddavila/features/user_app/home_screen/data/rx_search_result/rx.dart';
 import 'package:ddavila/features/user_app/home_screen/model/product_search_data_model.dart';
 import 'package:ddavila/helpers/all_routes.dart';
+import 'package:ddavila/helpers/di.dart';
 import 'package:ddavila/helpers/navigation_service.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:rxdart/rxdart.dart';
 
 class SearchUserScreen extends StatefulWidget {
@@ -24,6 +29,9 @@ class SearchUserScreen extends StatefulWidget {
 }
 
 class _SearchUserScreenState extends State<SearchUserScreen> {
+
+  bool isStripeConnected = appData.read(kKeyCardAttributes);
+  bool isProfileConnected = appData.read(kKeyOnboarding);
   final TextEditingController _searchController = TextEditingController();
   final List<String> _previousSearches = [];
   final _debouncer = Debouncer(milliseconds: 500);
@@ -373,19 +381,66 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
                     print(">>>>>>>>>>>>>>> here is the product type  after ${product.type}");
                     if (product.type.toString() == "sale") {
 
+
+
+                      print(">>>>>>>>>>>>>>>>>>> here is the  stripe connected value ${isStripeConnected}");
+                      if(isStripeConnected == true|| isProfileConnected == true){
+
+                        NavigationService.navigateToWithArgs(
+                          Routes.productDetailsScreen,
+                          {"slug": product.slug,},
+                        );
+                      }else if(isStripeConnected == false ){
+                        Get.to(StripeCardScreen());
+                      }else if(isProfileConnected == false ){
+                        Get.to(CompleteAccountInfoScreen());
+                      }
+
+
                       print(">>>>>>>>>>>>>>> here is the product id ${product.id}");
                       print(">>>>>>>>>>>>>>> here is the product type ${product.type}");
-                      NavigationService.navigateToWithArgs(
-                        Routes.productDetailsScreen,
-                        {"slug": product.slug},
-                      );
+                      // NavigationService.navigateToWithArgs(
+                      //   Routes.productDetailsScreen,
+                      //   {"slug": product.slug},
+                      // );
                     } else {
+
+
+
+
+
+                      print(">>>>>>>>>>>>>>>>>>> here is the  stripe connected value ${isStripeConnected}");
+                      if(isStripeConnected == true|| isProfileConnected == true){
+
+                        NavigationService.navigateToWithArgs(
+                          Routes.productsBidScreen,
+                          {"slag": product.slug, "productId": product.id},
+                        );
+                      }else if(isProfileConnected == false ){
+                        Get.to(CompleteAccountInfoScreen());
+                      }else if(isProfileConnected == false ){
+                        Get.to(StripeCardScreen());
+                      }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                       print(">>>>>>>>>>>>>>> here is the product type ${product.type}");
                       print(">>>>>>>>>>>>>>> here is the not sale , and this is id product id ${product.id}");
-                      NavigationService.navigateToWithArgs(
-                        Routes.productsBidScreen,
-                        {"slag": product.slug, "productId": product..id},
-                      );
+                      // NavigationService.navigateToWithArgs(
+                      //   Routes.productsBidScreen,
+                      //   {"slag": product.slug, "productId": product..id},
+                      // );
                     }
                   },
 

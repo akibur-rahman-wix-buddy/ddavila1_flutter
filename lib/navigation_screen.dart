@@ -10,6 +10,7 @@ import 'package:ddavila/features/user_app/profile_screen/presentation/profile_sc
 import 'package:ddavila/helpers/all_routes.dart';
 import 'package:ddavila/helpers/navigation_service.dart';
 import 'package:ddavila/helpers/toast.dart';
+import 'package:ddavila/networks/api_acess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -25,6 +26,16 @@ class NavigationScreen extends StatefulWidget {
 }
 
 class _NavigationScreenState extends State<NavigationScreen> {
+
+
+  @override
+  void initState() {
+
+    mySelfRx.mySelfData();
+    super.initState();
+  }
+
+
   int selectedIndex = 0;
 
   final List<Widget> _screens = [

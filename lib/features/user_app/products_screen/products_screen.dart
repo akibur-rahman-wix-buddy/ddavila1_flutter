@@ -5,6 +5,7 @@ import 'package:ddavila/features/user_app/products_screen/model/sale_product_det
 import 'package:ddavila/helpers/html_text_viewer.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';
 import 'package:ddavila/networks/api_acess.dart';
+import 'package:ddavila/networks/endpoints.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -12,6 +13,7 @@ import 'package:ddavila/assets_helper/app_colors.dart';
 import 'package:ddavila/assets_helper/app_icons.dart';
 import 'package:ddavila/assets_helper/app_image.dart';
 import 'package:ddavila/assets_helper/text_font_style.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ProductsScreen extends StatefulWidget {
   const ProductsScreen({super.key, required this.slug});
@@ -24,6 +26,11 @@ class ProductsScreen extends StatefulWidget {
 
 class _ProductsScreenState extends State<ProductsScreen> {
 
+
+
+
+
+
   bool isWhiteListing = false;
   bool _isProcessing = false;
 
@@ -32,6 +39,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
   @override
   void initState() {
+
+    print(">>>>>>>>>>>>>>>> in screen slug is ${widget.slug}");
+
     productViewDetailsRx.categoryWiseProductData(slug: widget.slug);
     super.initState();
   }
@@ -106,14 +116,19 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        data?.title.toString()??"",
-                                        style: TextFontStyle
-                                            .textLine7w400cFFFFFFDmSans
-                                            .copyWith(
-                                          fontSize: 22.0,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black,
+                                      SizedBox(
+                                        width: 300,
+                                        child: Text(
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          data?.title.toString()??"",
+                                          style: TextFontStyle
+                                              .textLine7w400cFFFFFFDmSans
+                                              .copyWith(
+                                            fontSize: 22.0,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                          ),
                                         ),
                                       ),
 
@@ -183,20 +198,21 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                 isLoading? CircularProgressIndicator(color: Colors.blueAccent,):  CustomButton(
 
                                     onTap: (){
-
                                       setState(() {
-                                        isLoading =true;
+                                        _isProcessing =true;
                                       });
 
                                       postSaleProductPaymentRx.saleProductStripePayment(productId: data?.id);
                                       setState(() {
-                                        isLoading =false;
+                                        _isProcessing =false;
                                       });
-
+                                      setState(() {
+                                        _isProcessing =false;
+                                      });
                                     },
-                                    text: 'Buy Now',
+                                    text: _isProcessing?"Buying..." :'Buy Now',
                                     context: context,
-                                    minWidth: 200,
+                                    minWidth: 150,
                                   ),
                                 ],
                               ),
@@ -309,13 +325,29 @@ class _ProductImageSliderState extends State<ProductImageSlider> {
             itemBuilder: (context, index) {
               return ClipRRect(
                 borderRadius: BorderRadius.circular(10.0),
-                child: Image.asset(
-                  widget.image[index],
+                child: Image.network(
+                  image_url + widget.image[index],
                   fit: BoxFit.cover,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child; // ✅ Image fully loaded
+                    }
+                    return Shimmer.fromColors(
+                      baseColor: Colors.blueAccent.shade400,
+                      highlightColor: Colors.blueAccent.shade100,
+                      child: Container(
+                        color: Colors.blueAccent.shade100,
+                      ),
+                    );
+                  },
+                  errorBuilder: (context, error, stackTrace) {
+                    return Center(child: Icon(Icons.broken_image, size: 40));
+                  },
                 ),
               );
             },
           ),
+
           Positioned(
             top: 10.0,
             left: 16.0,

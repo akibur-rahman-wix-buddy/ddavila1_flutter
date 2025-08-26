@@ -63,4 +63,7 @@ final class Endpoints {
   static String searchResultApiLink()=> "/products/search";
   static String getStates()=> "/states";
   static String completeProfile()=> "/profile/complete";
+  static String stripeCardAddApiLink()=> "/stripe/card/add";
+  static String verificationOtpApiLink()=> "/verify-otp-password";
+  static String mySelfApiLink()=> "/me";
 }

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:ddavila/features/admin_app/admin_navigation.dart';
 import 'package:ddavila/features/admin_app/dashboard_screen/admin_dashboard_screen.dart';
 import 'package:ddavila/features/auth_screen/presentation/login_screen.dart';
+import 'package:ddavila/features/auth_screen/presentation/otp_varification_screen.dart';
 import 'package:ddavila/features/auth_screen/presentation/role_screen.dart';
 import 'package:ddavila/features/auth_screen/presentation/signin_screen.dart';
 import 'package:ddavila/features/auth_screen/presentation/signup_screen.dart';
@@ -49,6 +50,7 @@ final class Routes {
   // * ##########################################################################################
   static const String adminNavigationScreen = '/adminNavigationScreen';
   static const String adminDashboard = '/adminDashboard';
+  static const String otpVerificationScreen = '/otpVerificationScreen';
 }
 
 final class RouteGenerator {
@@ -147,6 +149,22 @@ final class RouteGenerator {
             : CupertinoPageRoute(
             builder: (context) => ProductsScreen(
               slug: args['slug'],
+            ));
+
+
+
+
+      case Routes.otpVerificationScreen:
+        final Map args = settings.arguments as Map;
+        return Platform.isAndroid
+            ? UltimateSmoothTransitionRoute(
+            widget: OtpVerificationScreen(
+              email: args['email'],
+            ),
+            settings: settings)
+            : CupertinoPageRoute(
+            builder: (context) => OtpVerificationScreen(
+              email: args['email'],
             ));
 
 

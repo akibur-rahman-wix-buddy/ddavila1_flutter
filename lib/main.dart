@@ -10,6 +10,7 @@ import 'package:ddavila/features/user_app/products_screen/products_screen.dart';
 import 'package:ddavila/loading_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:ddavila/constants/app_constants.dart';
@@ -19,17 +20,15 @@ import 'package:provider/provider.dart';
 import '/helpers/all_routes.dart';
 import 'constants/custome_theme.dart';
 import 'features/admin_app/buying/presention/buying_order.dart';
+import 'features/auth_screen/presentation/otp_varification_screen.dart';
 import 'helpers/helper_methods.dart';
 import 'helpers/navigation_service.dart';
 import 'helpers/register_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // * change by nurnabi + nayem
-  // * ############################
-  // * await PurchaseHelper.init();
-  // * ############################
+  Stripe.publishableKey = "pk_test_51OU6GtBanWWo7KdE2UwRQoIBJwEAQUmQLxZqkOnlauGl7smQfHqIsgPlaPLZ4dn9obcYYzSSKNBe130hVb8YVgVl00CuBqwUgb";
+  await Stripe.instance.applySettings();
   await GetStorage.init();
   diSetup();
   initiInternetChecker();
@@ -101,9 +100,7 @@ class UtillScreenMobile extends StatelessWidget {
             },
             navigatorKey: NavigationService.navigatorKey,
             onGenerateRoute: RouteGenerator.generateRoute,
-            home: StripeCardScreen(
-
-            ),
+            home: LoadingScreen(),
           ),
         );
       },
