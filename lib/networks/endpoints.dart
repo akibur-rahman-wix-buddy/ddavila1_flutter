@@ -66,4 +66,8 @@ final class Endpoints {
   static String stripeCardAddApiLink()=> "/stripe/card/add";
   static String verificationOtpApiLink()=> "/verify-otp-password";
   static String mySelfApiLink()=> "/me";
+  static String getStateApiLink()=> "/states";
+  static String getStripeBitPaymentApiLink()=> "/stripe/onboading";
+  static String updateProfileUrl()=> "/update/user";
+  static String passwordUpdate()=> "/password/change";
 }

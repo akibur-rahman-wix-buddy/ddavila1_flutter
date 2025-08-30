@@ -33,6 +33,26 @@ final class MySelfRx extends RxResponseInt<MySelfModelData> {
 
 
       bool isStripeConnectIsTrue = data.data?.user?.cardAttributes == true ? true : false;
+      dynamic myState = data.data?.user?.state;
+
+
+
+      if(myState != null){
+
+        print(">>>>>>>>>>>>>>>>>>>>>>>>>>> my state is ok ${myState} ");
+
+        appData.write(kKeyMyState , myState);
+
+        print(">>>>>>>>>>>>>>>>>>>>>>>>>>> my state is ok and data ${appData.read(kKeyMyState)} ");
+      }else{
+        appData.write(kKeyMyState , null);
+        print(">>>>>>>>>>>>>>>>>>>>>>>>>>> my state is not ok ");
+      }
+
+
+
+
+
 
 
       if(onBoardingIsTrue == true){

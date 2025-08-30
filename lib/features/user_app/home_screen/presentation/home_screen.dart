@@ -12,7 +12,6 @@ import 'package:ddavila/features/user_app/home_screen/model/home_category_data_m
 import 'package:ddavila/features/user_app/home_screen/model/live_autction_data_model.dart';
 import 'package:ddavila/features/user_app/home_screen/model/popular_category_data_model.dart';
 import 'package:ddavila/features/user_app/home_screen/widget/category_wise_card.dart';
-import 'package:ddavila/features/user_app/products_screen/product_bid_screen.dart';
 import 'package:ddavila/helpers/all_routes.dart';
 import 'package:ddavila/helpers/di.dart';
 import 'package:ddavila/helpers/navigation_service.dart';
@@ -36,8 +35,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
 
-  bool isStripeConnected = appData.read(kKeyCardAttributes);
-  bool isProfileConnected = appData.read(kKeyOnboarding);
+  bool isStripeConnected = appData.read(kKeyCardAttributes) ??false;
+  bool isProfileConnected = appData.read(kKeyOnboarding)??false;
 
   int selectedIndex = 0;
   int? selectedPopularId;
@@ -46,6 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
+    mySelfRx.mySelfData();
     super.initState();
     _loadInitialData();
     print(">>>>>>>>>>>>>>> h key card attributes $isStripeConnected");
@@ -315,7 +315,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                     print(">>>>>>>>>>>>>>>>>>> here is the  stripe connected value ${isStripeConnected}");
                     print(">>>>>>>>>>>>>>>>>>> here is the  profile connected value ${isProfileConnected}");
-                    if(isStripeConnected == true|| isProfileConnected == true){
+                    if(isStripeConnected == true && isProfileConnected == true){
 
                       NavigationService.navigateToWithArgs(
                         Routes.productDetailsScreen,
@@ -330,10 +330,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                     print(">>>>>>>>>>>>>>> here is the product id ${data?.id}");
                     print(">>>>>>>>>>>>>>> here is the product type ${data?.type}");
-                    // NavigationService.navigateToWithArgs(
-                    //   Routes.productDetailsScreen,
-                    //   {"slug": data?.slug},
-                    // );
+
                   } else {
 
 
@@ -341,7 +338,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
                     print(">>>>>>>>>>>>>>>>>>> here is the  stripe connected value ${isStripeConnected}");
-                    if(isStripeConnected == true|| isProfileConnected == true){
+
+                    if(isStripeConnected == true && isProfileConnected == true){
 
                       NavigationService.navigateToWithArgs(
                         Routes.productsBidScreen,
@@ -349,7 +347,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     }else if(isProfileConnected == false ){
                       Get.to(CompleteAccountInfoScreen());
-                    }else if(isProfileConnected == false ){
+                    }else if(isStripeConnected == false ){
                       Get.to(StripeCardScreen());
                     }
 
@@ -641,33 +639,33 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
                   print(">>>>>>>>>>>>>>>>>>> here is the  stripe connected value ${isStripeConnected}");
-                  if(isStripeConnected == true|| isProfileConnected == true){
+                  if(isStripeConnected == true && isProfileConnected == true){
 
                     NavigationService.navigateToWithArgs(
                       Routes.productDetailsScreen,
-                      {"slag": data?[index].slug,},
+                      {"slug": data?[index].slug,},
                     );
+                  }else if(isStripeConnected == false ){
+                    Get.to(StripeCardScreen());
                   }else if(isProfileConnected == false ){
                     Get.to(CompleteAccountInfoScreen());
-                  }else if(isProfileConnected == false ){
-                    Get.to(StripeCardScreen());
                   }
 
 
                   print(">>>>>>>>>>>>>>> here is the product id ${data?[index].id}");
                   print(">>>>>>>>>>>>>>> here is the product type ${data?[index].type}");
-                  NavigationService.navigateToWithArgs(
-                    Routes.productDetailsScreen,
-                    {"slug": data?[index].slug},
-                  );
+                  // NavigationService.navigateToWithArgs(
+                  //   Routes.productDetailsScreen,
+                  //   {"slug": product.slug},
+                  // );
                 } else {
 
 
 
-
+                  print(">>>>>>>>>>>>>>>>>>> here is the  product slug  ${data?[index].slug.toString()}");
 
                   print(">>>>>>>>>>>>>>>>>>> here is the  stripe connected value ${isStripeConnected}");
-                  if(isStripeConnected == true|| isProfileConnected == true){
+                  if(isStripeConnected == true && isProfileConnected == true){
 
                     NavigationService.navigateToWithArgs(
                       Routes.productsBidScreen,
@@ -675,7 +673,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   }else if(isProfileConnected == false ){
                     Get.to(CompleteAccountInfoScreen());
-                  }else if(isProfileConnected == false ){
+                  }else if(isStripeConnected == false ){
                     Get.to(StripeCardScreen());
                   }
 

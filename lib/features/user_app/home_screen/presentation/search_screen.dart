@@ -384,7 +384,7 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
 
 
                       print(">>>>>>>>>>>>>>>>>>> here is the  stripe connected value ${isStripeConnected}");
-                      if(isStripeConnected == true|| isProfileConnected == true){
+                      if(isStripeConnected == true && isProfileConnected == true){
 
                         NavigationService.navigateToWithArgs(
                           Routes.productDetailsScreen,
@@ -403,14 +403,16 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
                       //   Routes.productDetailsScreen,
                       //   {"slug": product.slug},
                       // );
-                    } else {
+                    }else if (product.type.toString() == "auction")  {
 
-
-
+                      print(">>>>>>>>>>>>>>>>>>> this is the else product ");
 
 
                       print(">>>>>>>>>>>>>>>>>>> here is the  stripe connected value ${isStripeConnected}");
-                      if(isStripeConnected == true|| isProfileConnected == true){
+                      if(isStripeConnected == true && isProfileConnected == true){
+
+
+
 
                         NavigationService.navigateToWithArgs(
                           Routes.productsBidScreen,
@@ -418,22 +420,9 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
                         );
                       }else if(isProfileConnected == false ){
                         Get.to(CompleteAccountInfoScreen());
-                      }else if(isProfileConnected == false ){
+                      }else if(isStripeConnected == false ){
                         Get.to(StripeCardScreen());
                       }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                       print(">>>>>>>>>>>>>>> here is the product type ${product.type}");
                       print(">>>>>>>>>>>>>>> here is the not sale , and this is id product id ${product.id}");

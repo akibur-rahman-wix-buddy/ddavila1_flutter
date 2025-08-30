@@ -49,7 +49,7 @@ class _WebViewLinkState extends State<WebViewLink> {
 
                 return NavigationDecision.prevent;
               } else if (request.url.contains(
-                  'https://errol.softvencefsd.xyz/api/checkout/success')) {
+                  'https://thehobbynexus.com/sign-in')) {
                 NavigationService.navigateTo(Routes.navigationScreen);
               }else if (request.url.contains(
                   'https://thehobbynexus.com/error')) {

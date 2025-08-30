@@ -109,6 +109,7 @@ const String kKeyFCMToken = 'fcm_token';
 const String kKeyUserID = 'user_id';
 const String kKeyOnboarding = 'on_boarding';
 const String kKeyCardAttributes = 'card_attributes';
+const String kKeyMyState = 'my_state';
 const String kKeyShopID = 'shop_id';
 const String kKeycategoriesID = 'categoriesId';
 const String kKeyproductID = 'productId';

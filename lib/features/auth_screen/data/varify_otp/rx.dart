@@ -34,21 +34,7 @@ final class VerificationOtpRx extends RxResponseInt<Map<String, dynamic>> {
     try {
       // Check if the response indicates success
       if (data['status'] == true && data['message']?.toString().toLowerCase().contains('success') == true) {
-        // Extract the token from the response
-        String token = data['token'] ?? '';
 
-        if (token.isNotEmpty) {
-          print(">>>>>>>>>>>>>>>>>>>>>>> here is the token:${token}");
-
-          // Save the token and login status using appData
-          appData.write(kKeyAccessToken, token); // Storing the token
-          print(">>>>>>>>>>>>>>>>>>>> here is the access info rx :${appData.read(kKeyIsLoggedIn)}");
-          appData.write(kKeyIsLoggedIn, true);
-          print(">>>>>>>>>>>>>>>>>>>> here is the access info rx :${appData.read(kKeyIsLoggedIn)}");
-
-          // Update DioSingleton with the new token
-          DioSingleton.instance.update(token);
-        }
 
         // Add the data to the stream
         dataFetcher.sink.add(data);

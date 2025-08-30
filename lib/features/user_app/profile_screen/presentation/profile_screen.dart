@@ -2,12 +2,15 @@ import 'package:ddavila/assets_helper/app_colors.dart';
 import 'package:ddavila/assets_helper/app_icons.dart';
 import 'package:ddavila/assets_helper/app_image.dart';
 import 'package:ddavila/assets_helper/text_font_style.dart';
+import 'package:ddavila/features/user_app/profile_screen/model/my_self_model_data.dart';
 import 'package:ddavila/features/user_app/profile_screen/widget/logout_dialouge_box.dart';
 import 'package:ddavila/helpers/all_routes.dart';
 import 'package:ddavila/helpers/navigation_service.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';
 import 'package:ddavila/networks/api_acess.dart';
+import 'package:ddavila/networks/endpoints.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -19,6 +22,12 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
+  void initState() {
+    mySelfRx.mySelfData();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
@@ -29,43 +38,117 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             child: Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Image.asset(
-                      AppImages.profile,
-                      height: 80,
-                      width: 80,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Zobayer Hasan Nayem',
-                          style:
-                              TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                            color: Colors.black,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w800,
+                StreamBuilder<MySelfModelData>(
+                  stream: mySelfRx.dataFetcher,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Center(
+                            child: CircularProgressIndicator(),
                           ),
-                        ),
-                        Text(
-                          'zobayer.dev@gmail.com',
-                          style:
-                              TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                            color: Colors.black,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w800,
+                          UIHelper.verticalSpace(10.h),
+                          const Text(
+                            "Loading...",
+                            style: TextStyle(color: Colors.black),
+                          )
+                        ],
+                      );
+                    } else if (snapshot.hasError) {
+                      return const Center(child: Text("Something went wrong!"));
+                    } else if (!snapshot.hasData ||
+                        snapshot.data?.data == null) {
+                      return const Center(child: Text("No data found."));
+                    } else {
+                      var data = snapshot.data?.data?.user;
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(
+                                  50), // ensures image itself is rounded
+                              child: Image.network(
+                                data?.avatar != null
+                                    ? image_url + data!.avatar!
+                                    : "",
+                                height: 80,
+                                width: 80,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Image.asset(
+                                    AppImages.profile, // fallback asset image
+                                    height: 80,
+                                    width: 80,
+                                    fit: BoxFit.cover,
+                                  );
+                                },
+                                loadingBuilder:
+                                    (context, child, loadingProgress) {
+                                  if (loadingProgress == null) return child;
+                                  return Container(
+                                    height: 80,
+                                    width: 80,
+                                    alignment: Alignment.center,
+                                    child: CircularProgressIndicator(
+                                      value:
+                                          loadingProgress.expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  loadingProgress
+                                                      .expectedTotalBytes!
+                                              : null,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
                           ),
-                        )
-                      ],
-                    ),
-                    Image.asset(
-                      AppImages.settingImage,
-                      height: 50,
-                      width: 50,
-                    ),
-                  ],
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                data?.name.toString() ?? "",
+                                style: TextFontStyle.textLine7w400cFFFFFFDmSans
+                                    .copyWith(
+                                  color: Colors.black,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                              Text(
+                                data?.email.toString() ?? "",
+                                style: TextFontStyle.textLine7w400cFFFFFFDmSans
+                                    .copyWith(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              )
+                            ],
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              NavigationService.navigateToWithArgs(
+                                  Routes.updateProfileScreen,
+                                  {"userData": snapshot.data});
+                            },
+                            child: Image.asset(
+                              AppImages.settingImage,
+                              height: 50,
+                              width: 50,
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+                  },
                 ),
                 UIHelper.verticalSpaceMedium,
                 Align(
@@ -247,7 +330,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   icon: SvgPicture.asset(
                     AppIcons.securityIcon,
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    print(">>>>>>>>>> this is security");
+                    NavigationService.navigateTo(Routes.changePassword);
+                  },
                 ),
                 UIHelper.verticalSpace(8),
                 ProfileItemWidget(
@@ -276,16 +362,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 UIHelper.verticalSpace(8),
                 GestureDetector(
                   onTap: () async {
-
-
                     logoutDialogueBox(context);
 
                     // bool success =await postLogOutRX.logOut();
                     // if(success){
                     //   NavigationService.navigateToRemoveuntil(Routes.loginScreen);
                     // }
-
-
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -343,7 +425,7 @@ class ProfileItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
           color: AppColor.cECEFF3,

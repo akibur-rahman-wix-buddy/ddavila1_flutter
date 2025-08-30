@@ -146,6 +146,7 @@ class LoadingScreen extends StatefulWidget {
 class _LoadingScreenState extends State<LoadingScreen> {
   bool _isLoading = true;
 
+
   @override
   void initState() {
     loadInitialData();

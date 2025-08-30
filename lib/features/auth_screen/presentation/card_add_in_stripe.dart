@@ -1,5 +1,8 @@
 import 'dart:developer';
 import 'package:ddavila/common_widgets/custom_button.dart';
+import 'package:ddavila/constants/app_constants.dart';
+import 'package:ddavila/helpers/all_routes.dart';
+import 'package:ddavila/helpers/di.dart';
 import 'package:ddavila/helpers/navigation_service.dart';
 import 'package:ddavila/helpers/toast.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';
@@ -50,12 +53,13 @@ class _StripeCardScreenState extends State<StripeCardScreen> {
       bool success = await stripeCardAddRx.stripeCardAddInfo(paymentMethodId: paymentMethod.id);
 
       if(success){
-        ToastUtil.showLongToast("card add success");
+        mySelfRx.mySelfData();
+        NavigationService.navigateToRemoveuntil(Routes.navigationScreen);
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("🟢 Payment Method ID: ${paymentMethod.id}")),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(content: Text("🟢 Payment Method ID: ${paymentMethod.id}")),
+      // );
     } catch (e) {
       log('🔴 Error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
@@ -70,54 +74,77 @@ class _StripeCardScreenState extends State<StripeCardScreen> {
 
     return Scaffold(
       backgroundColor: Colors.blue.shade900,
-      body: Center(
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          margin: const EdgeInsets.symmetric(horizontal: 20),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-          ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: IconButton(onPressed: (){
 
-              // CardField for card input
-              CardField(
-                controller: _controller,
-                onCardChanged: (card) {
-                  setState(() {
-                    _cardDetails = card;
-                  });
-                },
-                decoration: InputDecoration(
-                  labelText: "Card Number",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    NavigationService.goBack;
+
+                  }, icon: Icon(Icons.arrow_circle_left,color: Colors.white,size: 45,))),
+        
+              Center(
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  filled: true,
-                  fillColor: Colors.grey[50],
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+        
+                      // CardField for card input
+                      CardField(
+                        controller: _controller,
+                        onCardChanged: (card) {
+                          setState(() {
+                            _cardDetails = card;
+                          });
+                        },
+                        decoration: InputDecoration(
+                          labelText: "Card Number",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          filled: true,
+                          fillColor: Colors.grey[50],
+                        ),
+                        style: const TextStyle(fontSize: 16),
+                        enablePostalCode: false,
+                        cursorColor: Colors.blue,
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: isValid ? _createPaymentMethod : null,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: isValid ? Colors.blue : Colors.grey,
+                          minimumSize: const Size(double.infinity, 50),
+                        ),
+                        child: const Text("Submit"),
+                      ),
+        
+                      UIHelper.verticalSpace(24.h),
+        
+                      CustomButton(text: "Go back ",onTap:(){
+                        NavigationService.goBack;
+                      } , context: context)
+        
+                    ],
+                  ),
                 ),
-                style: const TextStyle(fontSize: 16),
-                enablePostalCode: false,
-                cursorColor: Colors.blue,
               ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: isValid ? _createPaymentMethod : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: isValid ? Colors.blue : Colors.grey,
-                  minimumSize: const Size(double.infinity, 50),
-                ),
-                child: const Text("Submit"),
-              ),
-
-              UIHelper.verticalSpace(24.h),
-
-              CustomButton(text: "Go back ",onTap:(){
-                NavigationService.goBack;
-              } , context: context)
-
+        
+        
+              SizedBox()
+        
+        
             ],
           ),
         ),

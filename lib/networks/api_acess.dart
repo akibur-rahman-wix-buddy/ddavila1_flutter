@@ -36,6 +36,8 @@ import 'package:ddavila/features/user_app/home_screen/model/category_wise_data_m
 import 'package:ddavila/features/user_app/home_screen/model/home_category_data_model.dart';
 import 'package:ddavila/features/user_app/home_screen/model/live_autction_data_model.dart';
 import 'package:ddavila/features/user_app/home_screen/model/popular_category_data_model.dart';
+import 'package:ddavila/features/user_app/products_screen/data/bit_payment_data/rx.dart';
+import 'package:ddavila/features/user_app/products_screen/data/get_state_api/rx.dart';
 import 'package:ddavila/features/user_app/products_screen/data/live_auction_details_rx/rx.dart';
 import 'package:ddavila/features/user_app/products_screen/data/post_bit_price/rx.dart';
 import 'package:ddavila/features/user_app/products_screen/data/post_white_list_data/rx.dart';
@@ -43,6 +45,7 @@ import 'package:ddavila/features/user_app/products_screen/data/sale_product_paym
 import 'package:ddavila/features/user_app/products_screen/data/sate_product_detailes_data/rx.dart';
 import 'package:ddavila/features/user_app/products_screen/model/live_action_details_model.dart';
 import 'package:ddavila/features/user_app/profile_screen/data/my_self_Data/rx.dart';
+import 'package:ddavila/features/user_app/profile_screen/data/post_update_profile_data/rx.dart';
 import 'package:ddavila/features/user_app/profile_screen/data/rx_logout/rx.dart';
 import 'package:ddavila/features/user_app/products_screen/model/sale_product_details_data_model.dart';
 import 'package:ddavila/features/user_app/profile_screen/model/my_self_model_data.dart';
@@ -57,6 +60,8 @@ import '../features/auth_screen/complete_account_info/data/get_states/get_states
 import '../features/auth_screen/complete_account_info/data/post_create_profile/rx.dart';
 import '../features/auth_screen/complete_account_info/model/state_model.dart';
 import '../features/user_app/home_screen/data/rx_home_category_Data/rx.dart';
+import '../features/user_app/products_screen/model/state_data_model.dart';
+import '../features/user_app/profile_screen/data/update_password/rx.dart' show UpdatePasswordRx;
 
 SignInApiRx signInApiRx = SignInApiRx(
   empty: <String, dynamic>{},
@@ -161,6 +166,11 @@ CategoryWiseProductRx categoryWiseProductRx = CategoryWiseProductRx(
   dataFetcher: BehaviorSubject<CategoryWiseProductDataModel>(),
 );
 
+GetStateRx getStateRx = GetStateRx(
+  empty: StateDataModel(),
+  dataFetcher: BehaviorSubject<StateDataModel>(),
+);
+
 final liveAuctionDetailsDataRx = LiveAuctionDetailsDataRx(
   empty: LiveAuctionDetailsApiDataModel(),
   dataFetcher: BehaviorSubject<LiveAuctionDetailsApiDataModel>(),
@@ -212,6 +222,22 @@ GetSubPropertyAPIRX getSubPropertyAPIRXObj = GetSubPropertyAPIRX(
 CompleteProfileApiRx completeProfileApiRxObj = CompleteProfileApiRx(
   empty: <String, dynamic>{},
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+
+BitPaymentRx bitPaymentRx = BitPaymentRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+
+UpdatePasswordRx updatePasswordRx = UpdatePasswordRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+UpdateProfileApiRx  updateProfileApiRx = UpdateProfileApiRx(
+
 );
 
 

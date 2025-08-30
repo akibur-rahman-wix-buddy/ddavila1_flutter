@@ -5,7 +5,6 @@ import 'package:ddavila/features/admin_app/buying/presention/buying_order.dart';
 import 'package:ddavila/features/admin_app/seling/presentation/selling_order.dart';
 import 'package:ddavila/features/chat/presentation/chat_screen.dart';
 import 'package:ddavila/features/user_app/home_screen/presentation/home_screen.dart';
-import 'package:ddavila/features/user_app/products_screen/products_screen.dart';
 import 'package:ddavila/features/user_app/profile_screen/presentation/profile_screen.dart';
 import 'package:ddavila/helpers/all_routes.dart';
 import 'package:ddavila/helpers/navigation_service.dart';
