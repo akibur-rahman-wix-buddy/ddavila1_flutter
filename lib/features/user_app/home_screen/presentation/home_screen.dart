@@ -168,8 +168,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             child: Image.network(
-              userData?.data?.user?.avatar != null
-                  ? '$image_url${userData!.data!.user!.avatar}'
+              userdata.data?.user?.avatar != null
+                  ? '$image_url${userdata.data!.user!.avatar}'
                   : '', // Empty string will trigger errorBuilder
               width: 21,
               height: 28,
