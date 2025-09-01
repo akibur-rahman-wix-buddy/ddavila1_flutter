@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:auto_animated/auto_animated.dart';
 import 'package:ddavila/features/user_app/profile_screen/presentation/update_profile.dart';
 import 'package:ddavila/loading_screen.dart';
+import 'package:ddavila/features/auth_screen/presentation/card_add_in_stripe.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
@@ -86,7 +87,6 @@ class UtillScreenMobile extends StatelessWidget {
               primarySwatch: CustomTheme.kToDark,
               useMaterial3: false,
             ),
-
             debugShowCheckedModeBanner: false,
             builder: (context, widget) {
               return MediaQuery(data: MediaQuery.of(context), child: widget!);

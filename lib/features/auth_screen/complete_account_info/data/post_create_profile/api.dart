@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
-import 'package:image_picker/image_picker.dart';
 import '../../../../../networks/dio/dio.dart';
 import '../../../../../networks/endpoints.dart';
 import '../../../../../networks/exception_handler/data_source.dart';

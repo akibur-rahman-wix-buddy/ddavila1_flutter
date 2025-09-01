@@ -1744,7 +1744,6 @@ import 'package:ddavila/features/admin_app/auction_screen/final_auction_screen.d
 import 'package:ddavila/features/admin_app/auction_screen/model/category_model.dart';
 import 'package:ddavila/features/admin_app/auction_screen/model/property_model.dart';
 import 'package:ddavila/features/admin_app/auction_screen/model/sub_property_model.dart';
-import 'package:ddavila/helpers/navigation_service.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';
 import 'package:ddavila/networks/api_acess.dart';
 import 'package:flutter/material.dart';
