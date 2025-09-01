@@ -40,7 +40,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
   final List<Widget> _screens = [
     const HomeScreen(),
     // const ProductsScreen(),
-    const ChatScreen(),
+    // const ChatScreen(),
     const ChatScreen(),
     const ProfileScreen(),
   ];
@@ -216,35 +216,40 @@ class _NavigationScreenState extends State<NavigationScreen> {
               ),
             ),
           ),
-          Container(
-            decoration: BoxDecoration(
-              color: AppColor.cFFFFFF,
-              borderRadius: BorderRadius.circular(99.r),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Row(
-                children: [
-                  const SizedBox(width: 23),
-                  Text(
-                    'My Auction',
-                    style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                      color: AppColor.c000000,
+          GestureDetector(
+            onTap: (){
+              NavigationService.navigateTo(Routes.adminDashboard);
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppColor.cFFFFFF,
+                borderRadius: BorderRadius.circular(99.r),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  children: [
+                    const SizedBox(width: 23),
+                    Text(
+                      'My Auction',
+                      style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                        color: AppColor.c000000,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 10),
-                  FloatingActionButton.small(
-                    heroTag: 'remind',
-                    backgroundColor: AppColor.cFFFFFF,
-                    foregroundColor: AppColor.cFFFFFF,
-                    disabledElevation: 0,
-                    elevation: 0,
-                    onPressed: () {
-                      debugPrint("My Auction");
-                    },
-                    child: SvgPicture.asset(AppIcons.auctionIcon),
-                  ),
-                ],
+                    const SizedBox(width: 10),
+                    FloatingActionButton.small(
+                      heroTag: 'remind',
+                      backgroundColor: AppColor.cFFFFFF,
+                      foregroundColor: AppColor.cFFFFFF,
+                      disabledElevation: 0,
+                      elevation: 0,
+                      onPressed: () {
+                        debugPrint("My Auction");
+                      },
+                      child: SvgPicture.asset(AppIcons.auctionIcon),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -302,7 +307,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _buildNavItem(AppIcons.navHome, 0),
-              _buildNavItem(AppIcons.navNote, 1),
+              // _buildNavItem(AppIcons.navNote, 1),
               _buildNavItem(AppIcons.navMessage, 2),
               _buildNavItem(AppIcons.navProfile, 3),
             ],

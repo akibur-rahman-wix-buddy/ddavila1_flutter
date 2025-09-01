@@ -1,14 +1,17 @@
 import 'dart:io';
 import 'package:ddavila/assets_helper/app_colors.dart';
 import 'package:ddavila/assets_helper/app_image.dart';
-import 'package:ddavila/constants/app_constants.dart';
+import 'package:ddavila/common_widgets/custom_button.dart';
 import 'package:ddavila/features/auth_screen/complete_account_info/model/state_model.dart';
 import 'package:ddavila/features/user_app/profile_screen/model/my_self_model_data.dart';
+import 'package:ddavila/helpers/toast.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';
+import 'package:ddavila/helpers/wab_view.dart';
 import 'package:ddavila/networks/api_acess.dart';
 import 'package:ddavila/networks/endpoints.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 class UpdateProfileScreen extends StatefulWidget {
@@ -25,6 +28,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   String? selectedState;
   File? _imageFile;
   bool _isLoading = false;
+  bool isOnBoardign = false;
+
 
 
   final TextEditingController nameController = TextEditingController();
@@ -36,11 +41,14 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   final ImagePicker _picker = ImagePicker();
 
 
+
+
   @override
   void initState() {
     super.initState();
     _loadUserData();
     getStateApiRXObj.states();
+isOnBoardign = widget.userData.data?.user?.onboardComplete == 1 ? true: false;
   }
 
   void _loadUserData() {
@@ -150,13 +158,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     }
   }
 
-  Widget _buildProgressIndicator() {
-    return CircularProgressIndicator(
-      valueColor: AlwaysStoppedAnimation<Color>(
-        Colors.white.withOpacity(0.7),
-      ),
-    );
-  }
+
   @override
   void dispose() {
     nameController.dispose();
@@ -324,6 +326,24 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                         dropdownColor: Colors.white,
                         menuMaxHeight: 200.h,
                       ),
+                    ),
+
+                    UIHelper.verticalSpace(16.h),
+                    CustomButton(
+                      text: isOnBoardign ? "Manage Stripe" : "Connect Stripe",
+                      context: context,
+                      minWidth: 150.w,
+                      onTap: () async {
+                        final stripeData = await stripeConnectRx.stripeConnectInfo();
+
+                        if (stripeData != null && stripeData.data?.dashboardUrl != null) {
+                          Get.to(
+                            WebViewLink(link: stripeData.data!.dashboardUrl!),
+                          );
+                        } else {
+                          ToastUtil.showShortToast("Stripe URL not available.");
+                        }
+                      },
                     ),
 
                     UIHelper.verticalSpace(16.h),

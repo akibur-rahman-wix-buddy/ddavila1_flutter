@@ -70,4 +70,6 @@ final class Endpoints {
   static String getStripeBitPaymentApiLink()=> "/stripe/onboading";
   static String updateProfileUrl()=> "/update/user";
   static String passwordUpdate()=> "/password/change";
+  static String stripeConnectApiLink()=> "/stripe/connect";
+  static String sellingOrderConfirmApiLink({dynamic productId})=> "/orders/$productId";
 }

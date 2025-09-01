@@ -13,6 +13,7 @@ import 'package:ddavila/features/admin_app/buying/data/get_buying_data/buying_or
 import 'package:ddavila/features/admin_app/buying/model/buying_order_data_model.dart';
 import 'package:ddavila/features/admin_app/dashboard_screen/data/admindash_rx.dart';
 import 'package:ddavila/features/admin_app/dashboard_screen/model/admin_dash_model.dart';
+import 'package:ddavila/features/admin_app/seling/data/selling_order_confirm_Api/rx.dart';
 import 'package:ddavila/features/admin_app/seling/data/selling_order_data/buying_order_rx.dart';
 import 'package:ddavila/features/admin_app/seling/model/selling_order_data_model.dart';
 import 'package:ddavila/features/admin_app/wishlist_screen/model/wishlist_model.dart';
@@ -48,7 +49,9 @@ import 'package:ddavila/features/user_app/profile_screen/data/my_self_Data/rx.da
 import 'package:ddavila/features/user_app/profile_screen/data/post_update_profile_data/rx.dart';
 import 'package:ddavila/features/user_app/profile_screen/data/rx_logout/rx.dart';
 import 'package:ddavila/features/user_app/products_screen/model/sale_product_details_data_model.dart';
+import 'package:ddavila/features/user_app/profile_screen/data/stripe_connect_data/rx.dart';
 import 'package:ddavila/features/user_app/profile_screen/model/my_self_model_data.dart';
+import 'package:ddavila/features/user_app/profile_screen/model/stripe_connect_data_model.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:ddavila/features/auth_screen/data/rx_sign_in/rx.dart';
 
@@ -210,6 +213,11 @@ GetPropertyAPIRX getPropertyAPIRXObj = GetPropertyAPIRX(
   dataFetcher: BehaviorSubject<PropertyModel>(),
 );
 
+StripeConnectRx stripeConnectRx = StripeConnectRx(
+  empty: StripeConnectDataModel(),
+  dataFetcher: BehaviorSubject<StripeConnectDataModel>(),
+);
+
 GetSubPropertyAPIRX getSubPropertyAPIRXObj = GetSubPropertyAPIRX(
   empty: SubPropertyModel(),
   dataFetcher: BehaviorSubject<SubPropertyModel>(),
@@ -235,6 +243,15 @@ UpdatePasswordRx updatePasswordRx = UpdatePasswordRx(
   empty: <String, dynamic>{},
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );
+
+
+SellingOrderConfirmRx sellingOrderConfirmRx = SellingOrderConfirmRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+
+
 
 UpdateProfileApiRx  updateProfileApiRx = UpdateProfileApiRx(
 

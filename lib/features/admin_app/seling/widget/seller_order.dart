@@ -20,8 +20,12 @@ class _SellingOrderState extends State<SellingOrder> {
 
   @override
   void initState() {
-    getSellingOrderRX.getSellingOrderRX();
+    _loadData();
     super.initState();
+  }
+
+  void _loadData() {
+    getSellingOrderRX.getSellingOrderRX();
   }
 
   void _filterData(String query) {
@@ -82,8 +86,8 @@ class _SellingOrderState extends State<SellingOrder> {
               return const Center(child: Text("No data found."));
             } else {
               // Store original data and initialize filtered data
-              if (_originalData.isEmpty) {
-                _originalData = snapshot.data?.data?.data ?? [];
+              _originalData = snapshot.data?.data?.data ?? [];
+              if (_filteredData.isEmpty) {
                 _filteredData = List.from(_originalData);
               }
 
@@ -102,14 +106,28 @@ class _SellingOrderState extends State<SellingOrder> {
                           height: 1.40,
                         ),
                       ),
-                      CustomTextField(
-                        hintText: "Search",
-                        fieldWidth: 200,
-                        borderRadius: 30,
-                        prefixIcon: Icon(Icons.search_sharp, size: 24),
-                        controller: _searchController,
-                        onChanged: _filterData,
-                      )
+                      Row(
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.refresh),
+                            onPressed: () {
+                              setState(() {
+                                _originalData = [];
+                                _filteredData = [];
+                              });
+                              _loadData();
+                            },
+                          ),
+                          CustomTextField(
+                            hintText: "Search",
+                            fieldWidth: 200,
+                            borderRadius: 30,
+                            prefixIcon: Icon(Icons.search_sharp, size: 24),
+                            controller: _searchController,
+                            onChanged: _filterData,
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                   UIHelper.verticalSpace(12),

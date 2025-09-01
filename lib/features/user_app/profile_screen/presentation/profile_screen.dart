@@ -343,14 +343,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   onTap: () {},
                 ),
-                UIHelper.verticalSpace(8),
-                ProfileItemWidget(
-                  title: 'Become a seller',
-                  icon: SvgPicture.asset(
-                    AppIcons.selerIcon,
-                  ),
-                  onTap: () {},
-                ),
+                // UIHelper.verticalSpace(8),
+                // ProfileItemWidget(
+                //   title: 'Become a seller',
+                //   icon: SvgPicture.asset(
+                //     AppIcons.selerIcon,
+                //   ),
+                //   onTap: () {},
+                // ),
                 UIHelper.verticalSpace(8),
                 ProfileItemWidget(
                   title: 'Account Delete',
@@ -363,12 +363,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 GestureDetector(
                   onTap: () async {
                     logoutDialogueBox(context);
-
-                    // bool success =await postLogOutRX.logOut();
-                    // if(success){
-                    //   NavigationService.navigateToRemoveuntil(Routes.loginScreen);
-                    // }
-                  },
+                    },
                   child: Container(
                     decoration: BoxDecoration(
                       color: AppColor.cECEFF3,
