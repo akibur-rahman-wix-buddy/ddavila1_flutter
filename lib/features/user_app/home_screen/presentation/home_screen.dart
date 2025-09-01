@@ -12,6 +12,7 @@ import 'package:ddavila/features/user_app/home_screen/model/home_category_data_m
 import 'package:ddavila/features/user_app/home_screen/model/live_autction_data_model.dart';
 import 'package:ddavila/features/user_app/home_screen/model/popular_category_data_model.dart';
 import 'package:ddavila/features/user_app/home_screen/widget/category_wise_card.dart';
+import 'package:ddavila/features/user_app/profile_screen/model/my_self_model_data.dart';
 import 'package:ddavila/helpers/all_routes.dart';
 import 'package:ddavila/helpers/di.dart';
 import 'package:ddavila/helpers/navigation_service.dart';
@@ -43,9 +44,10 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isLoading = true;
   bool isCategoryLoading = false;
 
+
   @override
   void initState() {
-    mySelfRx.mySelfData();
+  mySelfRx.mySelfData() ;
     super.initState();
     _loadInitialData();
     print(">>>>>>>>>>>>>>> h key card attributes $isStripeConnected");
@@ -88,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Header section
-                _buildHeader(),
+                _buildHeader(mySelfRx.dataFetcher.value),
                 const SizedBox(height: 20),
                 // Search TextField
                 _buildSearchField(),
@@ -120,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   ///>>>>>>>>>>>>>>>>>>>> here is the appbar section >>>>>>>>>>>>>>>>>>
-  Widget _buildHeader() {
+  Widget _buildHeader( MySelfModelData userdata) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -128,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Hello Jhon',
+              userdata.data?.user?.name.toString()??"",
               style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
                 color: Colors.black,
                 fontSize: 18,
@@ -156,13 +158,51 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           child: Container(
-            width: 21,
-            height: 28,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(AppImages.profileIcon),
-                fit: BoxFit.cover,
+            width: 41,
+            height: 41,
+            padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
+            decoration: ShapeDecoration(
+              color: const Color(0xFFB0E8CA),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.54),
               ),
+            ),
+            child: Image.network(
+              userData?.data?.user?.avatar != null
+                  ? '$image_url${userData!.data!.user!.avatar}'
+                  : '', // Empty string will trigger errorBuilder
+              width: 21,
+              height: 28,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                // Fallback to profile icon if network image fails
+                return Container(
+                  width: 21,
+                  height: 28,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(AppImages.profileIcon),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                );
+              },
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+                return Center(
+                  child: SizedBox(
+                    width: 21,
+                    height: 28,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      value: loadingProgress.expectedTotalBytes != null
+                          ? loadingProgress.cumulativeBytesLoaded /
+                          (loadingProgress.expectedTotalBytes ?? 1)
+                          : null,
+                    ),
+                  ),
+                );
+              },
             ),
           ),
         ),

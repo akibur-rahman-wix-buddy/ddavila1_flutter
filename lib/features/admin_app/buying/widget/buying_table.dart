@@ -713,7 +713,7 @@ class BuyingTable extends StatefulWidget {
 
 class _BuyingTableState extends State<BuyingTable> {
   late DataGridController _dataGridController;
-  Map<String, bool> _loadingStates = {};
+  Map<int, bool> _loadingStates = {}; // Changed to use int keys for ID
   List<BuyingOrderDatum> _currentData = []; // Store current data locally
 
   @override
@@ -722,10 +722,10 @@ class _BuyingTableState extends State<BuyingTable> {
     _dataGridController = DataGridController();
     _currentData = widget.data; // Initialize with provided data
 
-    // Initialize loading states for all orders
+    // Initialize loading states for all orders using ID
     for (var order in _currentData) {
-      if (order.orderNumber != null) {
-        _loadingStates[order.orderNumber!] = false;
+      if (order.id != null) {
+        _loadingStates[order.id!] = false;
       }
     }
   }
@@ -738,11 +738,11 @@ class _BuyingTableState extends State<BuyingTable> {
       setState(() {
         _currentData = widget.data;
 
-        // Reset loading states
+        // Reset loading states using ID
         _loadingStates.clear();
         for (var order in _currentData) {
-          if (order.orderNumber != null) {
-            _loadingStates[order.orderNumber!] = false;
+          if (order.id != null) {
+            _loadingStates[order.id!] = false;
           }
         }
       });
@@ -842,13 +842,94 @@ class _BuyingTableState extends State<BuyingTable> {
     );
   }
 
-  Future<void> _handleButtonPressed(String id, String currentStatus) async {
-    print('Button pressed for order: $id with status: $currentStatus');
+  // Future<void> _handleButtonPressed(int id, String currentStatus) async {
+  //   print('Button pressed for order ID: $id with status: $currentStatus');
+  //   setState(() {
+  //     _loadingStates[id] = true;
+  //   });
+  //
+  //   bool success = await buyingOrderConfirmRx.buyingOrderConfirmInfo(productId: id);
+  //
+  //   if (success) {
+  //     // Notify parent widget to refresh data
+  //     widget.onDataUpdated();
+  //
+  //     // Also update the UI immediately
+  //     setState(() {
+  //       // Find and update the specific order status
+  //       int index = _currentData.indexWhere((order) => order.id == id);
+  //       if (index != -1) {
+  //         // Update the status based on current status
+  //         if (currentStatus.toLowerCase() == 'shipping') {
+  //           _currentData[index].status = DatumStatus.confirmed;
+  //         } else if (currentStatus.toLowerCase() == 'confirmed') {
+  //           _currentData[index].status = DatumStatus.completed;
+  //         }
+  //       }
+  //     });
+  //   }
+  //
+  //   setState(() {
+  //     _loadingStates[id] = false;
+  //   });
+  // }
+
+
+
+
+
+  Future<void> _handleButtonPressed(int id, String currentStatus) async {
+    print('Button pressed for order ID: $id with status: $currentStatus');
+
+    // Find the order data
+    final orderIndex = _currentData.indexWhere((order) => order.id == id);
+    if (orderIndex == -1) return;
+
+    final order = _currentData[orderIndex];
+
+    // Show confirmation dialog
+    final bool confirm = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirm Action'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Are you sure you want to ${currentStatus.toLowerCase() == 'shipping' ? 'accept' : 'complete'} this order?'),
+              SizedBox(height: 16),
+              Text('Order #${order.orderNumber ?? 'N/A'}', style: TextStyle(fontWeight: FontWeight.bold)),
+              SizedBox(height: 8),
+              Text('Product: ${order.orderItems?.first.product?.title ?? 'Unknown'}'),
+              SizedBox(height: 8),
+              Text('Total: \$${order.totalAmount?.toString() ?? '0.00'}'),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text('Confirm'),
+            ),
+          ],
+        );
+      },
+    );
+
+    // If user cancelled, return early
+    if (confirm != true) {
+      return;
+    }
+
     setState(() {
       _loadingStates[id] = true;
     });
 
-    bool success = await buyingOrderConfirmRx.buyingOrderConfirmInfo(productId: int.parse(id));
+    bool success = await buyingOrderConfirmRx.buyingOrderConfirmInfo(productId: id);
 
     if (success) {
       // Notify parent widget to refresh data
@@ -857,22 +938,44 @@ class _BuyingTableState extends State<BuyingTable> {
       // Also update the UI immediately
       setState(() {
         // Find and update the specific order status
-        int index = _currentData.indexWhere((order) => order.orderNumber == id);
+        int index = _currentData.indexWhere((order) => order.id == id);
         if (index != -1) {
           // Update the status based on current status
           if (currentStatus.toLowerCase() == 'shipping') {
-            _currentData[index].status = 'confirmed'
-            as DatumStatus?; // Or whatever status comes after shipping
+            _currentData[index].status = DatumStatus.confirmed;
+          } else if (currentStatus.toLowerCase() == 'confirmed') {
+            _currentData[index].status = DatumStatus.completed;
           }
-          // Add other status transitions as needed
         }
       });
+
+      // Show success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Order #${order.orderNumber} has been ${currentStatus.toLowerCase() == 'shipping' ? 'accepted' : 'completed'} successfully'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } else {
+      // Show error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to update order #${order.orderNumber}'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
 
     setState(() {
       _loadingStates[id] = false;
     });
   }
+
+
+
+
+
+
 
   Widget _buildHeader(String text, Alignment alignment) {
     return Container(
@@ -892,8 +995,8 @@ class _BuyingTableState extends State<BuyingTable> {
 
 class OrderDataSource extends DataGridSource {
   List<BuyingOrderDatum> orderData;
-  final Map<String, bool> loadingStates;
-  final Function(String, String) onButtonPressed;
+  final Map<int, bool> loadingStates; // Changed to use int keys for ID
+  final Function(int, String) onButtonPressed; // Changed to accept int ID
   final VoidCallback refresh;
 
   OrderDataSource(
@@ -930,7 +1033,7 @@ class OrderDataSource extends DataGridSource {
       isButtonActive = true;
     } else if (status.toLowerCase() == 'confirmed') {
       buttonText = 'Complete';
-      isButtonActive = true; // Changed to true to allow completing the order
+      isButtonActive = false; // Changed to true to allow completing the order
     } else {
       buttonText = 'Complete Order';
       isButtonActive = false;
@@ -946,7 +1049,7 @@ class OrderDataSource extends DataGridSource {
       DataGridCell<Map<String, dynamic>>(columnName: 'Action', value: {
         'text': buttonText,
         'isActive': isButtonActive,
-        'orderNumber': data.orderNumber ?? 'N/A', // Use orderNumber as string
+        'id': data.id ?? 0, // Use ID instead of orderNumber
         'status': status,
       }),
     ]);
@@ -1038,10 +1141,10 @@ class OrderDataSource extends DataGridSource {
           final actionData = dataCell.value as Map<String, dynamic>?;
           final buttonText = actionData?['text'] ?? 'Complete Order';
           final isButtonActive = actionData?['isActive'] ?? true;
-          final orderNumber = actionData?['orderNumber'] ?? 'N/A';
+          final id = actionData?['id'] ?? 0; // Get ID instead of orderNumber
           final status = actionData?['status'] ?? 'Pending';
 
-          final isLoading = loadingStates[orderNumber] ?? false;
+          final isLoading = loadingStates[id] ?? false;
 
           return Container(
             alignment: Alignment.center,
@@ -1054,7 +1157,7 @@ class OrderDataSource extends DataGridSource {
                 : ElevatedButton(
               onPressed: isButtonActive && !isLoading
                   ? () async {
-                await onButtonPressed(orderNumber, status);
+                await onButtonPressed(id, status);
                 refresh(); // Refresh the UI
               }
                   : null,

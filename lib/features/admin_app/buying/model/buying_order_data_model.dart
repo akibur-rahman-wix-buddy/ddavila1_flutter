@@ -1076,7 +1076,7 @@ class ShippingAddress {
 
 enum DatumStatus {
   CONFIRMED,
-  PENDING,COMPLETED,SHIPPING
+  PENDING,COMPLETED,SHIPPING, confirmed, completed
 }
 
 final datumStatusValues = EnumValues({
