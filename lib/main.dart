@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:auto_animated/auto_animated.dart';
+import 'package:ddavila/loading_screen.dart';
 import 'package:ddavila/features/user_app/profile_screen/presentation/update_profile.dart';
 import 'package:ddavila/loading_screen.dart';
 import 'package:ddavila/features/auth_screen/presentation/card_add_in_stripe.dart';

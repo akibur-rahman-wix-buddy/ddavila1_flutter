@@ -5,8 +5,6 @@ import 'package:ddavila/networks/endpoints.dart';
 import 'package:ddavila/networks/exception_handler/data_source.dart';
 import 'package:dio/dio.dart';
 
-
-
 final class SignInApi {
 
   static final  SignInApi _singleton = SignInApi._internal();
