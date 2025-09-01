@@ -626,7 +626,7 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisCount: 2,
             mainAxisSpacing: 10,
             crossAxisSpacing: 10,
-            childAspectRatio: .4,
+            childAspectRatio: .55,
           ),
           itemCount: data?.length,
           itemBuilder: (context, index) {
@@ -676,17 +676,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   }else if(isStripeConnected == false ){
                     Get.to(StripeCardScreen());
                   }
-
-
-
-
-
-
-
-
-
-
-
 
 
 

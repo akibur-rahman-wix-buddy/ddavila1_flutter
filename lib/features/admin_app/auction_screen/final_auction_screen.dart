@@ -1,14 +1,36 @@
-// ignore_for_file: library_private_types_in_public_api
-
+// ignore_for_file: library_private_types_in_public_api, prefer_initializing_formals, must_be_immutable
+import 'dart:developer';
 import 'package:ddavila/assets_helper/app_colors.dart';
+import 'package:ddavila/assets_helper/app_icons.dart';
 import 'package:ddavila/assets_helper/text_font_style.dart';
+import 'package:ddavila/common_widgets/custom_appbar.dart';
 import 'package:ddavila/common_widgets/custom_button.dart';
 import 'package:ddavila/common_widgets/custom_textfiled.dart';
+import 'package:ddavila/constants/app_constants.dart';
+import 'package:ddavila/helpers/toast.dart';
+import 'package:ddavila/networks/api_acess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
 
 class FinalAuctionScreen extends StatefulWidget {
-  const FinalAuctionScreen({super.key});
+  dynamic titleText, descriptionText, subCategory, category, property, imageItem;
+  FinalAuctionScreen(
+      {super.key,
+      required titleText,
+      required descriptionText,
+      required subCategory,
+      required category,
+      required property,
+      required imageItem}) {
+    this.titleText = titleText;
+    this.descriptionText = descriptionText;
+    this.subCategory = subCategory;
+    this.category = category;
+    this.property = property;
+    this.imageItem = imageItem;
+  }
 
   @override
   _FinalAuctionScreenState createState() => _FinalAuctionScreenState();
@@ -16,10 +38,25 @@ class FinalAuctionScreen extends StatefulWidget {
 
 class _FinalAuctionScreenState extends State<FinalAuctionScreen> {
   bool isAuction = false;
+  final TextEditingController startingPriceController = TextEditingController();
+  final TextEditingController buyNowPriceController = TextEditingController();
+  final TextEditingController auctionEndDateController =
+      TextEditingController();
+  final TextEditingController shipWithinController = TextEditingController();
+  final TextEditingController shippingCostController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    log('############################## Data Come from create auction ################################');
+    log('Final Auction Title: ${widget.titleText}');
+    log('Final Auction Description: ${widget.descriptionText}');
+    log('Final Auction Sub Category: ${widget.subCategory}');
+    log('Final Auction Category: ${widget.category}');
+    log('Final Auction Property: ${widget.property}');
+    log('Final Auction Images: ${widget.imageItem}');
+    log('#############################################################################################');
     return Scaffold(
+      appBar: CustomAppBar(text: 'Create Auction'),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 28.h),
@@ -47,7 +84,7 @@ class _FinalAuctionScreenState extends State<FinalAuctionScreen> {
                       if (value != null) {
                         setState(() {
                           isAuction = value;
-                          print('Selected value: $isAuction');
+                          log(isAuction ? 'Auction' : 'Sale');
                         });
                       }
                     },
@@ -68,7 +105,7 @@ class _FinalAuctionScreenState extends State<FinalAuctionScreen> {
                       if (value != null) {
                         setState(() {
                           isAuction = value;
-                          print('Selected value: $isAuction');
+                          log(isAuction ? 'Auction' : 'Sale');
                         });
                       }
                     },
@@ -99,10 +136,9 @@ class _FinalAuctionScreenState extends State<FinalAuctionScreen> {
                     ),
                     SizedBox(height: 8.h),
                     CustomTextField(
+                      controller: startingPriceController,
                       hintText: 'Enter Starting Price',
-                      onChanged: (value) {
-                        // Handle the input value
-                      },
+                      onChanged: (value) {},
                     ),
                     SizedBox(height: 20.h),
                     Text(
@@ -115,7 +151,27 @@ class _FinalAuctionScreenState extends State<FinalAuctionScreen> {
                     ),
                     SizedBox(height: 8.h),
                     CustomTextField(
+                      suffixIcon: GestureDetector(
+                        onTap: () async {
+                          DateTime? pickedDate = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(2000), // minimum date
+                            lastDate: DateTime(2100), // maximum date
+                          );
+
+                          if (pickedDate != null) {
+                            // format the date as yyyy-MM-dd
+                            String formattedDate =
+                                "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
+
+                            auctionEndDateController.text = formattedDate;
+                          }
+                        },
+                        child: SvgPicture.asset(AppIcons.cameraIcon),
+                      ),
                       hintText: 'Select auction end date',
+                      controller: auctionEndDateController,
                       onChanged: (value) {
                         // Handle the input value
                       },
@@ -139,6 +195,7 @@ class _FinalAuctionScreenState extends State<FinalAuctionScreen> {
                               ),
                               SizedBox(height: 8.h),
                               CustomTextField(
+                                controller: shipWithinController,
                                 hintText: '0',
                                 fieldWidth: 160.w,
                                 onChanged: (value) {
@@ -165,6 +222,7 @@ class _FinalAuctionScreenState extends State<FinalAuctionScreen> {
                               SizedBox(height: 8.h),
                               CustomTextField(
                                 hintText: '0',
+                                controller: shippingCostController,
                                 fieldWidth: 160.w,
                                 onChanged: (value) {
                                   // Handle the input value
@@ -193,6 +251,7 @@ class _FinalAuctionScreenState extends State<FinalAuctionScreen> {
                     SizedBox(height: 8.h),
                     CustomTextField(
                       hintText: 'Enter Buy Now Price',
+                      controller: buyNowPriceController,
                       onChanged: (value) {
                         // Handle the input value
                       },
@@ -217,6 +276,7 @@ class _FinalAuctionScreenState extends State<FinalAuctionScreen> {
                               SizedBox(height: 8.h),
                               CustomTextField(
                                 hintText: '0',
+                                controller: shipWithinController,
                                 fieldWidth: 160.w,
                                 onChanged: (value) {
                                   // Handle the input value
@@ -241,6 +301,7 @@ class _FinalAuctionScreenState extends State<FinalAuctionScreen> {
                               ),
                               SizedBox(height: 8.h),
                               CustomTextField(
+                                controller: shippingCostController,
                                 hintText: '0',
                                 fieldWidth: 160.w,
                                 onChanged: (value) {
@@ -261,9 +322,7 @@ class _FinalAuctionScreenState extends State<FinalAuctionScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   CustomButton(
-                    onTap: () {
-                      // Handle back button action
-                    },
+                    onTap: () {},
                     text: 'Back',
                     context: context,
                     minWidth: 160.w,
@@ -277,8 +336,87 @@ class _FinalAuctionScreenState extends State<FinalAuctionScreen> {
                     ),
                   ),
                   CustomButton(
-                    onTap: () {
-                      // Handle next button action
+                    onTap: () async {
+                      // Convert List<String> to List<XFile>
+                      List<XFile> imagees = (widget.imageItem as List<dynamic>)
+                          .map((path) => XFile(path as String))
+                          .toList();
+                      if (isAuction) {
+                        log("################# Auction True ####################");
+                        log('Starting Price: ${startingPriceController.text}');
+                        log('Auction End Date: ${auctionEndDateController.text}');
+                        log('Shipping Cost: ${shippingCostController.text}');
+                        log('Ship Within: ${shipWithinController.text}');
+                        log("###################################################");
+
+                        bool success =
+                        await postAuctionProductAPIRx.postProductAuctionRX(
+                          title: widget.titleText.toString(),
+                          description: widget.descriptionText,
+                          categoryId: widget.category,
+                          subcategoryId: widget.subCategory,
+                          auction_end_at: auctionEndDateController.text,
+                          type: 'auction',
+                          shippingCost:
+                          double.tryParse(shippingCostController.text) ??
+                              0.0,
+                          price: startingPriceController.text,
+                          shipWithin: shipWithinController.text,
+                          images: imagees,
+                          propertyItem: widget.property
+                              .map<String>(
+                                (item) => "${item['title']}, ${item['value']}",
+                          )
+                              .toList(),
+                        );
+                        if (success) {
+                          ToastUtil.showShortToast(
+                            'Product Posted Successfully',
+                          );
+                        } else {
+                          log('==========================>>>>>> Auction Starting Price : ${startingPriceController.text}');
+                          ToastUtil.showShortToast(
+                            'Product Posted UnSuccessful',
+
+                          );
+                        }
+
+
+                      } else {
+                        log("################# Auction False ####################");
+                        log('Buy Now Price: ${buyNowPriceController.text}');
+                        log('Shipping Cost: ${shippingCostController.text}');
+                        log('Ship Within: ${shipWithinController.text}');
+                        log("#####################################################");
+                        bool success =
+                            await postProductsAPIRxObj.postProductSaleRX(
+                          title: widget.titleText.toString(),
+                          description: widget.descriptionText,
+                          categoryId: widget.category,
+                          subcategoryId: widget.subCategory,
+                          type: 'sale',
+                          shippingCost:
+                              double.tryParse(shippingCostController.text) ??
+                                  0.0,
+                          price: buyNowPriceController.text,
+                          shipWithin: shipWithinController.text,
+                          images: imagees,
+                          propertyItem: widget.property
+                              .map<String>(
+                                (item) => "${item['title']}, ${item['value']}",
+                              )
+                              .toList(),
+                        );
+                        if (success) {
+                          ToastUtil.showShortToast(
+                            'Product Posted Successfully',
+                          );
+                        } else {
+                          ToastUtil.showShortToast(
+                            'Product Posted UnSuccessful',
+                          );
+                        }
+                      }
                     },
                     text: 'Next',
                     context: context,

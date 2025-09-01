@@ -5,10 +5,12 @@
 import 'package:ddavila/features/admin_app/auction_screen/data/get_category/get_category_rx.dart';
 import 'package:ddavila/features/admin_app/auction_screen/data/get_property/get_property_rx.dart';
 import 'package:ddavila/features/admin_app/auction_screen/data/get_property/get_sub_property_rx.dart';
+import 'package:ddavila/features/admin_app/auction_screen/data/post_products/post_products_rx.dart';
 import 'package:ddavila/features/admin_app/auction_screen/model/auction_model.dart';
 import 'package:ddavila/features/admin_app/auction_screen/model/category_model.dart';
 import 'package:ddavila/features/admin_app/auction_screen/model/property_model.dart';
 import 'package:ddavila/features/admin_app/auction_screen/model/sub_property_model.dart';
+import 'package:ddavila/features/admin_app/buying/data/buying_order_confirm/rx.dart';
 import 'package:ddavila/features/admin_app/buying/data/get_buying_data/buying_order_rx.dart';
 import 'package:ddavila/features/admin_app/buying/model/buying_order_data_model.dart';
 import 'package:ddavila/features/admin_app/dashboard_screen/data/admindash_rx.dart';
@@ -57,6 +59,7 @@ import 'package:ddavila/features/auth_screen/data/rx_sign_in/rx.dart';
 
 import '../features/admin_app/auction_screen/data/auction_complete/get_rx.dart';
 import '../features/admin_app/auction_screen/data/auction_ongoing/get_rx.dart';
+import '../features/admin_app/auction_screen/data/post_auction_products/post_auction_products_rx.dart';
 import '../features/admin_app/auction_screen/model/auction_running_model.dart';
 import '../features/admin_app/wishlist_screen/data/get_rx.dart';
 import '../features/auth_screen/complete_account_info/data/get_states/get_states_rx.dart';
@@ -222,8 +225,8 @@ GetSubPropertyAPIRX getSubPropertyAPIRXObj = GetSubPropertyAPIRX(
   empty: SubPropertyModel(),
   dataFetcher: BehaviorSubject<SubPropertyModel>(),
 );
-    CreateConversationRx createConversationRx = CreateConversationRx(
-    empty: ConversationCreateModelData(),
+CreateConversationRx createConversationRx = CreateConversationRx(
+  empty: ConversationCreateModelData(),
 // dataFetcher: BehaviorSubject<ConversationCreateModelData>(),
 );
 
@@ -250,15 +253,27 @@ SellingOrderConfirmRx sellingOrderConfirmRx = SellingOrderConfirmRx(
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );
 
-
-
-
 UpdateProfileApiRx  updateProfileApiRx = UpdateProfileApiRx(
 
 );
 
-
 GetStateApiRX getStateApiRXObj = GetStateApiRX(
   empty: StatesModel(),
   dataFetcher: BehaviorSubject<StatesModel>(),
+);
+
+PostProductsAPIRx postProductsAPIRxObj = PostProductsAPIRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+
+PostAuctionProductAPIRx postAuctionProductAPIRx = PostAuctionProductAPIRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+BuyingOrderConfirmRx buyingOrderConfirmRx = BuyingOrderConfirmRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );

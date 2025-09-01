@@ -55,6 +55,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
 
       // ✅ ExpandableFab ঠিকভাবে কাজ করবে
       floatingActionButton: ExpandableFab(
+
         type: ExpandableFabType.up,
         distance: 70,
         childrenAnimation: ExpandableFabAnimation.none,
@@ -308,8 +309,8 @@ class _NavigationScreenState extends State<NavigationScreen> {
             children: [
               _buildNavItem(AppIcons.navHome, 0),
               // _buildNavItem(AppIcons.navNote, 1),
-              _buildNavItem(AppIcons.navMessage, 2),
-              _buildNavItem(AppIcons.navProfile, 3),
+              _buildNavItem(AppIcons.navMessage, 1),
+              _buildNavItem(AppIcons.navProfile, 2),
             ],
           ),
         ),

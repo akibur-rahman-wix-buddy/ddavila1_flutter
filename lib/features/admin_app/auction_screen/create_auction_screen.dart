@@ -1,5 +1,3 @@
-
-
 import 'dart:convert';
 import 'dart:developer';
 import 'package:ddavila/assets_helper/app_colors.dart';
@@ -24,18 +22,14 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
-
 class CreateAuctionScreen extends StatefulWidget {
-  
   static void _defaultNotification(String message) {}
 
   const CreateAuctionScreen({super.key});
 
-
   @override
   State<CreateAuctionScreen> createState() => _CreateAuctionScreenState();
 }
-
 
 class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
   final TextEditingController _coreFeaturesController = TextEditingController();
@@ -58,13 +52,13 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
   String? selectedSubCategoryTitle;
   final TextEditingController _categoryController = TextEditingController();
   final TextEditingController _subCategoryController = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
   List<Map<String, dynamic>> propertyRows = [];
   List<String> valueOptions = ['Add New Item'];
   List<Map<String, String>> titleValuePairs = [];
   // * ########## Image
   List<Map<String, String>> _cardImages = [];
   List<String> imagePaths = [];
-
 
   @override
   void initState() {
@@ -80,7 +74,6 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
     });
   }
 
-
   @override
   void dispose() {
     _coreFeaturesController.dispose();
@@ -94,13 +87,11 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
     super.dispose();
   }
 
-
   void _toggleBold() => setState(() => _isBold = !_isBold);
   void _toggleItalic() => setState(() => _isItalic = !_isItalic);
   void _toggleUnderline() => setState(() => _isUnderlined = !_isUnderlined);
   void _setAlignment(TextAlign alignment) =>
       setState(() => _alignment = alignment);
-
 
   void _logTitleValuePairs() {
     // Pretty print titleValuePairs in JSON format
@@ -108,7 +99,6 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
     final formattedJson = encoder.convert(titleValuePairs);
     log('Title-Value Pairs:\n$formattedJson');
   }
-
 
   Future<void> _resetFile() async {
     try {
@@ -129,22 +119,18 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
     }
   }
 
-
   Future<void> _loadSavedText() async {
     try {
       final directory = await getApplicationDocumentsDirectory();
       final file = File('${directory.path}/editor_text.html');
       if (!await file.exists()) return;
 
-
       final savedText = await file.readAsString();
       final RegExp divRegex = RegExp(r'<div>(.*?)</div>', dotAll: true);
       final RegExpMatch? match = divRegex.firstMatch(savedText);
       String textContent = match?.group(1) ?? '';
 
-
       textContent = textContent.replaceAll('<br>', '\n');
-
 
       if (mounted) {
         setState(() {
@@ -159,12 +145,10 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
     }
   }
 
-
   Future<void> _saveText() async {
     try {
       final directory = await getApplicationDocumentsDirectory();
       final file = File('${directory.path}/editor_text.html');
-
 
       // Process Core Features
       String coreFeaturesText = _coreFeaturesController.text;
@@ -173,11 +157,9 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
           .replaceAll('<', '&lt;')
           .replaceAll('>', '&gt;');
 
-
       if (_isBold) styledCoreFeatures = '<b>$styledCoreFeatures</b>';
       if (_isItalic) styledCoreFeatures = '<i>$styledCoreFeatures</i>';
       if (_isUnderlined) styledCoreFeatures = '<u>$styledCoreFeatures</u>';
-
 
       // Process Description
       String descriptionText = _descriptionController.text;
@@ -186,11 +168,9 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
           .replaceAll('<', '&lt;')
           .replaceAll('>', '&gt;');
 
-
       if (_isBold) styledDescription = '<b>$styledDescription</b>';
       if (_isItalic) styledDescription = '<i>$styledDescription</i>';
       if (_isUnderlined) styledDescription = '<u>$styledDescription</u>';
-
 
       // Combine for saving to file
       String htmlContent = '''
@@ -202,10 +182,8 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
 </div>
 ''';
 
-
       // Save to file
       await file.writeAsString(htmlContent);
-
 
       // Log the HTML content separately
       coreFeaturesHtmlText = coreFeaturesHtml = '''
@@ -214,18 +192,15 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
 </div>
 ''';
 
-
       descriptionHtmlText = descriptionHtml = '''
 <div>
  ${styledDescription.replaceAll('\n', '<br>')}
 </div>
 ''';
 
-
       // Log immediately after setting
       log('Description Data: $descriptionHtmlText');
       log('Core Features Data: $coreFeaturesHtmlText');
-
 
       if (mounted) {
         log('Saved as HTML and logged successfully!');
@@ -236,7 +211,6 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
       }
     }
   }
-
 
   // * ####################### Image list ##########################
   Future<void> _showImageSourceDialog() async {
@@ -266,9 +240,7 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
       ),
     );
 
-
     if (!mounted || source == null) return;
-
 
     if (source == ImageSource.gallery) {
       await _pickImagesFromGallery();
@@ -277,14 +249,12 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
     }
   }
 
-
   Future<void> _pickImagesFromGallery() async {
     try {
       final picker = ImagePicker();
       final List<XFile>? pickedImages =
-      await picker.pickMultiImage(imageQuality: 85);
+          await picker.pickMultiImage(imageQuality: 85);
       if (!mounted || pickedImages == null || pickedImages.isEmpty) return;
-
 
       List<String> newPaths = [];
       List<Map<String, String>> newCardImages = [];
@@ -295,7 +265,6 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
           log('Image ${picked.name} exceeds 25 MB limit');
           continue;
         }
-
 
         final bytes = await picked.readAsBytes();
         final b64 = base64Encode(bytes);
@@ -313,12 +282,10 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
           mime = 'image/heic';
         }
 
-
         final dataUrl = 'data:$mime;base64,$b64';
         newPaths.add(picked.path);
         newCardImages.add({'src': dataUrl, 'link': ''});
       }
-
 
       if (newPaths.isNotEmpty) {
         setState(() {
@@ -335,14 +302,12 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
     }
   }
 
-
   Future<void> _pickImageFromCamera() async {
     try {
       final picker = ImagePicker();
       final XFile? picked =
-      await picker.pickImage(source: ImageSource.camera, imageQuality: 85);
+          await picker.pickImage(source: ImageSource.camera, imageQuality: 85);
       if (!mounted || picked == null) return;
-
 
       final file = File(picked.path);
       final fileSize = await file.length() / (1024 * 1024); // Size in MB
@@ -350,7 +315,6 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
         log('Image exceeds 25 MB limit');
         return;
       }
-
 
       final bytes = await picked.readAsBytes();
       final b64 = base64Encode(bytes);
@@ -368,16 +332,13 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
         mime = 'image/heic';
       }
 
-
       final dataUrl = 'data:$mime;base64,$b64';
-
 
       setState(() {
         _cardImages.add({'src': dataUrl, 'link': ''});
         imagePaths.add(picked.path);
         print('Selected image paths: $imagePaths');
       });
-
 
       if (mounted) {
         log('Image added from camera');
@@ -388,7 +349,6 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
       }
     }
   }
-
 
   void _insertImagePlaceholder(int index) {
     final cursorPos = _coreFeaturesController.selection.baseOffset;
@@ -407,7 +367,6 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
       });
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -464,6 +423,41 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
+                    'Product Title',
+                    style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                      color: AppColor.blackColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+                UIHelper.verticalSpace(10),
+                TextFormField(
+                  controller: _titleController,
+                  keyboardType: TextInputType.text,
+                  decoration: InputDecoration(
+                    hintText: 'Enter Product Title',
+                    hintStyle:
+                        TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: AppColor.cAEAEAE,
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your email';
+                    }
+                    if (!value.contains('@')) {
+                      return 'Please enter a valid email';
+                    }
+                    return null;
+                  },
+                ),
+                UIHelper.verticalSpace(10),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
                     'Item Details',
                     style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
                       color: AppColor.blackColor,
@@ -481,44 +475,44 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                       children: [
                         hasAnyImage
                             ? SizedBox(
-                          height: 60,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: _cardImages.length,
-                            itemBuilder: (context, index) {
-                              final image = _cardImages[index];
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 4),
-                                child: image['src']!.startsWith('data:')
-                                    ? Image.memory(
-                                  base64Decode(image['src']!
-                                      .split(',')
-                                      .last),
-                                  width: 48,
-                                  height: 48,
-                                  fit: BoxFit.cover,
-                                )
-                                    : Image.network(
-                                  image['src']!,
-                                  width: 48,
-                                  height: 48,
-                                  fit: BoxFit.cover,
+                                height: 60,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: _cardImages.length,
+                                  itemBuilder: (context, index) {
+                                    final image = _cardImages[index];
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 4),
+                                      child: image['src']!.startsWith('data:')
+                                          ? Image.memory(
+                                              base64Decode(image['src']!
+                                                  .split(',')
+                                                  .last),
+                                              width: 48,
+                                              height: 48,
+                                              fit: BoxFit.cover,
+                                            )
+                                          : Image.network(
+                                              image['src']!,
+                                              width: 48,
+                                              height: 48,
+                                              fit: BoxFit.cover,
+                                            ),
+                                    );
+                                  },
                                 ),
-                              );
-                            },
-                          ),
-                        )
+                              )
                             : CircleAvatar(
-                          radius: 24,
-                          backgroundColor: Colors.grey.shade100,
-                          child: Image.asset(AppImages.picImage),
-                        ),
+                                radius: 24,
+                                backgroundColor: Colors.grey.shade100,
+                                child: Image.asset(AppImages.picImage),
+                              ),
                         const SizedBox(height: 12),
                         Text(
                           "Click to Upload Front Side of Card",
                           style:
-                          TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                              TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
                             color: AppColor.blackColor,
                             fontSize: 16,
                             fontWeight: FontWeight.w800,
@@ -529,7 +523,7 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                         Text(
                           "(Max. File size: 25 MB)",
                           style:
-                          TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                              TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
                             color: AppColor.blackColor,
                             fontSize: 14,
                             fontWeight: FontWeight.w800,
@@ -539,7 +533,6 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                     ),
                   ),
                 ),
-
 
                 UIHelper.verticalSpace(10),
                 Align(
@@ -585,13 +578,13 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                                       ]
                                           .map<DropdownMenuItem<String>>(
                                             (String value) =>
-                                            DropdownMenuItem<String>(
+                                                DropdownMenuItem<String>(
                                               value: value,
                                               child: Text(value,
                                                   style: const TextStyle(
                                                       fontSize: 14)),
                                             ),
-                                      )
+                                          )
                                           .toList(),
                                       onChanged: (String? newValue) =>
                                           setState(() => fontStyle = newValue!),
@@ -602,13 +595,13 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                                       items: [12.0, 14.0, 16.0, 18.0, 20.0]
                                           .map<DropdownMenuItem<double>>(
                                             (double value) =>
-                                            DropdownMenuItem<double>(
+                                                DropdownMenuItem<double>(
                                               value: value,
                                               child: Text('$value',
                                                   style: const TextStyle(
                                                       fontSize: 14)),
                                             ),
-                                      )
+                                          )
                                           .toList(),
                                       onChanged: (double? newValue) =>
                                           setState(() => fontSize = newValue!),
@@ -618,7 +611,7 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                                           size: 20),
                                       onPressed: _toggleBold,
                                       color:
-                                      _isBold ? Colors.black : Colors.grey,
+                                          _isBold ? Colors.black : Colors.grey,
                                       tooltip: 'Bold',
                                     ),
                                     IconButton(
@@ -710,7 +703,6 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                 ),
                 UIHelper.verticalSpace(10),
 
-
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -730,15 +722,12 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                       return const CircularProgressIndicator();
                     }
 
-
                     if (snapshot.hasError) {
                       return Text('Error: ${snapshot.error}');
                     }
 
-
                     final categoryData = snapshot.data;
                     final categories = categoryData?.data ?? [];
-
 
                     if (selectedCategoryId == null && categories.isNotEmpty) {
                       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -759,23 +748,21 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                             selectedSubCategoryId = null;
                             selectedSubCategoryTitle = null;
                             _subCategoryController.text =
-                            'No subcategories available';
+                                'No subcategories available';
                           }
                         });
                       });
                     }
 
-
                     final selectedCategory = categories.firstWhere(
-                          (category) => category.id == selectedCategoryId,
+                      (category) => category.id == selectedCategoryId,
                       orElse: () =>
-                      categories.isNotEmpty ? categories.first : Datum(),
+                          categories.isNotEmpty ? categories.first : Datum(),
                     );
                     final subCategoryOptions = selectedCategory.subcategories
-                        ?.map((sub) => sub.title ?? '')
-                        .toList() ??
+                            ?.map((sub) => sub.title ?? '')
+                            .toList() ??
                         [];
-
 
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -813,7 +800,7 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                               onItemSelected: (value) {
                                 setState(() {
                                   final selected = categories.firstWhere(
-                                        (category) => category.title == value,
+                                    (category) => category.title == value,
                                     orElse: () => Datum(),
                                   );
                                   selectedCategoryId = selected.id;
@@ -833,7 +820,7 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                                         subcategories.first.title ?? '';
                                   } else {
                                     _subCategoryController.text =
-                                    'No subcategories available';
+                                        'No subcategories available';
                                   }
                                 });
                                 print("Category ID: $selectedCategoryId");
@@ -877,7 +864,7 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                                   final selected = selectedCategory
                                       .subcategories
                                       ?.firstWhere(
-                                        (sub) => sub.title == value,
+                                    (sub) => sub.title == value,
                                     orElse: () => Subcategory(),
                                   );
                                   selectedSubCategoryId = selected?.id;
@@ -894,7 +881,6 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                   },
                 ),
                 UIHelper.verticalSpaceMedium,
-
 
                 // * ############################# Property Section Started ##################################
                 Row(
@@ -913,9 +899,9 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                         setState(() {
                           final lastRow = propertyRows.last;
                           final selectedTitle =
-                          lastRow['selectedTitle'] as String?;
+                              lastRow['selectedTitle'] as String?;
                           final selectedValue =
-                          lastRow['selectedValue'] as String?;
+                              lastRow['selectedValue'] as String?;
                           if (selectedTitle != null &&
                               selectedValue != null &&
                               selectedTitle.isNotEmpty &&
@@ -951,7 +937,7 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                       child: Text(
                         'Add',
                         style:
-                        TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                            TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
                           color: AppColor.c4275F6,
                           fontSize: 16,
                           fontWeight: FontWeight.w800,
@@ -968,11 +954,9 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                       return const Center(child: CircularProgressIndicator());
                     }
 
-
                     if (snapshot.hasError) {
                       return Center(child: Text('Error: ${snapshot.error}'));
                     }
-
 
                     final propertyData = snapshot.data;
                     final titleOptions = [
@@ -982,19 +966,16 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                       'Add New Item'
                     ];
 
-
                     return Column(
                       children: List.generate(propertyRows.length, (index) {
                         final row = propertyRows[index];
                         final titleController =
-                        row['titleController'] as TextEditingController;
+                            row['titleController'] as TextEditingController;
                         final valueController =
-                        row['valueController'] as TextEditingController;
-
+                            row['valueController'] as TextEditingController;
 
                         // Store selected title
                         var selectedTitle = row['selectedTitle'] as String?;
-
 
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1051,16 +1032,16 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                                         if (index < titleValuePairs.length) {
                                           titleValuePairs[index] = {
                                             'title':
-                                            row['selectedTitle'] as String,
+                                                row['selectedTitle'] as String,
                                             'value':
-                                            row['selectedValue'] as String,
+                                                row['selectedValue'] as String,
                                           };
                                         } else {
                                           titleValuePairs.add({
                                             'title':
-                                            row['selectedTitle'] as String,
+                                                row['selectedTitle'] as String,
                                             'value':
-                                            row['selectedValue'] as String,
+                                                row['selectedValue'] as String,
                                           });
                                         }
                                         print('Selected Title: $value');
@@ -1073,7 +1054,7 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                                           titleValuePairs[index] = {
                                             'title': value,
                                             'value':
-                                            row['selectedValue'] as String,
+                                                row['selectedValue'] as String,
                                           };
                                         }
                                         print('Title Changed: $value');
@@ -1107,7 +1088,6 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                                       'Add New Item'
                                     ];
 
-
                                     if (subSnapshot.connectionState ==
                                         ConnectionState.waiting) {
                                       return const SizedBox(
@@ -1117,15 +1097,13 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                                       );
                                     }
 
-
                                     if (subSnapshot.hasError) {
                                       return SizedBox(
                                         width: 150.w,
                                         child:
-                                        Text('Error: ${subSnapshot.error}'),
+                                            Text('Error: ${subSnapshot.error}'),
                                       );
                                     }
-
 
                                     final subPropertyData = subSnapshot.data;
                                     if (subPropertyData != null &&
@@ -1137,7 +1115,6 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                                         'Add New Item'
                                       ];
                                     }
-
 
                                     return SizedBox(
                                       width: 150.w,
@@ -1166,16 +1143,16 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                                                 titleValuePairs.length) {
                                               titleValuePairs[index] = {
                                                 'title': row['selectedTitle']
-                                                as String,
+                                                    as String,
                                                 'value': row['selectedValue']
-                                                as String,
+                                                    as String,
                                               };
                                             } else {
                                               titleValuePairs.add({
                                                 'title': row['selectedTitle']
-                                                as String,
+                                                    as String,
                                                 'value': row['selectedValue']
-                                                as String,
+                                                    as String,
                                               });
                                             }
                                             log('Selected Value for Title ${row['selectedTitle']}: $value');
@@ -1188,7 +1165,7 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                                                 titleValuePairs.length) {
                                               titleValuePairs[index] = {
                                                 'title': row['selectedTitle']
-                                                as String,
+                                                    as String,
                                                 'value': value,
                                               };
                                             }
@@ -1229,7 +1206,6 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                 ),
                 // * ############################# Property Section Ended ##################################
 
-
                 UIHelper.verticalSpaceMedium,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1241,7 +1217,7 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                       minWidth: 170,
                       color: AppColor.cF3F2F2,
                       textStyle:
-                      TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                          TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
                         color: AppColor.blackColor,
                         fontSize: 16,
                         fontWeight: FontWeight.w800,
@@ -1257,6 +1233,7 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                         _logTitleValuePairs();
                         NavigationService.navigateToWithArgs(
                             Routes.finalAuctionScreen, {
+                          'titleText': _titleController.text,
                           'descriptionText': descriptionHtmlText,
                           'subCategory': selectedSubCategoryId.toString(),
                           'category': selectedCategoryId.toString(),
@@ -1268,7 +1245,7 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                       context: context,
                       minWidth: 170.w,
                       textStyle:
-                      TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                          TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
                         color: AppColor.cFFFFFF,
                         fontSize: 16,
                         fontWeight: FontWeight.w800,
@@ -1284,7 +1261,6 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
     );
   }
 }
-
 
 class DropDownCustomTextField extends StatelessWidget {
   final String? hintText;
@@ -1305,7 +1281,6 @@ class DropDownCustomTextField extends StatelessWidget {
   final Function(String)? onChanged;
   final List<String>? dropdownItems;
   final Function(String)? onItemSelected;
-
 
   const DropDownCustomTextField({
     super.key,
@@ -1328,7 +1303,6 @@ class DropDownCustomTextField extends StatelessWidget {
     this.dropdownItems,
     this.onItemSelected,
   });
-
 
   @override
   Widget build(BuildContext context) {
@@ -1375,53 +1349,50 @@ class DropDownCustomTextField extends StatelessWidget {
           prefixIcon: prefixIcon,
           suffixIcon: dropdownItems != null
               ? GestureDetector(
-            onTap: () async {
-              final RenderBox button =
-              context.findRenderObject() as RenderBox;
-              final RenderBox overlay = Overlay.of(context)
-                  .context
-                  .findRenderObject() as RenderBox;
+                  onTap: () async {
+                    final RenderBox button =
+                        context.findRenderObject() as RenderBox;
+                    final RenderBox overlay = Overlay.of(context)
+                        .context
+                        .findRenderObject() as RenderBox;
 
+                    final RelativeRect position = RelativeRect.fromRect(
+                      Rect.fromPoints(
+                        button.localToGlobal(Offset.zero, ancestor: overlay),
+                        button.localToGlobal(
+                            button.size.bottomRight(Offset.zero),
+                            ancestor: overlay),
+                      ),
+                      Offset.zero & overlay.size,
+                    );
 
-              final RelativeRect position = RelativeRect.fromRect(
-                Rect.fromPoints(
-                  button.localToGlobal(Offset.zero, ancestor: overlay),
-                  button.localToGlobal(
-                      button.size.bottomRight(Offset.zero),
-                      ancestor: overlay),
-                ),
-                Offset.zero & overlay.size,
-              );
+                    final String? selected = await showMenu<String>(
+                      context: context,
+                      position: position,
+                      items: dropdownItems!
+                          .map((e) => PopupMenuItem(
+                                value: e,
+                                child: Text(
+                                  e,
+                                  style: TextFontStyle
+                                      .textLine7w400cFFFFFFDmSans
+                                      .copyWith(
+                                    color: AppColor.blackColor,
+                                  ),
+                                ),
+                              ))
+                          .toList(),
+                    );
 
-
-              final String? selected = await showMenu<String>(
-                context: context,
-                position: position,
-                items: dropdownItems!
-                    .map((e) => PopupMenuItem(
-                  value: e,
-                  child: Text(
-                    e,
-                    style: TextFontStyle
-                        .textLine7w400cFFFFFFDmSans
-                        .copyWith(
-                      color: AppColor.blackColor,
-                    ),
-                  ),
-                ))
-                    .toList(),
-              );
-
-
-              if (selected != null) {
-                controller?.text = selected;
-                if (onItemSelected != null) {
-                  onItemSelected!(selected);
-                }
-              }
-            },
-            child: const Icon(Icons.arrow_drop_down),
-          )
+                    if (selected != null) {
+                      controller?.text = selected;
+                      if (onItemSelected != null) {
+                        onItemSelected!(selected);
+                      }
+                    }
+                  },
+                  child: const Icon(Icons.arrow_drop_down),
+                )
               : null,
           enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,
@@ -1434,14 +1405,11 @@ class DropDownCustomTextField extends StatelessWidget {
   }
 }
 
-
 // * ###################################################################################
 class DottedBorderContainer extends StatelessWidget {
   final Widget child;
 
-
   const DottedBorderContainer({super.key, required this.child});
-
 
   @override
   Widget build(BuildContext context) {

@@ -152,159 +152,159 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   },
                 ),
                 UIHelper.verticalSpaceMedium,
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Profile Settings',
-                    style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                ),
-                UIHelper.verticalSpace(12),
-                Container(
-                  decoration: BoxDecoration(
-                    color: AppColor.c4275F6,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        spreadRadius: 1,
-                        blurRadius: 5,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 30, vertical: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          children: [
-                            Stack(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 10),
-                                  child: SvgPicture.asset(
-                                    AppIcons.packedIcon,
-                                    height: 24,
-                                    width: 24,
-                                  ),
-                                ),
-                                Positioned(
-                                  left: 32,
-                                  child: Container(
-                                    padding: EdgeInsets.all(2.5),
-                                    decoration: BoxDecoration(
-                                      color: Colors.red,
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Text(
-                                      '01',
-                                      style: TextFontStyle
-                                          .textLine7w400cFFFFFFDmSans
-                                          .copyWith(
-                                        color: Colors.white,
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w800,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Text(
-                              'Packed',
-                              style: TextFontStyle.textLine7w400cFFFFFFDmSans
-                                  .copyWith(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Stack(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 10),
-                                  child: SvgPicture.asset(
-                                    AppIcons.truckIcon,
-                                    height: 24,
-                                    width: 24,
-                                  ),
-                                ),
-                                Positioned(
-                                  left: 32,
-                                  child: Container(
-                                    padding: EdgeInsets.all(2.5),
-                                    decoration: BoxDecoration(
-                                      color: Colors.red,
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Text(
-                                      '03',
-                                      style: TextFontStyle
-                                          .textLine7w400cFFFFFFDmSans
-                                          .copyWith(
-                                        color: Colors.white,
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w800,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Text(
-                              'Delivery',
-                              style: TextFontStyle.textLine7w400cFFFFFFDmSans
-                                  .copyWith(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Stack(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 10),
-                                  child: SvgPicture.asset(
-                                    AppIcons.starIcon,
-                                    height: 24,
-                                    width: 24,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Text(
-                              'Give a Rating',
-                              style: TextFontStyle.textLine7w400cFFFFFFDmSans
-                                  .copyWith(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ),
+                // Align(
+                //   alignment: Alignment.centerLeft,
+                //   child: Text(
+                //     'Profile Settings',
+                //     style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                //       color: Colors.black,
+                //       fontSize: 18,
+                //       fontWeight: FontWeight.w800,
+                //     ),
+                //   ),
+                // ),
+                // UIHelper.verticalSpace(12),
+                // Container(
+                //   decoration: BoxDecoration(
+                //     color: AppColor.c4275F6,
+                //     borderRadius: BorderRadius.circular(10),
+                //     boxShadow: [
+                //       BoxShadow(
+                //         color: Colors.grey.withOpacity(0.2),
+                //         spreadRadius: 1,
+                //         blurRadius: 5,
+                //         offset: const Offset(0, 3),
+                //       ),
+                //     ],
+                //   ),
+                //   child: Padding(
+                //     padding: const EdgeInsets.symmetric(
+                //         horizontal: 30, vertical: 16),
+                //     child: Row(
+                //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //       children: [
+                //         Column(
+                //           children: [
+                //             Stack(
+                //               children: [
+                //                 Padding(
+                //                   padding: const EdgeInsets.symmetric(
+                //                       horizontal: 20, vertical: 10),
+                //                   child: SvgPicture.asset(
+                //                     AppIcons.packedIcon,
+                //                     height: 24,
+                //                     width: 24,
+                //                   ),
+                //                 ),
+                //                 Positioned(
+                //                   left: 32,
+                //                   child: Container(
+                //                     padding: EdgeInsets.all(2.5),
+                //                     decoration: BoxDecoration(
+                //                       color: Colors.red,
+                //                       borderRadius: BorderRadius.circular(20),
+                //                     ),
+                //                     child: Text(
+                //                       '01',
+                //                       style: TextFontStyle
+                //                           .textLine7w400cFFFFFFDmSans
+                //                           .copyWith(
+                //                         color: Colors.white,
+                //                         fontSize: 13,
+                //                         fontWeight: FontWeight.w800,
+                //                       ),
+                //                     ),
+                //                   ),
+                //                 ),
+                //               ],
+                //             ),
+                //             Text(
+                //               'Packed',
+                //               style: TextFontStyle.textLine7w400cFFFFFFDmSans
+                //                   .copyWith(
+                //                 color: Colors.white,
+                //                 fontSize: 16,
+                //                 fontWeight: FontWeight.w800,
+                //               ),
+                //             ),
+                //           ],
+                //         ),
+                //         Column(
+                //           children: [
+                //             Stack(
+                //               children: [
+                //                 Padding(
+                //                   padding: const EdgeInsets.symmetric(
+                //                       horizontal: 20, vertical: 10),
+                //                   child: SvgPicture.asset(
+                //                     AppIcons.truckIcon,
+                //                     height: 24,
+                //                     width: 24,
+                //                   ),
+                //                 ),
+                //                 Positioned(
+                //                   left: 32,
+                //                   child: Container(
+                //                     padding: EdgeInsets.all(2.5),
+                //                     decoration: BoxDecoration(
+                //                       color: Colors.red,
+                //                       borderRadius: BorderRadius.circular(20),
+                //                     ),
+                //                     child: Text(
+                //                       '03',
+                //                       style: TextFontStyle
+                //                           .textLine7w400cFFFFFFDmSans
+                //                           .copyWith(
+                //                         color: Colors.white,
+                //                         fontSize: 13,
+                //                         fontWeight: FontWeight.w800,
+                //                       ),
+                //                     ),
+                //                   ),
+                //                 ),
+                //               ],
+                //             ),
+                //             Text(
+                //               'Delivery',
+                //               style: TextFontStyle.textLine7w400cFFFFFFDmSans
+                //                   .copyWith(
+                //                 color: Colors.white,
+                //                 fontSize: 16,
+                //                 fontWeight: FontWeight.w800,
+                //               ),
+                //             ),
+                //           ],
+                //         ),
+                //         Column(
+                //           children: [
+                //             Stack(
+                //               children: [
+                //                 Padding(
+                //                   padding: const EdgeInsets.symmetric(
+                //                       horizontal: 20, vertical: 10),
+                //                   child: SvgPicture.asset(
+                //                     AppIcons.starIcon,
+                //                     height: 24,
+                //                     width: 24,
+                //                   ),
+                //                 ),
+                //               ],
+                //             ),
+                //             Text(
+                //               'Give a Rating',
+                //               style: TextFontStyle.textLine7w400cFFFFFFDmSans
+                //                   .copyWith(
+                //                 color: Colors.white,
+                //                 fontSize: 16,
+                //                 fontWeight: FontWeight.w800,
+                //               ),
+                //             ),
+                //           ],
+                //         )
+                //       ],
+                //     ),
+                //   ),
+                // ),
                 UIHelper.verticalSpaceMedium,
                 Align(
                   alignment: Alignment.centerLeft,

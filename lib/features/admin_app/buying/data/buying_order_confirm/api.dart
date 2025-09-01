@@ -5,27 +5,27 @@ import 'package:ddavila/networks/endpoints.dart';
 import 'package:ddavila/networks/exception_handler/data_source.dart';
 import 'package:dio/dio.dart';
 
-final class SignInApi {
 
-  static final  SignInApi _singleton = SignInApi._internal();
 
-  SignInApi._internal();
+final class BuyingOrderConfirmApi {
 
-  static  SignInApi get instance => _singleton;
+  static final  BuyingOrderConfirmApi _singleton = BuyingOrderConfirmApi._internal();
 
-  Future<Map<String, dynamic>> signInApi({required dynamic email, required dynamic password}) async {
+  BuyingOrderConfirmApi._internal();
+
+  static  BuyingOrderConfirmApi get instance => _singleton;
+
+  Future<Map<String, dynamic>> buyingOrderConfirmInfo({
+    required dynamic productId, }) async {
     try {
       // Create the request data map
       Map<String, dynamic> data = {
-        "email": email,
-        "password": password,
       };
       // Make the POST request
-      Response response = (await postHttp(Endpoints.logInUrl(), data));
+      Response response = (await postHttp(Endpoints.busyingOrderConfirmApiLink(productId: productId), data));
 
       if (response.statusCode == 200) {
         final data = json.decode(json.encode(response.data));
-        ToastUtil.showShortToast('Login Successfully');
         return data;
 
       } else {

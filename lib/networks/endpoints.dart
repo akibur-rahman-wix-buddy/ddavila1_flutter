@@ -26,7 +26,7 @@ final class Endpoints {
   static String chatterListUrl() => "/messages";
   static String getChatList({dynamic participantableId}) =>
       "/messages/$participantableId";
-  static String postSentMessage() => "/api//messages";
+  static String postSentMessage() => "/messages";
   static String homeCategoryApiLink() => "/categories";
   static String popularCategoryApiLink() => "/categories/popular";
   static String liveAuctionDataApiLink() => "/auctions/popular";
@@ -49,7 +49,6 @@ final class Endpoints {
   static String buyingOrderBoard() => "/auth_buying_orders";
   static String sellingOrderBoard() => "/auth_selling_orders";
 
-
   // * category API
   static String categoryAPI() => "/categories";
   static String propertyAPI() => "/seller/product/all/propertys";
@@ -58,11 +57,13 @@ final class Endpoints {
 
   static String productDetails({dynamic slug}) => "/products/$slug";
   static String saleProductStripePayment() => "/stripe/checkout";
-  static String createConversation()=> "/messages/create";
-  static String whiteListApiLink()=> "/bookmark";
-  static String searchResultApiLink()=> "/products/search";
-  static String getStates()=> "/states";
-  static String completeProfile()=> "/profile/complete";
+  static String createConversation() => "/messages/create";
+  static String whiteListApiLink() => "/bookmark";
+  static String searchResultApiLink() => "/products/search";
+  static String getStates() => "/states";
+  static String completeProfile() => "/profile/complete";
+  static String postProductsSale() => "/seller/product";
+  static String postProductsAuction() => "/seller/product";
   static String stripeCardAddApiLink()=> "/stripe/card/add";
   static String verificationOtpApiLink()=> "/verify-otp-password";
   static String mySelfApiLink()=> "/me";
@@ -72,4 +73,5 @@ final class Endpoints {
   static String passwordUpdate()=> "/password/change";
   static String stripeConnectApiLink()=> "/stripe/connect";
   static String sellingOrderConfirmApiLink({dynamic productId})=> "/orders/$productId";
+  static String busyingOrderConfirmApiLink({dynamic productId})=> "/orders/$productId/accept";
 }
