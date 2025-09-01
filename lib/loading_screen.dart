@@ -126,6 +126,7 @@
 
 import 'package:ddavila/helpers/navigation_service.dart';
 import 'package:ddavila/navigation_screen.dart';
+import 'package:ddavila/networks/api_acess.dart';
 import 'package:ddavila/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'constants/app_constants.dart';
@@ -145,13 +146,17 @@ class LoadingScreen extends StatefulWidget {
 class _LoadingScreenState extends State<LoadingScreen> {
   bool _isLoading = true;
 
+
   @override
   void initState() {
     loadInitialData();
     super.initState();
   }
 
+
+
   loadInitialData() async {
+
     await Future.delayed(const Duration(seconds: 2));
     await setInitValue();
 
@@ -177,6 +182,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
     setState(() {});
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
@@ -185,6 +192,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
 
       print(">>>>>>>>>>>>>>>>>>>> here is the access info :${appData.read(kKeyIsLoggedIn)}");
+
 
 
       return appData.read(kKeyIsLoggedIn)

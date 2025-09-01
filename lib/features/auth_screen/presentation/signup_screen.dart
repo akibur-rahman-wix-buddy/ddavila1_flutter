@@ -92,7 +92,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
    if(success){
 
-     NavigationService.navigateTo(Routes.successScreen);
+     NavigationService.navigateToWithArgs(Routes.otpVerificationScreen,{
+       "email":_emailController.text
+     });
      setState(() {
        isLoading = false;
      });

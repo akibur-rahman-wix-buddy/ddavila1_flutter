@@ -62,6 +62,19 @@ final class Endpoints {
   static String searchResultApiLink() => "/products/search";
   static String getStates() => "/states";
   static String completeProfile() => "/profile/complete";
-
   static String postProductsSale() => "/seller/product";
+  static String createConversation()=> "/messages/create";
+  static String whiteListApiLink()=> "/bookmark";
+  static String searchResultApiLink()=> "/products/search";
+  static String getStates()=> "/states";
+  static String completeProfile()=> "/profile/complete";
+  static String stripeCardAddApiLink()=> "/stripe/card/add";
+  static String verificationOtpApiLink()=> "/verify-otp-password";
+  static String mySelfApiLink()=> "/me";
+  static String getStateApiLink()=> "/states";
+  static String getStripeBitPaymentApiLink()=> "/stripe/onboading";
+  static String updateProfileUrl()=> "/update/user";
+  static String passwordUpdate()=> "/password/change";
+  static String stripeConnectApiLink()=> "/stripe/connect";
+  static String sellingOrderConfirmApiLink({dynamic productId})=> "/orders/$productId";
 }

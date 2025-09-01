@@ -3,6 +3,7 @@ import 'package:ddavila/features/user_app/home_screen/model/category_wise_data_m
 import 'package:ddavila/helpers/all_routes.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';
 import 'package:ddavila/networks/api_acess.dart';
+import 'package:ddavila/networks/endpoints.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -67,7 +68,7 @@ class _CategoryProductsWidgetState extends State<CategoryProductsWidget> {
                       crossAxisCount: 2,
                       mainAxisSpacing: 12,
                       crossAxisSpacing: 10,
-                      childAspectRatio: .5,
+                      childAspectRatio: .45,
                     ),
                     itemCount: data?.length,
                     itemBuilder: (context, index) {
@@ -136,7 +137,10 @@ class _CategoryProductsWidgetState extends State<CategoryProductsWidget> {
     return ClipRRect(
       borderRadius: BorderRadius.circular(12),
       child: Image.network(
-        product.images?.toString() ?? "",
+        product.images?.isNotEmpty == true
+            ? image_url + product.images!.first
+            : "",
+
         fit: BoxFit.cover,
         width: double.infinity,
         height: 200,

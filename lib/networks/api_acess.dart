@@ -14,10 +14,13 @@ import 'package:ddavila/features/admin_app/buying/data/get_buying_data/buying_or
 import 'package:ddavila/features/admin_app/buying/model/buying_order_data_model.dart';
 import 'package:ddavila/features/admin_app/dashboard_screen/data/admindash_rx.dart';
 import 'package:ddavila/features/admin_app/dashboard_screen/model/admin_dash_model.dart';
+import 'package:ddavila/features/admin_app/seling/data/selling_order_confirm_Api/rx.dart';
 import 'package:ddavila/features/admin_app/seling/data/selling_order_data/buying_order_rx.dart';
 import 'package:ddavila/features/admin_app/seling/model/selling_order_data_model.dart';
 import 'package:ddavila/features/admin_app/wishlist_screen/model/wishlist_model.dart';
 import 'package:ddavila/features/auth_screen/data/rx_sign_up/rx.dart';
+import 'package:ddavila/features/auth_screen/data/stripe_card_add/rx.dart';
+import 'package:ddavila/features/auth_screen/data/varify_otp/rx.dart';
 import 'package:ddavila/features/chat/data/rx_create_conversation/rx.dart';
 import 'package:ddavila/features/chat/data/rx_get_chat/rx.dart';
 import 'package:ddavila/features/chat/data/rx_send_message/rx.dart';
@@ -35,14 +38,21 @@ import 'package:ddavila/features/user_app/home_screen/model/category_wise_data_m
 import 'package:ddavila/features/user_app/home_screen/model/home_category_data_model.dart';
 import 'package:ddavila/features/user_app/home_screen/model/live_autction_data_model.dart';
 import 'package:ddavila/features/user_app/home_screen/model/popular_category_data_model.dart';
+import 'package:ddavila/features/user_app/products_screen/data/bit_payment_data/rx.dart';
+import 'package:ddavila/features/user_app/products_screen/data/get_state_api/rx.dart';
 import 'package:ddavila/features/user_app/products_screen/data/live_auction_details_rx/rx.dart';
 import 'package:ddavila/features/user_app/products_screen/data/post_bit_price/rx.dart';
 import 'package:ddavila/features/user_app/products_screen/data/post_white_list_data/rx.dart';
 import 'package:ddavila/features/user_app/products_screen/data/sale_product_payment_data/rx.dart';
 import 'package:ddavila/features/user_app/products_screen/data/sate_product_detailes_data/rx.dart';
 import 'package:ddavila/features/user_app/products_screen/model/live_action_details_model.dart';
+import 'package:ddavila/features/user_app/profile_screen/data/my_self_Data/rx.dart';
+import 'package:ddavila/features/user_app/profile_screen/data/post_update_profile_data/rx.dart';
 import 'package:ddavila/features/user_app/profile_screen/data/rx_logout/rx.dart';
 import 'package:ddavila/features/user_app/products_screen/model/sale_product_details_data_model.dart';
+import 'package:ddavila/features/user_app/profile_screen/data/stripe_connect_data/rx.dart';
+import 'package:ddavila/features/user_app/profile_screen/model/my_self_model_data.dart';
+import 'package:ddavila/features/user_app/profile_screen/model/stripe_connect_data_model.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:ddavila/features/auth_screen/data/rx_sign_in/rx.dart';
 
@@ -54,6 +64,8 @@ import '../features/auth_screen/complete_account_info/data/get_states/get_states
 import '../features/auth_screen/complete_account_info/data/post_create_profile/rx.dart';
 import '../features/auth_screen/complete_account_info/model/state_model.dart';
 import '../features/user_app/home_screen/data/rx_home_category_Data/rx.dart';
+import '../features/user_app/products_screen/model/state_data_model.dart';
+import '../features/user_app/profile_screen/data/update_password/rx.dart' show UpdatePasswordRx;
 
 SignInApiRx signInApiRx = SignInApiRx(
   empty: <String, dynamic>{},
@@ -95,9 +107,27 @@ PostWhiteListRx postWhiteListRx = PostWhiteListRx(
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );
 
+StripeCardAddRx stripeCardAddRx = StripeCardAddRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+VerificationOtpRx verificationOtpRx = VerificationOtpRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+
+
 GetAllChatListRx getAllChatListRx = GetAllChatListRx(
   empty: ChatListModelData(),
   dataFetcher: BehaviorSubject<ChatListModelData>(),
+);
+
+
+MySelfRx mySelfRx = MySelfRx(
+  empty: MySelfModelData(),
+  dataFetcher: BehaviorSubject<MySelfModelData>(),
 );
 
 GetChatMessageRx getChatMessageRx = GetChatMessageRx(
@@ -140,6 +170,11 @@ CategoryWiseProductRx categoryWiseProductRx = CategoryWiseProductRx(
   dataFetcher: BehaviorSubject<CategoryWiseProductDataModel>(),
 );
 
+GetStateRx getStateRx = GetStateRx(
+  empty: StateDataModel(),
+  dataFetcher: BehaviorSubject<StateDataModel>(),
+);
+
 final liveAuctionDetailsDataRx = LiveAuctionDetailsDataRx(
   empty: LiveAuctionDetailsApiDataModel(),
   dataFetcher: BehaviorSubject<LiveAuctionDetailsApiDataModel>(),
@@ -179,6 +214,11 @@ GetPropertyAPIRX getPropertyAPIRXObj = GetPropertyAPIRX(
   dataFetcher: BehaviorSubject<PropertyModel>(),
 );
 
+StripeConnectRx stripeConnectRx = StripeConnectRx(
+  empty: StripeConnectDataModel(),
+  dataFetcher: BehaviorSubject<StripeConnectDataModel>(),
+);
+
 GetSubPropertyAPIRX getSubPropertyAPIRXObj = GetSubPropertyAPIRX(
   empty: SubPropertyModel(),
   dataFetcher: BehaviorSubject<SubPropertyModel>(),
@@ -191,6 +231,28 @@ CreateConversationRx createConversationRx = CreateConversationRx(
 CompleteProfileApiRx completeProfileApiRxObj = CompleteProfileApiRx(
   empty: <String, dynamic>{},
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+
+BitPaymentRx bitPaymentRx = BitPaymentRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+
+UpdatePasswordRx updatePasswordRx = UpdatePasswordRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+
+SellingOrderConfirmRx sellingOrderConfirmRx = SellingOrderConfirmRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+UpdateProfileApiRx  updateProfileApiRx = UpdateProfileApiRx(
+
 );
 
 GetStateApiRX getStateApiRXObj = GetStateApiRX(

@@ -54,7 +54,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
                   context: context,
                   minWidth: double.infinity,
                   onTap: () {
-                    NavigationService.navigateTo(Routes.homeScreen);
+                    NavigationService.navigateTo(Routes.navigationScreen);
                   },
                 ),
               ],

@@ -2,9 +2,11 @@
 
 import 'package:ddavila/common_widgets/custom_button.dart';
 import 'package:ddavila/features/user_app/products_screen/model/sale_product_details_data_model.dart';
+import 'package:ddavila/features/user_app/products_screen/widget/bit_product_image_slider.dart';
 import 'package:ddavila/helpers/html_text_viewer.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';
 import 'package:ddavila/networks/api_acess.dart';
+import 'package:ddavila/networks/endpoints.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -12,6 +14,7 @@ import 'package:ddavila/assets_helper/app_colors.dart';
 import 'package:ddavila/assets_helper/app_icons.dart';
 import 'package:ddavila/assets_helper/app_image.dart';
 import 'package:ddavila/assets_helper/text_font_style.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ProductsScreen extends StatefulWidget {
   const ProductsScreen({super.key, required this.slug});
@@ -24,6 +27,11 @@ class ProductsScreen extends StatefulWidget {
 
 class _ProductsScreenState extends State<ProductsScreen> {
 
+
+
+
+
+
   bool isWhiteListing = false;
   bool _isProcessing = false;
 
@@ -32,6 +40,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
   @override
   void initState() {
+
+    print(">>>>>>>>>>>>>>>> in screen slug is ${widget.slug}");
+
     productViewDetailsRx.categoryWiseProductData(slug: widget.slug);
     super.initState();
   }
@@ -106,14 +117,19 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        data?.title.toString()??"",
-                                        style: TextFontStyle
-                                            .textLine7w400cFFFFFFDmSans
-                                            .copyWith(
-                                          fontSize: 22.0,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black,
+                                      SizedBox(
+                                        width: 300,
+                                        child: Text(
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          data?.title.toString()??"",
+                                          style: TextFontStyle
+                                              .textLine7w400cFFFFFFDmSans
+                                              .copyWith(
+                                            fontSize: 22.0,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                          ),
                                         ),
                                       ),
 
@@ -183,20 +199,21 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                 isLoading? CircularProgressIndicator(color: Colors.blueAccent,):  CustomButton(
 
                                     onTap: (){
-
                                       setState(() {
-                                        isLoading =true;
+                                        _isProcessing =true;
                                       });
 
                                       postSaleProductPaymentRx.saleProductStripePayment(productId: data?.id);
                                       setState(() {
-                                        isLoading =false;
+                                        _isProcessing =false;
                                       });
-
+                                      setState(() {
+                                        _isProcessing =false;
+                                      });
                                     },
-                                    text: 'Buy Now',
+                                    text: _isProcessing?"Buying..." :'Buy Now',
                                     context: context,
-                                    minWidth: 200,
+                                    minWidth: 150,
                                   ),
                                 ],
                               ),
@@ -275,121 +292,4 @@ class _ProductsScreenState extends State<ProductsScreen> {
 //   State<ProductsScreen> createState() => _ProductsScreenState();
 // }
 
-class ProductImageSlider extends StatefulWidget {
 
-  const ProductImageSlider({super.key, required this.image});
-
-
- final  List image;
-
-  @override
-  _ProductImageSliderState createState() => _ProductImageSliderState();
-}
-
-class _ProductImageSliderState extends State<ProductImageSlider> {
-  int _currentIndex = 0;
-
-  final PageController _pageController = PageController();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 400.0,
-      child: Stack(
-        alignment: Alignment.topCenter,
-        children: [
-          PageView.builder(
-            controller: _pageController,
-            itemCount: widget.image.length,
-            onPageChanged: (index) {
-              setState(() {
-                _currentIndex = index;
-              });
-            },
-            itemBuilder: (context, index) {
-              return ClipRRect(
-                borderRadius: BorderRadius.circular(10.0),
-                child: Image.asset(
-                  widget.image[index],
-                  fit: BoxFit.cover,
-                ),
-              );
-            },
-          ),
-          Positioned(
-            top: 10.0,
-            left: 16.0,
-            child: GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Container(
-                padding: EdgeInsets.all(10),
-                child: SvgPicture.asset(AppIcons.arrowBack),
-              ),
-            ),
-          ),
-          Positioned(
-            top: 10.0,
-            right: 16.0,
-            child: GestureDetector(
-              onTap: () {},
-              child: Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
-                      blurRadius: 9.9,
-                      offset: Offset(0, 0.1),
-                    ),
-                  ],
-                ),
-                padding: EdgeInsets.all(10),
-                child: SvgPicture.asset(
-                  AppIcons.cartIcon,
-                  height: 44.0,
-                  width: 44.0,
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 10.0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(
-                widget.image.length,
-                (index) => Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      width: 1.5,
-                      color: _currentIndex == index
-                          ? Colors.red
-                          : Colors.transparent,
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(3.0),
-                    child: AnimatedContainer(
-                      duration: Duration(milliseconds: 300),
-                      margin: EdgeInsets.symmetric(horizontal: 1.0),
-                      height: _currentIndex == index ? 10.0 : 6.0,
-                      width: _currentIndex == index ? 10.0 : 6.0,
-                      decoration: BoxDecoration(
-                        color:
-                            _currentIndex == index ? Colors.blue : Colors.grey,
-                        borderRadius: BorderRadius.circular(6.0),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
