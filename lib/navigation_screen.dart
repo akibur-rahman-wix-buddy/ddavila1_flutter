@@ -218,7 +218,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
           ),
           GestureDetector(
             onTap: (){
-              NavigationService.navigateTo(Routes.adminDashboard);
+              NavigationService.navigateTo(Routes.createAuctionScreen);
             },
             child: Container(
               decoration: BoxDecoration(

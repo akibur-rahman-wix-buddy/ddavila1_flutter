@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:ddavila/features/admin_app/admin_navigation.dart';
+import 'package:ddavila/features/admin_app/auction_screen/create_auction_screen.dart';
 import 'package:ddavila/features/admin_app/dashboard_screen/admin_dashboard_screen.dart';
 import 'package:ddavila/features/auth_screen/presentation/login_screen.dart';
 import 'package:ddavila/features/auth_screen/presentation/otp_varification_screen.dart';
@@ -56,6 +57,9 @@ final class Routes {
   static const String otpVerificationScreen = '/otpVerificationScreen';
   static const String updateProfileScreen = '/updateProfileScreen';
   static const String changePassword = '/changePassword';
+  static const String createAuctionScreen = '/createAuctionScreen';
+  static const String finalAuctionScreen = '/finalAuctionScreen';
+
 }
 
 final class RouteGenerator {
@@ -241,6 +245,15 @@ final class RouteGenerator {
             : CupertinoPageRoute(
                 builder: (context) => const AdminDashboardScreen(),
               );
+
+    // * Filter Screen
+      case Routes.createAuctionScreen:
+        return Platform.isIOS
+            ? UltimateSmoothTransitionRoute(
+            widget: const ScreenTitle(widget: CreateAuctionScreen()),
+            settings: settings)
+            : CupertinoPageRoute(builder: (context) => const CreateAuctionScreen());
+
 
       default:
         return null;
