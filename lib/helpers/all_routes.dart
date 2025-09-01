@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:ddavila/features/admin_app/admin_navigation.dart';
 import 'package:ddavila/features/admin_app/dashboard_screen/admin_dashboard_screen.dart';
 import 'package:ddavila/features/auth_screen/presentation/login_screen.dart';
+import 'package:ddavila/features/auth_screen/presentation/otp_varification_screen.dart';
 import 'package:ddavila/features/auth_screen/presentation/role_screen.dart';
 import 'package:ddavila/features/auth_screen/presentation/signin_screen.dart';
 import 'package:ddavila/features/auth_screen/presentation/signup_screen.dart';
@@ -9,10 +10,13 @@ import 'package:ddavila/features/auth_screen/presentation/success_screen.dart';
 import 'package:ddavila/features/user_app/filter_screen/presentation/filter_screen.dart';
 import 'package:ddavila/features/user_app/home_screen/presentation/home_screen.dart';
 import 'package:ddavila/features/user_app/home_screen/presentation/search_screen.dart';
-import 'package:ddavila/features/user_app/products_screen/product_bid_screen.dart';
-import 'package:ddavila/features/user_app/products_screen/products_screen.dart';
+import 'package:ddavila/features/user_app/products_screen/presentation/product_bid_screen.dart';
+import 'package:ddavila/features/user_app/products_screen/presentation/products_screen.dart';
+import 'package:ddavila/features/user_app/profile_screen/presentation/change_password.dart';
 import 'package:ddavila/navigation_screen.dart';
 import 'package:flutter/cupertino.dart';
+
+import '../features/user_app/profile_screen/presentation/update_profile.dart' show UpdateProfileScreen;
 
 final class Routes {
   static final Routes _routes = Routes._internal();
@@ -49,6 +53,9 @@ final class Routes {
   // * ##########################################################################################
   static const String adminNavigationScreen = '/adminNavigationScreen';
   static const String adminDashboard = '/adminDashboard';
+  static const String otpVerificationScreen = '/otpVerificationScreen';
+  static const String updateProfileScreen = '/updateProfileScreen';
+  static const String changePassword = '/changePassword';
 }
 
 final class RouteGenerator {
@@ -91,6 +98,7 @@ final class RouteGenerator {
                 settings: settings)
             : CupertinoPageRoute(builder: (context) => const SignUpScreen());
 
+
       // * Sign In Screen
       case Routes.navigationScreen:
         return Platform.isIOS
@@ -99,6 +107,14 @@ final class RouteGenerator {
                 settings: settings)
             : CupertinoPageRoute(
                 builder: (context) => const NavigationScreen());
+
+      case Routes.changePassword:
+        return Platform.isIOS
+            ? UltimateSmoothTransitionRoute(
+                widget: const ScreenTitle(widget: ChangePassword()),
+                settings: settings)
+            : CupertinoPageRoute(
+                builder: (context) => const ChangePassword());
 
       // * Success Screen
       case Routes.successScreen:
@@ -147,6 +163,38 @@ final class RouteGenerator {
             : CupertinoPageRoute(
             builder: (context) => ProductsScreen(
               slug: args['slug'],
+            ));
+
+
+
+
+      case Routes.updateProfileScreen:
+        final Map args = settings.arguments as Map;
+        return Platform.isAndroid
+            ? UltimateSmoothTransitionRoute(
+            widget: UpdateProfileScreen(
+              userData: args['userData'],
+            ),
+            settings: settings)
+            : CupertinoPageRoute(
+            builder: (context) => UpdateProfileScreen(
+            userData: args["userData"],
+            ));
+
+
+
+
+      case Routes.otpVerificationScreen:
+        final Map args = settings.arguments as Map;
+        return Platform.isAndroid
+            ? UltimateSmoothTransitionRoute(
+            widget: OtpVerificationScreen(
+              email: args['email'],
+            ),
+            settings: settings)
+            : CupertinoPageRoute(
+            builder: (context) => OtpVerificationScreen(
+              email: args['email'],
             ));
 
 

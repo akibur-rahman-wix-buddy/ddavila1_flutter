@@ -1,112 +1,14 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter_stripe/flutter_stripe.dart';
-//
-// class StripeCardScreen extends StatefulWidget {
-//   const StripeCardScreen({super.key});
-//
-//   @override
-//   State<StripeCardScreen> createState() => _StripeCardScreenState();
-// }
-//
-// class _StripeCardScreenState extends State<StripeCardScreen> {
-//   final CardEditController _controller = CardEditController();
-//   bool _isValid = false;
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//     _controller.addListener(() {
-//       setState(() {
-//         _isValid = _controller.complete; // Stripe auto-validates card
-//       });
-//     });
-//   }
-//
-//   void _submitCard() {
-//
-//     print(">>>>>>>>>>>>>>>>. here is validation: $_isValid");
-//      print(">>>>>>>>>>>>>>>>. here is card details: ${_controller.details}");
-//
-//
-//
-//     if (_isValid) {
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         const SnackBar(content: Text("Card is valid ✅")),
-//       );
-//     } else {
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         const SnackBar(content: Text("Invalid card ❌")),
-//       );
-//     }
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: Colors.blue.shade900,
-//       body: Center(
-//         child: Container(
-//           padding: const EdgeInsets.all(16),
-//           margin: const EdgeInsets.symmetric(horizontal: 20),
-//           decoration: BoxDecoration(
-//             color: Colors.white,
-//             borderRadius: BorderRadius.circular(12),
-//           ),
-//           child: Column(
-//             mainAxisSize: MainAxisSize.min,
-//             children: [
-//
-//
-//
-//
-//               CardField(
-//                 controller: _controller,
-//                 decoration: const InputDecoration(
-//                   labelText: "Card number",
-//                   border: InputBorder.none,
-//                   enabled: false,
-//                 ),
-//                 style: const TextStyle(fontSize: 16),
-//                 enablePostalCode: false, // Disable postal codec
-//                 cvcHintText : "", // Disable CVC field
-//                 expirationHintText: "", // Disable expiry date field
-//               ),
-//
-//
-//
-//
-//               // CardField(
-//               //   controller: _controller,
-//               //   decoration: const InputDecoration(
-//               //     labelText: "Card number",
-//               //     border: InputBorder.none,
-//               //     enabled: false,
-//               //   ),
-//               //   style: const TextStyle(fontSize: 16),
-//               //   enablePostalCode: true, // Hide postal code if not needed
-//               // ),
-//
-//
-//               const SizedBox(height: 20),
-//               ElevatedButton(
-//                 onPressed: _submitCard,
-//                 style: ElevatedButton.styleFrom(
-//                   backgroundColor: Colors.blue,
-//                   minimumSize: const Size(double.infinity, 50),
-//                 ),
-//                 child: const Text("Submit"),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-
-
+import 'dart:developer';
+import 'package:ddavila/common_widgets/custom_button.dart';
+import 'package:ddavila/constants/app_constants.dart';
+import 'package:ddavila/helpers/all_routes.dart';
+import 'package:ddavila/helpers/di.dart';
+import 'package:ddavila/helpers/navigation_service.dart';
+import 'package:ddavila/helpers/toast.dart';
+import 'package:ddavila/helpers/ui_helpers.dart';
+import 'package:ddavila/networks/api_acess.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 
 class StripeCardScreen extends StatefulWidget {
@@ -118,77 +20,131 @@ class StripeCardScreen extends StatefulWidget {
 
 class _StripeCardScreenState extends State<StripeCardScreen> {
   final CardEditController _controller = CardEditController();
-  bool _isValid = false;
+  CardFieldInputDetails? _cardDetails;
 
   @override
   void initState() {
     super.initState();
+
+    // Listen to controller updates (optional)
     _controller.addListener(() {
-      setState(() {
-        _isValid = _controller.complete;
-      });
+      setState(() {});
     });
   }
 
-  void _submitCard() {
-    print("Validation: $_isValid");
-    print("Card details: ${_controller.details}");
-
-    if (_isValid) {
+  void _createPaymentMethod() async {
+    if (_cardDetails == null || !_cardDetails!.complete) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Card is valid ✅")),
+        const SnackBar(content: Text("Please complete the card form")),
       );
-    } else {
+      return;
+    }
+
+    try {
+      final paymentMethod = await Stripe.instance.createPaymentMethod(
+        params: const PaymentMethodParams.card(
+          paymentMethodData: PaymentMethodData(),
+        ),
+      );
+
+      log('🟢 Payment Method ID: ${paymentMethod.id}');
+
+
+      bool success = await stripeCardAddRx.stripeCardAddInfo(paymentMethodId: paymentMethod.id);
+
+      if(success){
+        mySelfRx.mySelfData();
+        NavigationService.navigateToRemoveuntil(Routes.navigationScreen);
+      }
+
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(content: Text("🟢 Payment Method ID: ${paymentMethod.id}")),
+      // );
+    } catch (e) {
+      log('🔴 Error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Invalid card ❌")),
+        SnackBar(content: Text("❌ Error: $e")),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final isValid = _cardDetails?.complete ?? false;
+
     return Scaffold(
       backgroundColor: Colors.blue.shade900,
-      body: Center(
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          margin: const EdgeInsets.symmetric(horizontal: 20),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-          ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Card Field with only number visible
-              CardField(
-                controller: _controller,
-                decoration: InputDecoration(
-                  labelText: "Card Number",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  filled: true,
-                  fillColor: Colors.grey[50],
-                ),
-                style: const TextStyle(fontSize: 16),
-                // These settings help minimize the appearance of other fields
-                enablePostalCode: false,
-                cursorColor: Colors.blue,
-                // // You can also try setting the width to force only number field
-                // width: double.infinity,
-                // height: 60, // Adjust height to fit only one field
-              ),
+              Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: IconButton(onPressed: (){
 
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _submitCard,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  minimumSize: const Size(double.infinity, 50),
+                    NavigationService.goBack;
+
+                  }, icon: Icon(Icons.arrow_circle_left,color: Colors.white,size: 45,))),
+        
+              Center(
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+        
+                      // CardField for card input
+                      CardField(
+                        controller: _controller,
+                        onCardChanged: (card) {
+                          setState(() {
+                            _cardDetails = card;
+                          });
+                        },
+                        decoration: InputDecoration(
+                          labelText: "Card Number",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          filled: true,
+                          fillColor: Colors.grey[50],
+                        ),
+                        style: const TextStyle(fontSize: 16),
+                        enablePostalCode: false,
+                        cursorColor: Colors.blue,
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: isValid ? _createPaymentMethod : null,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: isValid ? Colors.blue : Colors.grey,
+                          minimumSize: const Size(double.infinity, 50),
+                        ),
+                        child: const Text("Submit"),
+                      ),
+        
+                      UIHelper.verticalSpace(24.h),
+        
+                      CustomButton(text: "Go back ",onTap:(){
+                        NavigationService.goBack;
+                      } , context: context)
+        
+                    ],
+                  ),
                 ),
-                child: const Text("Submit"),
               ),
+        
+        
+              SizedBox()
+        
+        
             ],
           ),
         ),

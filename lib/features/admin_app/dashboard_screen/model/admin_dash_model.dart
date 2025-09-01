@@ -1,13 +1,13 @@
 import 'dart:convert';
 
 class AdminDashModel {
-    final int? auctionsAll;
-    final int? auctionsOnGoing;
-    final int? totalEarning;
-    final int? soldItems;
-    final Map<String, int>? dailyData;
+    final dynamic auctionsAll;
+    final dynamic auctionsOnGoing;
+    final dynamic totalEarning;
+    final dynamic soldItems;
+    final Map<String, dynamic>? dailyData;
     final List<TopBidder>? topBidder;
-    final Map<String, int>? earning;
+    final Map<String, dynamic>? earning;
     final List<RecentAuction>? recentAuctions;
 
     AdminDashModel({
@@ -30,9 +30,9 @@ class AdminDashModel {
         auctionsOnGoing: json["auctionsOnGoing"],
         totalEarning: json["totalEarning"],
         soldItems: json["soldItems"],
-        dailyData: Map.from(json["dailyData"]!).map((k, v) => MapEntry<String, int>(k, v)),
+        dailyData: Map.from(json["dailyData"]!).map((k, v) => MapEntry<String, dynamic>(k, v)),
         topBidder: json["topBidder"] == null ? [] : List<TopBidder>.from(json["topBidder"]!.map((x) => TopBidder.fromJson(x))),
-        earning: Map.from(json["earning"]!).map((k, v) => MapEntry<String, int>(k, v)),
+        earning: Map.from(json["earning"]!).map((k, v) => MapEntry<String, dynamic>(k, v)),
         recentAuctions: json["recentAuctions"] == null ? [] : List<RecentAuction>.from(json["recentAuctions"]!.map((x) => RecentAuction.fromJson(x))),
     );
 
@@ -49,12 +49,12 @@ class AdminDashModel {
 }
 
 class RecentAuction {
-    final int? id;
+    final dynamic id;
     final String? title;
     final String? slug;
     final List<String>? images;
     final DateTime? auctionEndAt;
-    final int? startingPrice;
+    final dynamic startingPrice;
 
     RecentAuction({
         this.id,
@@ -89,8 +89,8 @@ class RecentAuction {
 }
 
 class TopBidder {
-    final int? userId;
-    final int? maxBid;
+    final dynamic userId;
+    final dynamic maxBid;
     final User? user;
 
     TopBidder({
