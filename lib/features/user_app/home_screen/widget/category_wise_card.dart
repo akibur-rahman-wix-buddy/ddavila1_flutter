@@ -68,7 +68,7 @@ class _CategoryProductsWidgetState extends State<CategoryProductsWidget> {
                       crossAxisCount: 2,
                       mainAxisSpacing: 12,
                       crossAxisSpacing: 10,
-                      childAspectRatio: .45,
+                      childAspectRatio: .53,
                     ),
                     itemCount: data?.length,
                     itemBuilder: (context, index) {
@@ -134,13 +134,13 @@ class _CategoryProductsWidgetState extends State<CategoryProductsWidget> {
   }
 
   Widget _buildProductImage(ProductData product) {
+    print(">>>>>>>>>>>>>>>>>> this is the image url ${"$image_url${product.images!.first}"}");
     return ClipRRect(
       borderRadius: BorderRadius.circular(12),
       child: Image.network(
         product.images?.isNotEmpty == true
-            ? image_url + product.images!.first
+            ? "$image_url${product.images!.first}" // Fixed: Added proper string concatenation
             : "",
-
         fit: BoxFit.cover,
         width: double.infinity,
         height: 200,
@@ -157,15 +157,18 @@ class _CategoryProductsWidgetState extends State<CategoryProductsWidget> {
   }
 
   Widget _buildProductTitle(ProductData product) {
-    return Text(
-      product.title.toString() ?? "",
-      style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-        fontSize: 16,
-        fontWeight: FontWeight.bold,
-        color: Colors.black,
+    return SizedBox(
+      height: 40,
+      child: Text(
+        product.title.toString() ?? "",
+        style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+        ),
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
       ),
-      maxLines: 2,
-      overflow: TextOverflow.ellipsis,
     );
   }
 

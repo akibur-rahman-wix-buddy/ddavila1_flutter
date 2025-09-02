@@ -76,31 +76,31 @@ class _ProductImageSliderState extends State<ProductImageSlider> {
               ),
             ),
           ),
-          Positioned(
-            top: 10.0,
-            right: 16.0,
-            child: GestureDetector(
-              onTap: () {},
-              child: Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
-                      blurRadius: 9.9,
-                      offset: Offset(0, 0.1),
-                    ),
-                  ],
-                ),
-                padding: EdgeInsets.all(10),
-                child: SvgPicture.asset(
-                  AppIcons.cartIcon,
-                  height: 44.0,
-                  width: 44.0,
-                ),
-              ),
-            ),
-          ),
+          // Positioned(
+          //   top: 10.0,
+          //   right: 16.0,
+          //   child: GestureDetector(
+          //     onTap: () {},
+          //     child: Container(
+          //       decoration: BoxDecoration(
+          //         shape: BoxShape.circle,
+          //         boxShadow: [
+          //           BoxShadow(
+          //             color: Colors.grey.withOpacity(0.1),
+          //             blurRadius: 9.9,
+          //             offset: Offset(0, 0.1),
+          //           ),
+          //         ],
+          //       ),
+          //       padding: EdgeInsets.all(10),
+          //       child: SvgPicture.asset(
+          //         AppIcons.cartIcon,
+          //         height: 44.0,
+          //         width: 44.0,
+          //       ),
+          //     ),
+          //   ),
+          // ),
           Positioned(
             bottom: 10.0,
             child: Row(

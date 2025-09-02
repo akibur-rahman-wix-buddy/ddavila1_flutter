@@ -666,7 +666,7 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisCount: 2,
             mainAxisSpacing: 10,
             crossAxisSpacing: 10,
-            childAspectRatio: .55,
+            childAspectRatio: .53,
           ),
           itemCount: data?.length,
           itemBuilder: (context, index) {
@@ -678,7 +678,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
 
-                  print(">>>>>>>>>>>>>>>>>>> here is the  stripe connected value ${isStripeConnected}");
+                  print(">>>>>>>>>>>>>>>>>>> here is the  stripe connected value $isStripeConnected");
                   if(isStripeConnected == true && isProfileConnected == true){
 
                     NavigationService.navigateToWithArgs(
@@ -765,16 +765,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       const SizedBox(height: 8),
-                      Text(
-                        data?[index].title.toString() ?? "",
-                        style: TextFontStyle.textLine7w400cFFFFFFDmSans
-                            .copyWith(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                      SizedBox(
+                        height: 40,
+                        child: Text(
+                          data?[index].title.toString() ?? "",
+                          style: TextFontStyle.textLine7w400cFFFFFFDmSans
+                              .copyWith(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 8),
                       Text(

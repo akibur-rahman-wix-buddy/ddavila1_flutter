@@ -1,6 +1,4 @@
-//
 // import 'package:ddavila/features/admin_app/seling/widget/shipping_dialouge_box.dart';
-// import 'package:ddavila/networks/api_acess.dart';
 // import 'package:flutter/material.dart';
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
 // import 'package:syncfusion_flutter_datagrid/datagrid.dart';
@@ -8,8 +6,9 @@
 //
 // class SellingTable extends StatefulWidget {
 //   final List<SellerOrderDatum> data;
+//   final VoidCallback onDataUpdated; // Callback to refresh data
 //
-//   const SellingTable({super.key, required this.data});
+//   const SellingTable({super.key, required this.data, required this.onDataUpdated});
 //
 //   @override
 //   _SellingTableState createState() => _SellingTableState();
@@ -17,17 +16,20 @@
 //
 // class _SellingTableState extends State<SellingTable> {
 //   late DataGridController _dataGridController;
+//   late OrderDataSource _dataSource;
 //
 //   @override
 //   void initState() {
 //     super.initState();
 //     _dataGridController = DataGridController();
+//     _dataSource = OrderDataSource(widget.data, context, widget.onDataUpdated);
 //   }
 //
 //   @override
 //   void didUpdateWidget(covariant SellingTable oldWidget) {
 //     super.didUpdateWidget(oldWidget);
 //     if (widget.data != oldWidget.data) {
+//       _dataSource = OrderDataSource(widget.data, context, widget.onDataUpdated);
 //       setState(() {});
 //     }
 //   }
@@ -70,12 +72,12 @@
 //                       color: Colors.grey.withOpacity(0.2),
 //                       spreadRadius: 1,
 //                       blurRadius: 3,
-//                       offset: Offset(0, 2),
+//                       offset: const Offset(0, 2),
 //                     ),
 //                   ],
 //                 ),
 //                 child: SfDataGrid(
-//                   source: OrderDataSource(widget.data, context),
+//                   source: _dataSource,
 //                   controller: _dataGridController,
 //                   columnWidthMode: ColumnWidthMode.fill,
 //                   gridLinesVisibility: GridLinesVisibility.horizontal,
@@ -118,29 +120,34 @@
 //
 //   Widget _buildHeader(String text, Alignment alignment) {
 //     return Container(
-//         alignment: alignment,
-//         padding: EdgeInsets.all(12.0),
-//     child: Text(
-//     text,
-//     style: TextStyle(
-//     fontWeight: FontWeight.bold,
-//     fontSize: 14.sp,
-//     color: Colors.blueGrey[800],
-//     ),)
+//       alignment: alignment,
+//       padding: const EdgeInsets.all(12.0),
+//       child: Text(
+//         text,
+//         style: TextStyle(
+//           fontWeight: FontWeight.bold,
+//           fontSize: 14.sp,
+//           color: Colors.blueGrey[800],
+//         ),
+//       ),
 //     );
 //   }
-//
 // }
 //
 // class OrderDataSource extends DataGridSource {
-//   final List<SellerOrderDatum> orderData;
+//   List<SellerOrderDatum> orderData;
 //   final BuildContext context;
+//   final VoidCallback onDataUpdated;
 //
-//   OrderDataSource(this.orderData, this.context);
+//   OrderDataSource(this.orderData, this.context, this.onDataUpdated);
+//
+//   void updateData(List<SellerOrderDatum> newData) {
+//     orderData = newData;
+//     notifyListeners();
+//   }
 //
 //   @override
 //   List<DataGridRow> get rows => orderData.map<DataGridRow>((data) {
-//     // Calculate subtotal from order items
 //     double subtotalValue = 0.0;
 //     if (data.orderItems?.isNotEmpty ?? false) {
 //       for (var item in data.orderItems!) {
@@ -151,7 +158,6 @@
 //     }
 //     String subtotal = subtotalValue.toStringAsFixed(2);
 //
-//     // Get product names
 //     String productNames = 'No Products';
 //     if (data.orderItems?.isNotEmpty ?? false) {
 //       productNames = data.orderItems!
@@ -159,8 +165,8 @@
 //           .join(', ');
 //     }
 //
-//     // Get status directly from SellerOrderDatum model - CORRECT WAY
-//     String status = data.status?.toString().split('.').last.toLowerCase() ?? 'Unknown Product';
+//     String status =
+//         data.status?.toString().split('.').last.toLowerCase() ?? 'unknown';
 //     print(">>>>>>>> Status from SellerOrderDatum: $status");
 //
 //     return DataGridRow(cells: [
@@ -186,14 +192,13 @@
 //   DataGridRowAdapter buildRow(DataGridRow row) {
 //     final int rowIndex = effectiveRows.indexOf(row);
 //
-//
 //     return DataGridRowAdapter(
 //       color: rowIndex % 2 == 0 ? Colors.grey[50] : Colors.white,
 //       cells: row.getCells().map<Widget>((dataCell) {
 //         if (dataCell.columnName == 'OrderNumber') {
 //           return Container(
 //             alignment: Alignment.center,
-//             padding: EdgeInsets.all(8.0),
+//             padding: const EdgeInsets.all(8.0),
 //             child: Text(
 //               dataCell.value?.toString() ?? 'N/A',
 //               style: TextStyle(
@@ -205,10 +210,12 @@
 //           );
 //         } else if (dataCell.columnName == 'ProductName') {
 //           return Container(
-//             alignment: Alignment.center,
-//             padding: EdgeInsets.all(8.0),
+//             alignment: Alignment.centerLeft, // Left-align for readability
+//             padding: const EdgeInsets.all(8.0),
 //             child: Text(
 //               dataCell.value?.toString() ?? 'No Products',
+//               maxLines: 1, // Restrict to one line
+//               overflow: TextOverflow.ellipsis, // Show ellipsis for overflow
 //               style: TextStyle(
 //                 fontSize: 12.sp,
 //                 color: Colors.black87,
@@ -216,14 +223,13 @@
 //             ),
 //           );
 //         } else if (dataCell.columnName == 'Status') {
-//           // Use the status value from SellerOrderDatum model
-//           String statusValue = dataCell.value?.toString() ?? 'unknown value';
+//           String statusValue = dataCell.value?.toString() ?? 'unknown';
 //           print(">>>>>>>> Status in buildRow: $statusValue");
 //
 //           String statusText;
 //           Color statusColor;
 //
-//           switch(statusValue) {
+//           switch (statusValue) {
 //             case 'confirmed':
 //               statusText = 'Confirmed';
 //               statusColor = Colors.green;
@@ -236,19 +242,19 @@
 //               statusText = 'Completed';
 //               statusColor = Colors.blue;
 //               break;
-//             case 'unknown value':
+//             case 'unknown':
 //               statusText = 'Pending';
 //               statusColor = Colors.grey;
 //               break;
 //             default:
-//               statusText = statusValue; // Show the actual value if unknown
+//               statusText = statusValue;
 //               statusColor = Colors.grey;
 //           }
 //
 //           return Container(
 //             alignment: Alignment.center,
-//             margin: EdgeInsets.all(10),
-//             padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+//             margin: const EdgeInsets.all(10),
+//             padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
 //             decoration: BoxDecoration(
 //               color: statusColor.withOpacity(0.1),
 //               borderRadius: BorderRadius.circular(16),
@@ -263,7 +269,6 @@
 //             ),
 //           );
 //         } else if (dataCell.columnName == 'Action') {
-//           // Extract the data from the cell value
 //           final actionData = dataCell.value as Map<String, dynamic>?;
 //           final orderNumber = actionData?['orderNumber'] ?? 'N/A';
 //           final productName = actionData?['productName'] ?? 'No Products';
@@ -271,19 +276,15 @@
 //           final buttonText = actionData?['text'] ?? 'Add Shipping Address';
 //           final productIds = actionData?['productIds'] ?? [];
 //
-//           // Determine button state based on status
 //           bool isEnabled;
 //           Color buttonColor;
 //
-//
 //           print(">>>>>>>>>>>>>>>>>>>> product button details $statusValue");
 //
-//           switch(statusValue) {
-//
+//           switch (statusValue) {
 //             case 'confirmed':
 //               isEnabled = true;
 //               buttonColor = Colors.blue;
-//
 //               break;
 //             case 'shipping':
 //               isEnabled = false;
@@ -317,7 +318,7 @@
 //                 shape: RoundedRectangleBorder(
 //                   borderRadius: BorderRadius.circular(20),
 //                 ),
-//                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+//                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
 //               ),
 //               child: Text(
 //                 buttonText,
@@ -350,13 +351,8 @@
 //     );
 //   }
 //
-//
-//
 //   void _showShippingUpdateDialog(
-//       BuildContext context,
-//       String orderNumber,
-//       String productName,
-//       List<dynamic> productIds) {
+//       BuildContext context, String orderNumber, String productName, List<dynamic> productIds) {
 //     showDialog(
 //       context: context,
 //       builder: (BuildContext context) {
@@ -365,28 +361,18 @@
 //           productName: productName,
 //           productIds: productIds,
 //           onSuccess: () {
-//             getSellingOrderRX.getSellingOrderRX();
+//             onDataUpdated(); // Call the callback to refresh data
 //           },
 //         );
 //       },
 //     );
 //   }
 //
-//
-//
-//
-//
-//
-//
 //   @override
 //   void notifyListeners() {
 //     super.notifyListeners();
 //   }
 // }
-//
-
-
-
 
 import 'package:ddavila/features/admin_app/seling/widget/shipping_dialouge_box.dart';
 import 'package:ddavila/networks/api_acess.dart';
@@ -397,8 +383,9 @@ import '../model/selling_order_data_model.dart';
 
 class SellingTable extends StatefulWidget {
   final List<SellerOrderDatum> data;
+  final VoidCallback onDataUpdated;
 
-  const SellingTable({super.key, required this.data});
+  const SellingTable({super.key, required this.data, required this.onDataUpdated});
 
   @override
   _SellingTableState createState() => _SellingTableState();
@@ -406,20 +393,20 @@ class SellingTable extends StatefulWidget {
 
 class _SellingTableState extends State<SellingTable> {
   late DataGridController _dataGridController;
-  late OrderDataSource _dataSource; // Add a field for the data source
+  late OrderDataSource _dataSource;
 
   @override
   void initState() {
     super.initState();
     _dataGridController = DataGridController();
-    _dataSource = OrderDataSource(widget.data, context); // Initialize data source
+    _dataSource = OrderDataSource(widget.data, context, widget.onDataUpdated);
   }
 
   @override
   void didUpdateWidget(covariant SellingTable oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.data != oldWidget.data) {
-      _dataSource = OrderDataSource(widget.data, context); // Recreate data source
+      _dataSource = OrderDataSource(widget.data, context, widget.onDataUpdated);
       setState(() {});
     }
   }
@@ -462,18 +449,17 @@ class _SellingTableState extends State<SellingTable> {
                       color: Colors.grey.withOpacity(0.2),
                       spreadRadius: 1,
                       blurRadius: 3,
-                      offset: Offset(0, 2),
+                      offset: const Offset(0, 2),
                     ),
                   ],
                 ),
                 child: SfDataGrid(
-                  source: _dataSource, // Use the data source field
+                  source: _dataSource,
                   controller: _dataGridController,
                   columnWidthMode: ColumnWidthMode.fill,
                   gridLinesVisibility: GridLinesVisibility.horizontal,
                   headerGridLinesVisibility: GridLinesVisibility.horizontal,
                   columns: [
-                    // Columns remain unchanged
                     GridColumn(
                       columnName: 'OrderNumber',
                       width: 180,
@@ -512,7 +498,7 @@ class _SellingTableState extends State<SellingTable> {
   Widget _buildHeader(String text, Alignment alignment) {
     return Container(
       alignment: alignment,
-      padding: EdgeInsets.all(12.0),
+      padding: const EdgeInsets.all(12.0),
       child: Text(
         text,
         style: TextStyle(
@@ -528,10 +514,10 @@ class _SellingTableState extends State<SellingTable> {
 class OrderDataSource extends DataGridSource {
   List<SellerOrderDatum> orderData;
   final BuildContext context;
+  final VoidCallback onDataUpdated;
 
-  OrderDataSource(this.orderData, this.context);
+  OrderDataSource(this.orderData, this.context, this.onDataUpdated);
 
-  // Method to update data and notify listeners
   void updateData(List<SellerOrderDatum> newData) {
     orderData = newData;
     notifyListeners();
@@ -539,7 +525,6 @@ class OrderDataSource extends DataGridSource {
 
   @override
   List<DataGridRow> get rows => orderData.map<DataGridRow>((data) {
-    // Existing code for generating rows
     double subtotalValue = 0.0;
     if (data.orderItems?.isNotEmpty ?? false) {
       for (var item in data.orderItems!) {
@@ -557,7 +542,8 @@ class OrderDataSource extends DataGridSource {
           .join(', ');
     }
 
-    String status = data.status?.toString().split('.').last.toLowerCase() ?? 'unknown';
+    String status =
+        data.status?.toString().split('.').last.toLowerCase() ?? 'unknown';
     print(">>>>>>>> Status from SellerOrderDatum: $status");
 
     return DataGridRow(cells: [
@@ -581,17 +567,15 @@ class OrderDataSource extends DataGridSource {
 
   @override
   DataGridRowAdapter buildRow(DataGridRow row) {
-    // Existing buildRow implementation
     final int rowIndex = effectiveRows.indexOf(row);
 
     return DataGridRowAdapter(
       color: rowIndex % 2 == 0 ? Colors.grey[50] : Colors.white,
       cells: row.getCells().map<Widget>((dataCell) {
-        // Existing cell rendering logic
         if (dataCell.columnName == 'OrderNumber') {
           return Container(
             alignment: Alignment.center,
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: Text(
               dataCell.value?.toString() ?? 'N/A',
               style: TextStyle(
@@ -603,10 +587,12 @@ class OrderDataSource extends DataGridSource {
           );
         } else if (dataCell.columnName == 'ProductName') {
           return Container(
-            alignment: Alignment.center,
-            padding: EdgeInsets.all(8.0),
+            alignment: Alignment.centerLeft,
+            padding: const EdgeInsets.all(8.0),
             child: Text(
               dataCell.value?.toString() ?? 'No Products',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontSize: 12.sp,
                 color: Colors.black87,
@@ -644,8 +630,8 @@ class OrderDataSource extends DataGridSource {
 
           return Container(
             alignment: Alignment.center,
-            margin: EdgeInsets.all(10),
-            padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+            margin: const EdgeInsets.all(10),
+            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
             decoration: BoxDecoration(
               color: statusColor.withOpacity(0.1),
               borderRadius: BorderRadius.circular(16),
@@ -672,26 +658,16 @@ class OrderDataSource extends DataGridSource {
 
           print(">>>>>>>>>>>>>>>>>>>> product button details $statusValue");
 
-          switch (statusValue) {
-            case 'confirmed':
-              isEnabled = true;
-              buttonColor = Colors.blue;
-              break;
-            case 'shipping':
-              isEnabled = false;
-              buttonColor = Colors.grey;
-              break;
-            case 'completed':
-              isEnabled = false;
-              buttonColor = Colors.grey;
-              break;
-            case 'pending':
-              isEnabled = false;
-              buttonColor = Colors.grey;
-              break;
-            default:
-              isEnabled = false;
-              buttonColor = Colors.grey;
+          // Disable button if status is not 'confirmed' or trackingNumber exists
+          if (statusValue == 'confirmed' &&
+              orderData.any((order) =>
+              order.orderNumber == orderNumber &&
+                  (order.trackingNumber == null || order.trackingNumber!.isEmpty))) {
+            isEnabled = true;
+            buttonColor = Colors.blue;
+          } else {
+            isEnabled = false;
+            buttonColor = Colors.grey;
           }
 
           return Container(
@@ -709,7 +685,7 @@ class OrderDataSource extends DataGridSource {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               ),
               child: Text(
                 buttonText,
@@ -743,10 +719,7 @@ class OrderDataSource extends DataGridSource {
   }
 
   void _showShippingUpdateDialog(
-      BuildContext context,
-      String orderNumber,
-      String productName,
-      List<dynamic> productIds) {
+      BuildContext context, String orderNumber, String productName, List<dynamic> productIds) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -755,7 +728,9 @@ class OrderDataSource extends DataGridSource {
           productName: productName,
           productIds: productIds,
           onSuccess: () {
-            getSellingOrderRX.getSellingOrderRX(); // Trigger data fetch
+            onDataUpdated();
+            // Optionally notify listeners for immediate UI update
+            notifyListeners();
           },
         );
       },
@@ -767,7 +742,3 @@ class OrderDataSource extends DataGridSource {
     super.notifyListeners();
   }
 }
-
-
-
-
