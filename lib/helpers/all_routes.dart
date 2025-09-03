@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:ddavila/features/admin_app/admin_navigation.dart';
+import 'package:ddavila/features/admin_app/auction_screen/create_auction_screen.dart';
+import 'package:ddavila/features/admin_app/auction_screen/final_auction_screen.dart';
 import 'package:ddavila/features/admin_app/dashboard_screen/admin_dashboard_screen.dart';
 import 'package:ddavila/features/auth_screen/presentation/forget_otp_screen.dart';
 import 'package:ddavila/features/auth_screen/presentation/forget_screen.dart';
@@ -18,10 +20,8 @@ import 'package:ddavila/features/user_app/products_screen/presentation/products_
 import 'package:ddavila/features/user_app/profile_screen/presentation/change_password.dart';
 import 'package:ddavila/navigation_screen.dart';
 import 'package:flutter/cupertino.dart';
-
-import '../features/admin_app/auction_screen/create_auction_screen.dart';
-import '../features/admin_app/auction_screen/final_auction_screen.dart';
-import '../features/user_app/profile_screen/presentation/update_profile.dart' show UpdateProfileScreen;
+import '../features/user_app/profile_screen/presentation/update_profile.dart'
+    show UpdateProfileScreen;
 
 final class Routes {
   static final Routes _routes = Routes._internal();
@@ -49,7 +49,6 @@ final class Routes {
   static const String resetNewPassScreen = '/resetNewPassScreen';
   static const String forgetPasswordScreen = '/forgetPasswordScreen';
 
-
   // * =============> Home navigation <============= */
   static const String homeScreen = '/homeScreen';
   static const String filterScreen = '/filterScreen';
@@ -64,14 +63,15 @@ final class Routes {
   // * ##########################################################################################
   static const String adminNavigationScreen = '/adminNavigationScreen';
   static const String adminDashboard = '/adminDashboard';
-  static const String otpVerificationScreen = '/otpVerificationScreen';
+  static const String myAuctionScreen = '/myAuctionScreen';
+
+  // * ############################## Profile ###########################################
+
   static const String updateProfileScreen = '/updateProfileScreen';
   static const String changePassword = '/changePassword';
   static const String createAuctionScreen = '/createAuctionScreen';
   static const String finalAuctionScreen = '/finalAuctionScreen';
-
 }
-
 
 final class RouteGenerator {
   static final RouteGenerator _routeGenerator = RouteGenerator._internal();
@@ -80,6 +80,15 @@ final class RouteGenerator {
   static Route<dynamic>? generateRoute(RouteSettings settings) {
     switch (settings.name) {
       // * Onboarding Screen
+
+      // * Login Screen
+      case Routes.myAuctionScreen:
+        return Platform.isIOS
+            ? UltimateSmoothTransitionRoute(
+                widget: const ScreenTitle(widget: CreateAuctionScreen()),
+                settings: settings)
+            : CupertinoPageRoute(
+                builder: (context) => const CreateAuctionScreen());
 
       // * Login Screen
       case Routes.loginScreen:
@@ -171,9 +180,6 @@ final class RouteGenerator {
             : CupertinoPageRoute(
                 builder: (context) => const SearchUserScreen());
 
-
-
-
       case Routes.productDetailsScreen:
         final Map args = settings.arguments as Map;
         return Platform.isAndroid
@@ -210,15 +216,14 @@ final class RouteGenerator {
                 ),
                 settings: settings)
             : CupertinoPageRoute(
-
-            builder: (context) => OtpVerificationScreen(
-              email: args['email'],
-            ));
-
-
                 builder: (context) => OtpVerificationScreen(
                       email: args['email'],
-                    ));
+                    ),
+                settings: settings);
+
+      // builder: (context) => OtpVerificationScreen(
+      //       email: args['email'],
+      //     ));
 
       // * Forget OTP Screen
       case Routes.forgetOTPScreen:
@@ -243,7 +248,6 @@ final class RouteGenerator {
                 settings: settings)
             : CupertinoPageRoute(
                 builder: (context) => const ResetPasswordScreen());
-
 
       case Routes.productsBidScreen:
         final Map args = settings.arguments as Map;
@@ -294,12 +298,12 @@ final class RouteGenerator {
         return Platform.isAndroid
             ? UltimateSmoothTransitionRoute(
                 widget: FinalAuctionScreen(
-
                   descriptionText: args['descriptionText'],
                   subCategory: args['subCategory'],
                   category: args['category'],
                   property: args['property'],
-                  imageItem: args['imageItem'], titleText: args['titleText'],
+                  imageItem: args['imageItem'],
+                  titleText: args['titleText'],
                 ),
                 settings: settings)
             : CupertinoPageRoute(
@@ -309,17 +313,17 @@ final class RouteGenerator {
                       category: args['category'],
                       property: args['property'],
                       imageItem: args['imageItem'],
-                  titleText: args['titleText'],
+                      titleText: args['titleText'],
                     ));
 
-    // * Filter Screen
+      // * Filter Screen
       case Routes.createAuctionScreen:
         return Platform.isIOS
             ? UltimateSmoothTransitionRoute(
-            widget: const ScreenTitle(widget: CreateAuctionScreen()),
-            settings: settings)
-            : CupertinoPageRoute(builder: (context) => const CreateAuctionScreen());
-
+                widget: const ScreenTitle(widget: CreateAuctionScreen()),
+                settings: settings)
+            : CupertinoPageRoute(
+                builder: (context) => const CreateAuctionScreen());
 
       default:
         return null;
