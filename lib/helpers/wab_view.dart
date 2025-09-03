@@ -43,13 +43,16 @@ class _WebViewLinkState extends State<WebViewLink> {
             onNavigationRequest: (NavigationRequest request) {
               log('Navigating to: ${request.url}');
               if (request.url ==
-                  'https://errol.softvencefsd.xyz/checkout/succes55s') {
+                  'https://thehobbynexus.com/success') {
                 // if (request.url.contains('roxyleisure.co.uk')) {
                 NavigationService.navigateTo(Routes.navigationScreen);
 
                 return NavigationDecision.prevent;
               } else if (request.url.contains(
                   'https://thehobbynexus.com/sign-in')) {
+                NavigationService.navigateTo(Routes.navigationScreen);
+              } else if (request.url.contains(
+                  'https://ddvila.softvencefsd.xyz/onboading/payment/error')) {
                 NavigationService.navigateTo(Routes.navigationScreen);
               }else if (request.url.contains(
                   'https://thehobbynexus.com/error')) {

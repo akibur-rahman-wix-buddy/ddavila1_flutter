@@ -7,6 +7,7 @@ import 'package:ddavila/common_widgets/custom_button.dart';
 import 'package:ddavila/features/admin_app/auction_screen/create_auction_screen.dart';
 import 'package:ddavila/features/admin_app/dashboard_screen/model/admin_dash_model.dart';
 import 'package:ddavila/features/admin_app/widget/admin_table.dart';
+import 'package:ddavila/helpers/navigation_service.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';
 import 'package:ddavila/networks/api_acess.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -14,6 +15,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+
+import '../../../helpers/all_routes.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
   const AdminDashboardScreen({super.key});
@@ -283,7 +286,11 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                         minWidth: double.infinity,
                         borderRadius: 10,
                         onTap: () {
-                          Get.to(() => CreateAuctionScreen());
+
+                          NavigationService.navigateTo(Routes.createAuctionScreen);
+
+                
+
                         },
                       ),
                       UIHelper.verticalSpace(

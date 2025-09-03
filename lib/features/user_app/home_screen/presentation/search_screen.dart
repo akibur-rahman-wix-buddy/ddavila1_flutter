@@ -15,6 +15,7 @@ import 'package:ddavila/helpers/all_routes.dart';
 import 'package:ddavila/helpers/di.dart';
 import 'package:ddavila/helpers/navigation_service.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';
+import 'package:ddavila/networks/endpoints.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -443,6 +444,7 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
 
   Widget _buildProductItem(SearchProductData
   product) {
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>> this is the image url ${'$image_url${product.firstImage}'}");
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -478,7 +480,7 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
                     topRight: Radius.circular(12.r),
                   ),
                   child: Image.network(
-                    'https://your-base-url.com/${product.firstImage}',
+                    '$image_url${product.firstImage}',
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
                       return Image.asset(
@@ -493,33 +495,33 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
                   fit: BoxFit.cover,
                 ),
               ),
-              Positioned(
-                top: 8.h,
-                right: 8.w,
-                child: GestureDetector(
-                  onTap: () {
-                    // Handle favorite toggle
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(4.sp),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 4,
-                        ),
-                      ],
-                    ),
-                    child: SvgPicture.asset(
-                      product.bookmark ?? false ? AppIcons.liveIcon : AppIcons.loveIcon,
-                      height: 16.h,
-                      width: 16.w,
-                    ),
-                  ),
-                ),
-              ),
+              // Positioned(
+              //   top: 8.h,
+              //   right: 8.w,
+              //   child: GestureDetector(
+              //     onTap: () {
+              //       // Handle favorite toggle
+              //     },
+              //     child: Container(
+              //       padding: EdgeInsets.all(4.sp),
+              //       decoration: BoxDecoration(
+              //         color: Colors.white,
+              //         shape: BoxShape.circle,
+              //         boxShadow: [
+              //           BoxShadow(
+              //             color: Colors.black.withOpacity(0.1),
+              //             blurRadius: 4,
+              //           ),
+              //         ],
+              //       ),
+              //       child: SvgPicture.asset(
+              //         product.bookmark ?? false ? AppIcons.liveIcon : AppIcons.loveIcon,
+              //         height: 16.h,
+              //         width: 16.w,
+              //       ),
+              //     ),
+              //   ),
+              // ),
             ],
           ),
 

@@ -279,6 +279,7 @@ isOnBoardign = widget.userData.data?.user?.onboardComplete == 1 ? true: false;
                       decoration: InputDecoration(
                         labelText: "Email address",
                         border: border16,
+                        enabled: false,
                         enabledBorder: border16,
                         focusedBorder: border16,
                       ),

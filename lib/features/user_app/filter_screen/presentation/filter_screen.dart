@@ -1,6 +1,7 @@
 import 'package:ddavila/assets_helper/app_icons.dart';
 import 'package:ddavila/common_widgets/custom_button.dart';
 import 'package:ddavila/common_widgets/custom_textfiled.dart';
+import 'package:ddavila/features/user_app/filter_screen/model/FilterProductDataModel.dart';
 import 'package:ddavila/features/user_app/filter_screen/model/cetagory_wise_sub_category_model_data.dart';
 import 'package:ddavila/features/user_app/filter_screen/model/filter_fatch_data_model.dart';
 import 'package:ddavila/features/user_app/filter_screen/presentation/filter_result_screen.dart';

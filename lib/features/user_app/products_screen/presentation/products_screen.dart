@@ -1,9 +1,12 @@
 // ignore_for_file: avoid_print, deprecated_member_use
 
 import 'package:ddavila/common_widgets/custom_button.dart';
+import 'package:ddavila/constants/app_constants.dart';
 import 'package:ddavila/features/user_app/products_screen/model/sale_product_details_data_model.dart';
 import 'package:ddavila/features/user_app/products_screen/widget/bit_product_image_slider.dart';
+import 'package:ddavila/helpers/di.dart';
 import 'package:ddavila/helpers/html_text_viewer.dart';
+import 'package:ddavila/helpers/toast.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';
 import 'package:ddavila/networks/api_acess.dart';
 import 'package:ddavila/networks/endpoints.dart';
@@ -34,7 +37,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
   bool isWhiteListing = false;
   bool _isProcessing = false;
-
+  dynamic myId = appData.read(kKeyUserID);
 
   bool isLoading= false;
 
@@ -42,6 +45,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
   void initState() {
 
     print(">>>>>>>>>>>>>>>> in screen slug is ${widget.slug}");
+    print(">>>>>>>>>>>>>>>> in screen slug is ${myId}");
+    print(">>>>>>>>>>>>>>>> in screen  slug is ${widget.slug}");
 
     productViewDetailsRx.categoryWiseProductData(slug: widget.slug);
     super.initState();
@@ -258,12 +263,28 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
                               // Buy Now Button
                               UIHelper.verticalSpace(24.h),
-                              CustomButton(text: "Contact Seller",minWidth: double.infinity,
+                            myId!=data?.userId?  CustomButton(text:  "Contact Seller",minWidth: double.infinity,
                                   textStyle: TextStyle(color: Colors.white,fontWeight: FontWeight.w700,fontSize: 18),
 
                                   onTap: ()  {
 
+
+                              print(">>>>>>>>>>>>>>>>>>>>> here is the my id $myId");
+                              print(">>>>>>>>>>>>>>>>>>>>> here is the product user id ${data?.userId}");
+
+
                                    createConversationRx.createConversations(userId: data?.userId);
+                                  },
+                                  context: context):
+                              CustomButton(text:  "It's your product ",minWidth: double.infinity,
+                                  textStyle: TextStyle(color: Colors.white,fontWeight: FontWeight.w700,fontSize: 18),
+
+                                  onTap: ()  {
+
+                                 ToastUtil.showLongToast("It's your product");
+
+
+                                   // createConversationRx.createConversations(userId: data?.userId);
                                   },
                                   context: context)
                               // Buy Now Button

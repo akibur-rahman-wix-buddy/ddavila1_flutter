@@ -14,14 +14,16 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 
 class FinalAuctionScreen extends StatefulWidget {
-  dynamic descriptionText, subCategory, category, property, imageItem;
+  dynamic titleText, descriptionText, subCategory, category, property, imageItem;
   FinalAuctionScreen(
       {super.key,
+      required titleText,
       required descriptionText,
       required subCategory,
       required category,
       required property,
       required imageItem}) {
+    this.titleText = titleText;
     this.descriptionText = descriptionText;
     this.subCategory = subCategory;
     this.category = category;
@@ -45,6 +47,7 @@ class _FinalAuctionScreenState extends State<FinalAuctionScreen> {
   @override
   Widget build(BuildContext context) {
     log('############################## Data Come from create auction ################################');
+    log('Final Auction Title: ${widget.titleText}');
     log('Final Auction Description: ${widget.descriptionText}');
     log('Final Auction Sub Category: ${widget.subCategory}');
     log('Final Auction Category: ${widget.category}');
@@ -344,6 +347,40 @@ class _FinalAuctionScreenState extends State<FinalAuctionScreen> {
                         log('Shipping Cost: ${shippingCostController.text}');
                         log('Ship Within: ${shipWithinController.text}');
                         log("###################################################");
+
+                        bool success =
+                        await postAuctionProductAPIRx.postProductAuctionRX(
+                          title: widget.titleText.toString(),
+                          description: widget.descriptionText,
+                          categoryId: widget.category,
+                          subcategoryId: widget.subCategory,
+                          auction_end_at: auctionEndDateController.text,
+                          type: 'auction',
+                          shippingCost:
+                          double.tryParse(shippingCostController.text) ??
+                              0.0,
+                          price: startingPriceController.text,
+                          shipWithin: shipWithinController.text,
+                          images: imagees,
+                          propertyItem: widget.property
+                              .map<String>(
+                                (item) => "${item['title']}, ${item['value']}",
+                          )
+                              .toList(),
+                        );
+                        if (success) {
+                          ToastUtil.showShortToast(
+                            'Product Posted Successfully',
+                          );
+                        } else {
+                          log('==========================>>>>>> Auction Starting Price : ${startingPriceController.text}');
+                          ToastUtil.showShortToast(
+                            'Product Posted UnSuccessful',
+
+                          );
+                        }
+
+
                       } else {
                         log("################# Auction False ####################");
                         log('Buy Now Price: ${buyNowPriceController.text}');
@@ -352,7 +389,7 @@ class _FinalAuctionScreenState extends State<FinalAuctionScreen> {
                         log("#####################################################");
                         bool success =
                             await postProductsAPIRxObj.postProductSaleRX(
-                          title: 'Zobayers',
+                          title: widget.titleText.toString(),
                           description: widget.descriptionText,
                           categoryId: widget.category,
                           subcategoryId: widget.subCategory,

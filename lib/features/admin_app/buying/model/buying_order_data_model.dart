@@ -638,7 +638,7 @@ class BuyingOrderDataModel {
   bool? success;
   String? message;
   BuyingOrderData? data;
-  int? code;
+  dynamic code;
 
   BuyingOrderDataModel({
     this.success,
@@ -667,19 +667,19 @@ class BuyingOrderDataModel {
 }
 
 class BuyingOrderData {
-  int? currentPage;
+  dynamic currentPage;
   List<BuyingOrderDatum>? data;
   String? firstPageUrl;
-  int? from;
-  int? lastPage;
+  dynamic from;
+  dynamic lastPage;
   String? lastPageUrl;
   List<Link>? links;
   dynamic nextPageUrl;
   String? path;
-  int? perPage;
+  dynamic perPage;
   dynamic prevPageUrl;
-  int? to;
-  int? total;
+  dynamic to;
+  dynamic total;
 
   BuyingOrderData({
     this.currentPage,
@@ -735,10 +735,10 @@ class BuyingOrderData {
 }
 
 class BuyingOrderDatum {
-  int? id;
-  int? userId;
-  int? paymentId;
-  int? cartId;
+  dynamic id;
+  dynamic userId;
+  dynamic paymentId;
+  dynamic cartId;
   String? orderNumber;
   String? totalAmount;
   Currency? currency;
@@ -857,11 +857,11 @@ final currencyValues = EnumValues({
 });
 
 class OrderItem {
-  int? id;
-  int? orderId;
-  int? productId;
+  dynamic id;
+  dynamic orderId;
+  dynamic productId;
   dynamic productBidId;
-  int? quantity;
+  dynamic quantity;
   String? unitPrice;
   String? subtotal;
   List<dynamic>? attributes;
@@ -921,23 +921,23 @@ class OrderItem {
 }
 
 class Product {
-  int? id;
+  dynamic id;
   String? title;
   String? slug;
   List<String>? images;
   String? description;
-  int? userId;
-  int? categoryId;
-  int? subCategoryId;
-  int? stock;
+  dynamic userId;
+  dynamic categoryId;
+  dynamic subCategoryId;
+  dynamic stock;
   Type? type;
-  int? bid;
+  dynamic bid;
   String? shippingCost;
-  int? shipWithin;
-  int? price;
-  int? startingPrice;
+  dynamic shipWithin;
+  dynamic price;
+  dynamic startingPrice;
   DateTime? auctionEndAt;
-  int? winnerId;
+  dynamic winnerId;
   ProductStatus? status;
   DateTime? createdAt;
   DateTime? updatedAt;
@@ -1076,7 +1076,7 @@ class ShippingAddress {
 
 enum DatumStatus {
   CONFIRMED,
-  PENDING,COMPLETED,SHIPPING
+  PENDING,COMPLETED,SHIPPING, confirmed, completed
 }
 
 final datumStatusValues = EnumValues({
@@ -1086,13 +1086,13 @@ final datumStatusValues = EnumValues({
 });
 
 class User {
-  int? id;
+  dynamic id;
   Name? name;
   Email? email;
   Avatar? avatar;
   DateTime? emailVerifiedAt;
   StripeAccountId? stripeAccountId;
-  int? onboardComplete;
+  dynamic onboardComplete;
   dynamic country;
   City? city;
   State? state;

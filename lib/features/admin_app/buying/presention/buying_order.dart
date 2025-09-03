@@ -120,6 +120,11 @@ class _BuyingOrderScreenState extends State<BuyingOrderScreen> {
                   ),
                   UIHelper.verticalSpace(12),
                   BuyingTable(
+                    onDataUpdated: (){
+                      setState(() {
+                        getBuyingOrderRX.getBuyingOrderRX();
+                      });
+                    },
                     data: _filteredData,
                   ),
                 ],
