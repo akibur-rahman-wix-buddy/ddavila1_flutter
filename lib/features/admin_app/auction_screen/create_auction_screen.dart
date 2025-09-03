@@ -6,7 +6,6 @@ import 'package:ddavila/assets_helper/app_image.dart';
 import 'package:ddavila/assets_helper/text_font_style.dart';
 import 'package:ddavila/common_widgets/custom_appbar.dart';
 import 'package:ddavila/common_widgets/custom_button.dart';
-import 'package:ddavila/features/admin_app/auction_screen/final_auction_screen.dart';
 import 'package:ddavila/features/admin_app/auction_screen/model/category_model.dart';
 import 'package:ddavila/features/admin_app/auction_screen/model/property_model.dart';
 import 'package:ddavila/features/admin_app/auction_screen/model/sub_property_model.dart';
@@ -17,13 +16,14 @@ import 'package:ddavila/networks/api_acess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
 class CreateAuctionScreen extends StatefulWidget {
+
   static void _defaultNotification(String message) {}
+
 
   const CreateAuctionScreen({super.key});
 

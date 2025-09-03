@@ -6,7 +6,6 @@ import 'package:ddavila/assets_helper/text_font_style.dart';
 import 'package:ddavila/common_widgets/custom_appbar.dart';
 import 'package:ddavila/common_widgets/custom_button.dart';
 import 'package:ddavila/common_widgets/custom_textfiled.dart';
-import 'package:ddavila/constants/app_constants.dart';
 import 'package:ddavila/helpers/toast.dart';
 import 'package:ddavila/networks/api_acess.dart';
 import 'package:flutter/material.dart';

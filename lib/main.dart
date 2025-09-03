@@ -1,9 +1,8 @@
 import 'dart:developer';
 import 'package:auto_animated/auto_animated.dart';
+import 'package:ddavila/features/auth_screen/presentation/forget_screen.dart';
+import 'package:ddavila/features/auth_screen/presentation/reset_password_screen.dart';
 import 'package:ddavila/loading_screen.dart';
-import 'package:ddavila/features/user_app/profile_screen/presentation/update_profile.dart';
-import 'package:ddavila/loading_screen.dart';
-import 'package:ddavila/features/auth_screen/presentation/card_add_in_stripe.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
@@ -15,14 +14,14 @@ import 'package:ddavila/networks/dio/dio.dart';
 import 'package:provider/provider.dart';
 import '/helpers/all_routes.dart';
 import 'constants/custome_theme.dart';
-import 'features/auth_screen/complete_account_info/complete_account_info_screen.dart';
 import 'helpers/helper_methods.dart';
 import 'helpers/navigation_service.dart';
 import 'helpers/register_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Stripe.publishableKey = "pk_test_51Raxa44azWPOh4j7n7lXUYffcYmfQQRYfmwm4nohAR9Rl7WRWYBbY1A1WFrEXnF4MZF0aOWhSkemEZrJUV97UzN200l9CqOWX9";
+  Stripe.publishableKey =
+      "pk_test_51Raxa44azWPOh4j7n7lXUYffcYmfQQRYfmwm4nohAR9Rl7WRWYBbY1A1WFrEXnF4MZF0aOWhSkemEZrJUV97UzN200l9CqOWX9";
   await Stripe.instance.applySettings();
   await GetStorage.init();
   diSetup();
@@ -94,7 +93,7 @@ class UtillScreenMobile extends StatelessWidget {
             },
             navigatorKey: NavigationService.navigatorKey,
             onGenerateRoute: RouteGenerator.generateRoute,
-            home: LoadingScreen(),
+            home: const LoadingScreen(),
           ),
         );
       },
