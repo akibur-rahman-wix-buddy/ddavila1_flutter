@@ -2,8 +2,11 @@ import 'dart:io';
 import 'package:ddavila/features/admin_app/admin_navigation.dart';
 import 'package:ddavila/features/admin_app/auction_screen/final_auction_screen.dart';
 import 'package:ddavila/features/admin_app/dashboard_screen/admin_dashboard_screen.dart';
+import 'package:ddavila/features/auth_screen/presentation/forget_otp_screen.dart';
+import 'package:ddavila/features/auth_screen/presentation/forget_screen.dart';
 import 'package:ddavila/features/auth_screen/presentation/login_screen.dart';
 import 'package:ddavila/features/auth_screen/presentation/otp_varification_screen.dart';
+import 'package:ddavila/features/auth_screen/presentation/reset_password_screen.dart';
 import 'package:ddavila/features/auth_screen/presentation/role_screen.dart';
 import 'package:ddavila/features/auth_screen/presentation/signin_screen.dart';
 import 'package:ddavila/features/auth_screen/presentation/signup_screen.dart';
@@ -41,6 +44,9 @@ final class Routes {
   static const String signUpScreen = '/signUpScreen';
   static const String successScreen = '/successScreen';
   static const String otpVerificationScreen = '/otpVerificationScreen';
+  static const String forgetOTPScreen = '/forgetOTPScreen';
+  static const String resetNewPassScreen = '/resetNewPassScreen';
+  static const String forgetPasswordScreen = '/forgetPasswordScreen';
 
   // * =============> Home navigation <============= */
   static const String homeScreen = '/homeScreen';
@@ -61,7 +67,6 @@ final class Routes {
   static const String updateProfileScreen = '/updateProfileScreen';
   static const String changePassword = '/changePassword';
 }
-
 
 final class RouteGenerator {
   static final RouteGenerator _routeGenerator = RouteGenerator._internal();
@@ -103,7 +108,6 @@ final class RouteGenerator {
                 settings: settings)
             : CupertinoPageRoute(builder: (context) => const SignUpScreen());
 
-
       // * Sign In Screen
       case Routes.navigationScreen:
         return Platform.isIOS
@@ -118,8 +122,7 @@ final class RouteGenerator {
             ? UltimateSmoothTransitionRoute(
                 widget: const ScreenTitle(widget: ChangePassword()),
                 settings: settings)
-            : CupertinoPageRoute(
-                builder: (context) => const ChangePassword());
+            : CupertinoPageRoute(builder: (context) => const ChangePassword());
 
       // * Success Screen
       case Routes.successScreen:
@@ -136,6 +139,15 @@ final class RouteGenerator {
                 widget: const ScreenTitle(widget: HomeScreen()),
                 settings: settings)
             : CupertinoPageRoute(builder: (context) => const HomeScreen());
+
+      // * Home Screen
+      case Routes.forgetPasswordScreen:
+        return Platform.isIOS
+            ? UltimateSmoothTransitionRoute(
+                widget: const ScreenTitle(widget: ForgetPasswordScreen()),
+                settings: settings)
+            : CupertinoPageRoute(
+                builder: (context) => const ForgetPasswordScreen());
 
       // * Filter Screen
       case Routes.filterScreen:
@@ -163,42 +175,61 @@ final class RouteGenerator {
                 ),
                 settings: settings)
             : CupertinoPageRoute(
-            builder: (context) => ProductsScreen(
-              slug: args['slug'],
-            ));
-
-
-
+                builder: (context) => ProductsScreen(
+                      slug: args['slug'],
+                    ));
 
       case Routes.updateProfileScreen:
         final Map args = settings.arguments as Map;
         return Platform.isAndroid
             ? UltimateSmoothTransitionRoute(
-            widget: UpdateProfileScreen(
-              userData: args['userData'],
-            ),
-            settings: settings)
+                widget: UpdateProfileScreen(
+                  userData: args['userData'],
+                ),
+                settings: settings)
             : CupertinoPageRoute(
-            builder: (context) => UpdateProfileScreen(
-            userData: args["userData"],
-            ));
+                builder: (context) => UpdateProfileScreen(
+                      userData: args["userData"],
+                    ));
 
-
-
-
+      // * OTP Verification Screen
       case Routes.otpVerificationScreen:
         final Map args = settings.arguments as Map;
         return Platform.isAndroid
             ? UltimateSmoothTransitionRoute(
-            widget: OtpVerificationScreen(
-              email: args['email'],
-            ),
-            settings: settings)
+                widget: OtpVerificationScreen(
+                  email: args['email'],
+                ),
+                settings: settings)
             : CupertinoPageRoute(
-            builder: (context) => OtpVerificationScreen(
-              email: args['email'],
-            ));
-        
+                builder: (context) => OtpVerificationScreen(
+                      email: args['email'],
+                    ));
+
+      // * Forget OTP Screen
+      case Routes.forgetOTPScreen:
+        final Map args = settings.arguments as Map;
+        return Platform.isAndroid
+            ? UltimateSmoothTransitionRoute(
+                widget: ForgetOTPScreen(
+                  email: args['email'],
+                ),
+                settings: settings)
+            : CupertinoPageRoute(
+                builder: (context) => ForgetOTPScreen(
+                      email: args['email'],
+                    ),
+                settings: settings);
+
+      // * Reset New Password Screen
+      case Routes.resetNewPassScreen:
+        return Platform.isIOS
+            ? UltimateSmoothTransitionRoute(
+                widget: const ScreenTitle(widget: ResetPasswordScreen()),
+                settings: settings)
+            : CupertinoPageRoute(
+                builder: (context) => const ResetPasswordScreen());
+
       case Routes.productsBidScreen:
         final Map args = settings.arguments as Map;
         return Platform.isAndroid
