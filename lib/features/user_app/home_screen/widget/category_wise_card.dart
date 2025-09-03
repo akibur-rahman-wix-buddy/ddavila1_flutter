@@ -6,6 +6,7 @@ import 'package:ddavila/networks/api_acess.dart';
 import 'package:ddavila/networks/endpoints.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../../helpers/navigation_service.dart' show NavigationService;
 
@@ -51,7 +52,7 @@ class _CategoryProductsWidgetState extends State<CategoryProductsWidget> {
             StreamBuilder<CategoryWiseProductDataModel>(
               stream: categoryWiseProductRx.dataFetcher,
               builder: (context, snapshot) {
-                if (!snapshot.hasData || (snapshot.data?.data?.products?.data?.isEmpty ?? true)) {
+                if (!snapshot.hasData ) {
                   return _buildErrorWidget("No data found.");
                 }
                 if(snapshot.connectionState == ConnectionState.waiting){
@@ -144,6 +145,17 @@ class _CategoryProductsWidgetState extends State<CategoryProductsWidget> {
         fit: BoxFit.cover,
         width: double.infinity,
         height: 200,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+                width: 200,
+                height: 200,
+                color: Colors.white),
+          );
+        },
         errorBuilder: (context, error, stackTrace) {
           return Container(
             width: double.infinity,

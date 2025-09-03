@@ -31,11 +31,7 @@ address: address,
 
       _dataFetcher.add(data);
       return true;
-    } on DioException catch (e) {
-      log("DioError in updateProfileApiInformation: $e", stackTrace: e.stackTrace);
-      _handleDioError(e);
-      return false;
-    } catch (error, stackTrace) {
+    }  catch (error, stackTrace) {
       log("Error in updateProfileApiInformation: $error", stackTrace: stackTrace);
       ToastUtil.showShortToast("An unexpected error occurred");
       _dataFetcher.addError(error);
@@ -46,7 +42,7 @@ address: address,
   void _handleDioError(DioException e) {
     if (e.response != null) {
       final statusCode = e.response!.statusCode;
-      final errorData = e.response!.data;
+      final errorData = e.response!.data["data"];
       final errorMessage = errorData['message'] ?? 'Failed to update profile';
 
       ToastUtil.showShortToast(errorMessage);
@@ -61,3 +57,5 @@ address: address,
     _dataFetcher.close();
   }
 }
+
+
