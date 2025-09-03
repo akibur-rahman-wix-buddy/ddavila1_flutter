@@ -72,7 +72,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
 
                   // * For Top Auctions
                   final spots =
-                  dailyData.entries.toList().asMap().entries.map((entry) {
+                      dailyData.entries.toList().asMap().entries.map((entry) {
                     final index = entry.key.toDouble(); // x axis (0,1,2…)
                     final value = (entry.value.value ?? 0).toDouble(); // y axis
                     return FlSpot(index, value);
@@ -83,7 +83,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     final index = entry.key.toDouble(); // X-axis index
                     final month = entry.value;
                     final value =
-                    (data?.earning?[month] ?? 0).toDouble(); // Y-axis value
+                        (data?.earning?[month] ?? 0).toDouble(); // Y-axis value
                     return FlSpot(index, value);
                   }).toList();
 
@@ -283,10 +283,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                         minWidth: double.infinity,
                         borderRadius: 10,
                         onTap: () {
-                          Get.to(() => CreateAuctionScreen(
-                                  onNotification: (notification) {
-                                // handle notification here
-                              }));
+                          Get.to(() => CreateAuctionScreen());
                         },
                       ),
                       UIHelper.verticalSpace(
@@ -394,7 +391,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                               // এখানে ListView.builder ব্যবহার করছি
                               SizedBox(
                                 height:
-                                200, // Fixed height দিতে হবে যাতে ListView কাজ করে
+                                    200, // Fixed height দিতে হবে যাতে ListView কাজ করে
                                 child: ListView.builder(
                                   itemCount: data?.topBidder?.length,
                                   itemBuilder: (context, index) {
@@ -403,7 +400,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
 
                                     return Padding(
                                       padding:
-                                      const EdgeInsets.only(bottom: 12.0),
+                                          const EdgeInsets.only(bottom: 12.0),
                                       child: _bidderItem(
                                         user['name'] ?? "N/A", // Name
                                         user['country'] ?? "", // Sub text
@@ -462,17 +459,17 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                                       leftTitles: AxisTitles(
                                         // 👈 Y-axis hide
                                         sideTitles:
-                                        SideTitles(showTitles: false),
+                                            SideTitles(showTitles: false),
                                       ),
                                       rightTitles: AxisTitles(
                                         // optional: right side
                                         sideTitles:
-                                        SideTitles(showTitles: false),
+                                            SideTitles(showTitles: false),
                                       ),
                                       topTitles: AxisTitles(
                                         // optional: top side
                                         sideTitles:
-                                        SideTitles(showTitles: false),
+                                            SideTitles(showTitles: false),
                                       ),
                                       bottomTitles: AxisTitles(
                                         // 👈 শুধু X-axis (Month) দেখাবে
@@ -532,14 +529,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
 
                       UIHelper.verticalSpace(16.h),
                       AuctionDataGridData(data: data!.recentAuctions ?? [])
-
-
-
                     ],
-
-
-
-
                   );
                 }),
           ),

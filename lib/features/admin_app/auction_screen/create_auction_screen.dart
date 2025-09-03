@@ -3124,7 +3124,6 @@ import 'package:ddavila/assets_helper/app_image.dart';
 import 'package:ddavila/assets_helper/text_font_style.dart';
 import 'package:ddavila/common_widgets/custom_appbar.dart';
 import 'package:ddavila/common_widgets/custom_button.dart';
-import 'package:ddavila/features/admin_app/auction_screen/final_auction_screen.dart';
 import 'package:ddavila/features/admin_app/auction_screen/model/category_model.dart';
 import 'package:ddavila/features/admin_app/auction_screen/model/property_model.dart';
 import 'package:ddavila/features/admin_app/auction_screen/model/sub_property_model.dart';
@@ -3135,17 +3134,13 @@ import 'package:ddavila/networks/api_acess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
 class CreateAuctionScreen extends StatefulWidget {
-  final void Function(String) onNotification;
 
-  static void _defaultNotification(String message) {}
-
-  const CreateAuctionScreen({super.key, required this.onNotification});
+  const CreateAuctionScreen({super.key});
 
   @override
   State<CreateAuctionScreen> createState() => _CreateAuctionScreenState();
@@ -3229,11 +3224,11 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
           _coreFeaturesController.text = '';
           _descriptionController.text = '';
         });
-        widget.onNotification('Content reset successfully!');
+        log('Content reset successfully!');
       }
     } catch (e) {
       if (mounted) {
-        widget.onNotification('Failed to reset content');
+        log('Failed to reset content');
       }
     }
   }
@@ -3259,7 +3254,7 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
       }
     } catch (e) {
       if (mounted) {
-        widget.onNotification('Failed to load saved content');
+        log('Failed to load saved content');
       }
     }
   }
@@ -3322,11 +3317,11 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
       log('Core Features Data: $coreFeaturesHtmlText');
 
       if (mounted) {
-        widget.onNotification('Saved as HTML and logged successfully!');
+        log('Saved as HTML and logged successfully!');
       }
     } catch (e) {
       if (mounted) {
-        widget.onNotification('Failed to save content');
+        log('Failed to save content');
       }
     }
   }
@@ -3381,7 +3376,7 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
         final file = File(picked.path);
         final fileSize = await file.length() / (1024 * 1024); // Size in MB
         if (fileSize > 25) {
-          widget.onNotification('Image ${picked.name} exceeds 25 MB limit');
+          log('Image ${picked.name} exceeds 25 MB limit');
           continue;
         }
 
@@ -3412,11 +3407,11 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
           _cardImages.addAll(newCardImages);
         });
         log('Selected image paths: $imagePaths');
-        widget.onNotification('Images added from gallery');
+        log('Images added from gallery');
       }
     } catch (e) {
       if (mounted) {
-        widget.onNotification('Failed to add images from gallery: $e');
+        log('Failed to add images from gallery: $e');
       }
     }
   }
@@ -3431,7 +3426,7 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
       final file = File(picked.path);
       final fileSize = await file.length() / (1024 * 1024); // Size in MB
       if (fileSize > 25) {
-        widget.onNotification('Image exceeds 25 MB limit');
+        log('Image exceeds 25 MB limit');
         return;
       }
 
@@ -3460,11 +3455,11 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
       });
 
       if (mounted) {
-        widget.onNotification('Image added from camera');
+        log('Image added from camera');
       }
     } catch (e) {
       if (mounted) {
-        widget.onNotification('Failed to add image from camera: $e');
+        log('Failed to add image from camera: $e');
       }
     }
   }
