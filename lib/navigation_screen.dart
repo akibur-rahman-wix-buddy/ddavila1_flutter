@@ -1,6 +1,7 @@
 // ignore_for_file: unused_element, library_private_types_in_public_api, deprecated_member_use
 import 'package:ddavila/assets_helper/app_colors.dart';
 import 'package:ddavila/assets_helper/text_font_style.dart';
+import 'package:ddavila/features/admin_app/all_product/presentation/get_all_Product_screen.dart';
 import 'package:ddavila/features/admin_app/buying/presention/buying_order.dart';
 import 'package:ddavila/features/admin_app/seling/presentation/selling_order.dart';
 import 'package:ddavila/features/admin_app/wishlist_screen/admin_wishlist_screen.dart';
@@ -187,6 +188,45 @@ class _NavigationScreenState extends State<NavigationScreen> {
                         debugPrint("Whitelist");
                       },
                       child: SvgPicture.asset(AppIcons.whiteLoveIcon),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          GestureDetector(
+
+            onTap: (){
+              Get.to(GetAllProductScreen());
+            },
+
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppColor.cFFFFFF,
+                borderRadius: BorderRadius.circular(99.r),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  children: [
+                    const SizedBox(width: 40),
+                    Text(
+                      'My Product',
+                      style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                        color: AppColor.c000000,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    FloatingActionButton.small(
+                      heroTag: 'remind',
+                      backgroundColor: AppColor.cFFFFFF,
+                      foregroundColor: AppColor.cFFFFFF,
+                      disabledElevation: 0,
+                      elevation: 0,
+                      onPressed: () {
+                        debugPrint("Whitelist");
+                      },
+                      child: SvgPicture.asset(AppIcons.productIcon),
                     ),
                   ],
                 ),

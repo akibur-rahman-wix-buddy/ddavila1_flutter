@@ -31,6 +31,7 @@ class AppIcons {
   static const String loveIcon = '$iconsRoute/loveIcon.svg';
   static const String cartIcon = '$iconsRoute/cartIcon.svg';
   static const String whiteLoveIcon = '$iconsRoute/whiteLoveIcon.svg';
+  static const String productIcon = '$iconsRoute/product_icon.svg';
 
   // * ===================> Product Screen Icons <====================
   static const String blueTimer = '$iconsRoute/blueTimer.svg';

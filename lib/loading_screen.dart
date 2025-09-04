@@ -1,5 +1,4 @@
 
-import 'package:ddavila/features/admin_app/all_product/presentation/get_all_Product_screen.dart';
 import 'package:ddavila/helpers/navigation_service.dart';
 import 'package:ddavila/navigation_screen.dart';
 import 'package:ddavila/networks/api_acess.dart';
@@ -48,7 +47,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
           ">>>>>>>>>>>>>>>>>>>> here is the access info :${appData.read(kKeyIsLoggedIn)}");
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => GetAllProductScreen()),
+        MaterialPageRoute(builder: (context) => NavigationScreen()),
       );
     } else {
       // Navigate to LoginScreen if not logged in
@@ -72,7 +71,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
 
       return appData.read(kKeyIsLoggedIn)
-          ? const GetAllProductScreen()
+          ? const NavigationScreen()
           : const LoginScreen();
     }
   }
