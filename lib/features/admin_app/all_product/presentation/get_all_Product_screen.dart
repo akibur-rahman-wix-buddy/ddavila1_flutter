@@ -276,33 +276,6 @@ class _GetAllProductScreenState extends State<GetAllProductScreen> {
                     fit: BoxFit.cover,
                   ),
                 ),
-                Positioned(
-                  top: 8.h,
-                  right: 8.w,
-                  child: GestureDetector(
-                    onTap: () {
-                      // Handle favorite toggle
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(4.sp),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 4,
-                          ),
-                        ],
-                      ),
-                      child: SvgPicture.asset(
-                        product.bookmark ?? false ? AppIcons.liveIcon : AppIcons.loveIcon,
-                        height: 16.h,
-                        width: 16.w,
-                      ),
-                    ),
-                  ),
-                ),
               ],
             ),
             Padding(
@@ -324,8 +297,8 @@ class _GetAllProductScreenState extends State<GetAllProductScreen> {
                   Text(
                     product.type?.toString() ?? '',
                     style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                      color: AppColor.c666666,
-                      fontSize: 12.sp,
+                      color: Colors.blueAccent,
+                      fontSize: 16.sp,
                     ),
                   ),
                   UIHelper.verticalSpace(8.h),
