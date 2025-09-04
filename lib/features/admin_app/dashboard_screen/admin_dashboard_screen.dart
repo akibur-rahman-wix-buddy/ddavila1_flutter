@@ -397,27 +397,38 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
 
                               // এখানে ListView.builder ব্যবহার করছি
                               SizedBox(
-                                height:
-                                    200, // Fixed height দিতে হবে যাতে ListView কাজ করে
-                                child: ListView.builder(
-                                  itemCount: data?.topBidder?.length,
-                                  itemBuilder: (context, index) {
-                                    final bidder = data?.topBidder?[index];
-                                    final user = bidder?.user?.toJson() ?? {};
+                                height: 200,
+                                child: (data?.topBidder == null ||
+                                        data!.topBidder!.isEmpty)
+                                    ? const Center(
+                                        child: Text(
+                                          "No data available",
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      )
+                                    : ListView.builder(
+                                        itemCount: data?.topBidder?.length ?? 0,
+                                        itemBuilder: (context, index) {
+                                          final bidder =
+                                              data?.topBidder?[index];
+                                          final user =
+                                              bidder?.user?.toJson() ?? {};
 
-                                    return Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 12.0),
-                                      child: _bidderItem(
-                                        user['name'] ?? "N/A", // Name
-                                        user['country'] ?? "", // Sub text
-                                        bidder?.maxBid.toString() ??
-                                            "0".toString(), // Bid amount
+                                          return Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 12.0),
+                                            child: _bidderItem(
+                                              user['name'] ?? "N/A", // Name
+                                              user['country'] ?? "", // Sub text
+                                              bidder?.maxBid?.toString() ??
+                                                  "0", // Bid amount
+                                            ),
+                                          );
+                                        },
                                       ),
-                                    );
-                                  },
-                                ),
-                              ),
+                              )
                             ],
                           ),
                         ),
@@ -446,16 +457,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                                 ),
                               ),
                               SizedBox(height: 4),
-                              Text(
-                                "Apr 30 - May 1",
-                                style: TextFontStyle.textLine7w400cFFFFFFDmSans
-                                    .copyWith(
-                                  color: AppColor.c666666,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w800,
-                                ),
-                              ),
-                              SizedBox(height: 20),
                               SizedBox(
                                 height: 200,
                                 child: LineChart(

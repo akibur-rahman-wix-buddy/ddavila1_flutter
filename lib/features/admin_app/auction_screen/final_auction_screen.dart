@@ -156,7 +156,25 @@ class _FinalAuctionScreenState extends State<FinalAuctionScreen> {
                             context: context,
                             initialDate: DateTime.now(),
                             firstDate: DateTime(2000), // minimum date
-                            lastDate: DateTime(2100), // maximum date
+                            lastDate: DateTime(2100),
+                            builder: (BuildContext context, Widget? child) {
+                              return Theme(
+                                data: Theme.of(context).copyWith(
+                                  colorScheme: ColorScheme.light(
+                                    primary: AppColor.c4275F6,
+                                    onPrimary: Colors.white,
+                                    onSurface: Colors.black,
+                                  ),
+                                  textButtonTheme: TextButtonThemeData(
+                                    style: TextButton.styleFrom(
+                                      foregroundColor: AppColor.c4275F6,
+                                    ),
+                                  ),
+                                ),
+                                child: child!,
+                              );
+                            },
+                            // maximum date
                           );
 
                           if (pickedDate != null) {
@@ -167,10 +185,15 @@ class _FinalAuctionScreenState extends State<FinalAuctionScreen> {
                             auctionEndDateController.text = formattedDate;
                           }
                         },
-                        child: SvgPicture.asset(AppIcons.cameraIcon),
+                        child: SvgPicture.asset(
+                          AppIcons.calendarIcon,
+                          height: 20,
+                          width: 20,
+                        ),
                       ),
                       hintText: 'Select auction end date',
                       controller: auctionEndDateController,
+                      readOnly: true,
                       onChanged: (value) {
                         // Handle the input value
                       },

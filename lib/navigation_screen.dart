@@ -10,7 +10,6 @@ import 'package:ddavila/features/user_app/home_screen/presentation/home_screen.d
 import 'package:ddavila/features/user_app/profile_screen/presentation/profile_screen.dart';
 import 'package:ddavila/helpers/all_routes.dart';
 import 'package:ddavila/helpers/navigation_service.dart';
-import 'package:ddavila/helpers/toast.dart';
 import 'package:ddavila/networks/api_acess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
@@ -27,15 +26,11 @@ class NavigationScreen extends StatefulWidget {
 }
 
 class _NavigationScreenState extends State<NavigationScreen> {
-
-
   @override
   void initState() {
-
     mySelfRx.mySelfData();
     super.initState();
   }
-
 
   int selectedIndex = 0;
 
@@ -57,7 +52,6 @@ class _NavigationScreenState extends State<NavigationScreen> {
 
       // ✅ ExpandableFab ঠিকভাবে কাজ করবে
       floatingActionButton: ExpandableFab(
-
         type: ExpandableFabType.up,
         distance: 70,
         childrenAnimation: ExpandableFabAnimation.none,
@@ -79,11 +73,10 @@ class _NavigationScreenState extends State<NavigationScreen> {
           backgroundColor: Colors.white,
         ),
         children: [
-
           GestureDetector(
-          onTap: (){
-            Get.to(BuyingOrderScreen());
-          },
+            onTap: () {
+              Get.to(BuyingOrderScreen());
+            },
             child: Container(
               decoration: BoxDecoration(
                 color: AppColor.cFFFFFF,
@@ -118,8 +111,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
             ),
           ),
           GestureDetector(
-
-            onTap: (){
+            onTap: () {
               Get.to(SellingOrder());
             },
             child: Container(
@@ -266,7 +258,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
             ),
           ),
           GestureDetector(
-            onTap: (){
+            onTap: () {
               NavigationService.navigateTo(Routes.createAuctionScreen);
             },
             child: Container(
@@ -293,7 +285,9 @@ class _NavigationScreenState extends State<NavigationScreen> {
                       disabledElevation: 0,
                       elevation: 0,
                       onPressed: () {
-                        debugPrint("My Auction");
+                        NavigationService.navigateTo(
+                          Routes.myAuctionScreen,
+                        );
                       },
                       child: SvgPicture.asset(AppIcons.auctionIcon),
                     ),
@@ -329,7 +323,9 @@ class _NavigationScreenState extends State<NavigationScreen> {
                       disabledElevation: 0,
                       elevation: 0,
                       onPressed: () {
-                        ToastUtil.showShortToast('Navigate To Admin Dashboard');
+                        NavigationService.navigateTo(
+                          Routes.adminNavigationScreen,
+                        );
                       },
                       child: SvgPicture.asset(AppIcons.dasbIcon),
                     ),

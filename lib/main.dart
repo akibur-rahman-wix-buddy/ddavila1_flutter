@@ -1,7 +1,5 @@
 import 'dart:developer';
 import 'package:auto_animated/auto_animated.dart';
-import 'package:ddavila/features/auth_screen/presentation/forget_screen.dart';
-import 'package:ddavila/features/auth_screen/presentation/reset_password_screen.dart';
 import 'package:ddavila/loading_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

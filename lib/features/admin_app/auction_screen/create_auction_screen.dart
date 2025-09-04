@@ -21,12 +21,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
 class CreateAuctionScreen extends StatefulWidget {
-
-  static void _defaultNotification(String message) {}
-
-
   const CreateAuctionScreen({super.key});
-
   @override
   State<CreateAuctionScreen> createState() => _CreateAuctionScreenState();
 }
@@ -997,6 +992,10 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                                   ),
                                 ),
                                 UIHelper.verticalSpace(10),
+
+                                // * ############################################################
+                                // * ##################### Add Properties #######################
+                                // * ############################################################
                                 SizedBox(
                                   width: 150.w,
                                   child: DropDownCustomTextField(
@@ -1087,23 +1086,6 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                                     List<String> subPropertyOptions = [
                                       'Add New Item'
                                     ];
-
-                                    if (subSnapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return const SizedBox(
-                                        width: 150,
-                                        child: Center(
-                                            child: CircularProgressIndicator()),
-                                      );
-                                    }
-
-                                    if (subSnapshot.hasError) {
-                                      return SizedBox(
-                                        width: 150.w,
-                                        child:
-                                            Text('Error: ${subSnapshot.error}'),
-                                      );
-                                    }
 
                                     final subPropertyData = subSnapshot.data;
                                     if (subPropertyData != null &&
