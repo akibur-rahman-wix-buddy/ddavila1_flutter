@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'package:ddavila/constants/app_constants.dart';
 import 'package:ddavila/features/admin_app/auction_screen/data/post_auction_products/post_auction_products_api.dart';
-import 'package:ddavila/features/admin_app/auction_screen/data/post_products/post_products_api.dart';
 import 'package:ddavila/helpers/di.dart';
 import 'package:ddavila/helpers/toast.dart';
 import 'package:ddavila/networks/dio/dio.dart';
