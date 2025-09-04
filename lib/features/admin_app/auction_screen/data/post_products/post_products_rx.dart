@@ -27,8 +27,7 @@ final class PostProductsAPIRx extends RxResponseInt<Map<String, dynamic>> {
     required dynamic shipWithin,
     required List<XFile>
         images, // Changed to List<XFile> to match PostProductsAPI
-    required List<String>
-        propertyItem, // List of strings for product properties
+    required List   propertyItem, // List of strings for product properties
   }) async {
     try {
       // Call the updated postProductSale API

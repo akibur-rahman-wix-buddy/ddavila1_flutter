@@ -358,6 +358,15 @@ class _FinalAuctionScreenState extends State<FinalAuctionScreen> {
                     ),
                   ),
                   CustomButton(
+
+
+
+
+                    // onTap: (){
+                    //   print(">>>>>>>>>>>>>>>>>>>> this is category item ${widget.property}");
+                    // },
+
+
                     onTap: () async {
                       // Convert List<String> to List<XFile>
                       List<XFile> imagees = (widget.imageItem as List<dynamic>)
@@ -424,10 +433,10 @@ class _FinalAuctionScreenState extends State<FinalAuctionScreen> {
                           shipWithin: shipWithinController.text,
                           images: imagees,
                           propertyItem: widget.property
-                              .map<String>(
-                                (item) => "${item['title']}, ${item['value']}",
-                              )
-                              .toList(),
+                              // .map<String>(
+                              //   (item) => "${item['title']}, ${item['value']}",
+                              // )
+                              // .toList(),
                         );
                         if (success) {
                           ToastUtil.showShortToast(

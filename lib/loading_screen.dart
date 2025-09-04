@@ -1,3 +1,4 @@
+
 // // ignore_for_file: unused_local_variable, prefer_final_fields
 //
 // import 'dart:convert';
@@ -122,7 +123,6 @@
 // }
 
 
-// ignore_for_file: unused_local_variable
 import 'package:ddavila/helpers/navigation_service.dart';
 import 'package:ddavila/navigation_screen.dart';
 import 'package:ddavila/welcome_screen.dart';

@@ -42,13 +42,13 @@ class AdminChatWidget extends StatelessWidget {
             },
             child: Padding(
               padding: const EdgeInsets.only(left: 48.0), // Align with avatar
-              child: Text(
-                senderName,
-                style: TextFontStyle.buttonTextStyle.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
+              // child: Text(
+              //   senderName,
+              //   style: TextFontStyle.buttonTextStyle.copyWith(
+              //     color: Colors.white,
+              //     fontWeight: FontWeight.w700,
+              //   ),
+              // ),
             ),
           ),
           const SizedBox(height: 4),

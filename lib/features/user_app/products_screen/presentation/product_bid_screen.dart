@@ -352,6 +352,7 @@ class _ProductsBidScreenState extends State<ProductsBidScreen> {
                       productPercentage: productPercentage,
                       stateName: stateName,
                     ),
+                    UIHelper.verticalSpace(100.h)
                   ],
                 ),
               );

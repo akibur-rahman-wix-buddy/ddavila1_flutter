@@ -1,4 +1,5 @@
 import 'package:ddavila/features/admin_app/dashboard_screen/model/admin_dash_model.dart';
+import 'package:ddavila/networks/endpoints.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
@@ -147,7 +148,7 @@ class AuctionDataSource extends DataGridSource {
               ? ClipRRect(
             borderRadius: BorderRadius.circular(6),
             child: Image.network(
-              dataCell.value,
+              "$image_url${dataCell.value}",
               width: 30,
               height: 30,
               fit: BoxFit.cover,
