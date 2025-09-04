@@ -90,69 +90,61 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
   product) {
     return GestureDetector(
 
+      onTap: () {
+        print(">>>>>>>>>>>>>>> here is the product type  after ${product.type}");
+        if (product.type.toString() == "sale") {
 
-      onTap: (){
-        print(">>>>>>>>>>>>>>>>> image url '$image_url${product.images[0]}'");
+
+
+          print(">>>>>>>>>>>>>>>>>>> here is the  stripe connected value ${isStripeConnected}");
+          if(isStripeConnected == true && isProfileConnected == true){
+
+            NavigationService.navigateToWithArgs(
+              Routes.productDetailsScreen,
+              {"slug": product.slug,},
+            );
+          }else if(isStripeConnected == false ){
+            Get.to(StripeCardScreen());
+          }else if(isProfileConnected == false ){
+            Get.to(CompleteAccountInfoScreen());
+          }
+
+
+          print(">>>>>>>>>>>>>>> here is the product id ${product.id}");
+          print(">>>>>>>>>>>>>>> here is the product type ${product.type}");
+          // NavigationService.navigateToWithArgs(
+          //   Routes.productDetailsScreen,
+          //   {"slug": product.slug},
+          // );
+        }else if (product.type.toString() == "auction")  {
+
+          print(">>>>>>>>>>>>>>>>>>> this is the else product ");
+
+
+          print(">>>>>>>>>>>>>>>>>>> here is the  stripe connected value ${isStripeConnected}");
+          if(isStripeConnected == true && isProfileConnected == true){
+
+
+
+
+            NavigationService.navigateToWithArgs(
+              Routes.productsBidScreen,
+              {"slag": product.slug, "productId": product.id},
+            );
+          }else if(isProfileConnected == false ){
+            Get.to(CompleteAccountInfoScreen());
+          }else if(isStripeConnected == false ){
+            Get.to(StripeCardScreen());
+          }
+
+          print(">>>>>>>>>>>>>>> here is the product type ${product.type}");
+          print(">>>>>>>>>>>>>>> here is the not sale , and this is id product id ${product.id}");
+          // NavigationService.navigateToWithArgs(
+          //   Routes.productsBidScreen,
+          //   {"slag": product.slug, "productId": product..id},
+          // );
+        }
       },
-
-
-
-
-      // onTap: () {
-      //   print(">>>>>>>>>>>>>>> here is the product type  after ${product.type}");
-      //   if (product.type.toString() == "sale") {
-      //
-      //
-      //
-      //     print(">>>>>>>>>>>>>>>>>>> here is the  stripe connected value ${isStripeConnected}");
-      //     if(isStripeConnected == true && isProfileConnected == true){
-      //
-      //       NavigationService.navigateToWithArgs(
-      //         Routes.productDetailsScreen,
-      //         {"slug": product.slug,},
-      //       );
-      //     }else if(isStripeConnected == false ){
-      //       Get.to(StripeCardScreen());
-      //     }else if(isProfileConnected == false ){
-      //       Get.to(CompleteAccountInfoScreen());
-      //     }
-      //
-      //
-      //     print(">>>>>>>>>>>>>>> here is the product id ${product.id}");
-      //     print(">>>>>>>>>>>>>>> here is the product type ${product.type}");
-      //     // NavigationService.navigateToWithArgs(
-      //     //   Routes.productDetailsScreen,
-      //     //   {"slug": product.slug},
-      //     // );
-      //   }else if (product.type.toString() == "auction")  {
-      //
-      //     print(">>>>>>>>>>>>>>>>>>> this is the else product ");
-      //
-      //
-      //     print(">>>>>>>>>>>>>>>>>>> here is the  stripe connected value ${isStripeConnected}");
-      //     if(isStripeConnected == true && isProfileConnected == true){
-      //
-      //
-      //
-      //
-      //       NavigationService.navigateToWithArgs(
-      //         Routes.productsBidScreen,
-      //         {"slag": product.slug, "productId": product.id},
-      //       );
-      //     }else if(isProfileConnected == false ){
-      //       Get.to(CompleteAccountInfoScreen());
-      //     }else if(isStripeConnected == false ){
-      //       Get.to(StripeCardScreen());
-      //     }
-      //
-      //     print(">>>>>>>>>>>>>>> here is the product type ${product.type}");
-      //     print(">>>>>>>>>>>>>>> here is the not sale , and this is id product id ${product.id}");
-      //     // NavigationService.navigateToWithArgs(
-      //     //   Routes.productsBidScreen,
-      //     //   {"slag": product.slug, "productId": product..id},
-      //     // );
-      //   }
-      // },
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,

@@ -4,7 +4,7 @@ import 'dart:convert';
 class ProductDetailsDataModel {
   bool? success;
   String? message;
-  Data? data;
+  SaleData? data;
   int? code;
 
   ProductDetailsDataModel({
@@ -21,7 +21,7 @@ class ProductDetailsDataModel {
   factory ProductDetailsDataModel.fromJson(Map<String, dynamic> json) => ProductDetailsDataModel(
     success: json["success"],
     message: json["message"],
-    data: json["data"] == null ? null : Data.fromJson(json["data"]),
+    data: json["data"] == null ? null : SaleData.fromJson(json["data"]),
     code: json["code"],
   );
 
@@ -33,7 +33,7 @@ class ProductDetailsDataModel {
   };
 }
 
-class Data {
+class SaleData {
   int? id;
   String? title;
   String? slug;
@@ -54,7 +54,7 @@ class Data {
   List<dynamic>? bids;
   List<Property>? properties;
 
-  Data({
+  SaleData({
     this.id,
     this.title,
     this.slug,
@@ -76,11 +76,11 @@ class Data {
     this.properties,
   });
 
-  factory Data.fromRawJson(String str) => Data.fromJson(json.decode(str));
+  factory SaleData.fromRawJson(String str) => SaleData.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
+  factory SaleData.fromJson(Map<String, dynamic> json) => SaleData(
     id: json["id"],
     title: json["title"],
     slug: json["slug"],

@@ -63,6 +63,7 @@ final class Routes {
   // * ##########################################################################################
   static const String adminNavigationScreen = '/adminNavigationScreen';
   static const String adminDashboard = '/adminDashboard';
+
   static const String myAuctionScreen = '/myAuctionScreen';
 
   // * ############################## Profile ###########################################
@@ -216,14 +217,12 @@ final class RouteGenerator {
                 ),
                 settings: settings)
             : CupertinoPageRoute(
+
                 builder: (context) => OtpVerificationScreen(
                       email: args['email'],
                     ),
                 settings: settings);
 
-      // builder: (context) => OtpVerificationScreen(
-      //       email: args['email'],
-      //     ));
 
       // * Forget OTP Screen
       case Routes.forgetOTPScreen:

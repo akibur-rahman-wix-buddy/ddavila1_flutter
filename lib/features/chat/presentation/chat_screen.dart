@@ -4,6 +4,7 @@ import 'package:ddavila/features/chat/model/chat_list_data_model.dart';
 import 'package:ddavila/features/chat/presentation/chat_to_person_screen.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';
 import 'package:ddavila/networks/api_acess.dart';
+import 'package:ddavila/networks/endpoints.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -18,11 +19,44 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   Set<int> selectedIndexes = {};
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
+  List<Conversation> _allConversations = [];
+  List<Conversation> _filteredConversations = [];
 
   @override
   void initState() {
     getAllChatListRx.getChatListInfo();
     super.initState();
+
+    // Add listener to search controller for live search
+    _searchController.addListener(() {
+      setState(() {
+        _searchQuery = _searchController.text;
+        _filterConversations();
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _filterConversations() {
+    if (_searchQuery.isEmpty) {
+      _filteredConversations = List.from(_allConversations);
+    } else {
+      _filteredConversations = _allConversations.where((conversation) {
+        final participant = conversation.participants?.isNotEmpty == true
+            ? conversation.participants![0].participantable
+            : null;
+        final participantName = participant?.name?.toLowerCase() ?? '';
+
+        return participantName.contains(_searchQuery.toLowerCase());
+      }).toList();
+    }
   }
 
   @override
@@ -30,200 +64,224 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        leading: SizedBox(),
+        leading: const SizedBox(),
         centerTitle: true,
-        title: Text("Chat",style: TextFontStyle.textLine20w400cFFFFFFDvSans,),
-
+        title: Text("Chat", style: TextFontStyle.textLine20w400cFFFFFFDvSans),
         backgroundColor: Colors.black,
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 16),
-        child: StreamBuilder<ChatListModelData>(
-          stream: getAllChatListRx.dataFetcher,
-          builder: (context, snapshot) {
-            String formatMessageTime(String? dateTimeString) {
-              if (dateTimeString == null || dateTimeString.isEmpty) return "";
-              try {
-                final dateTime = DateTime.parse(dateTimeString);
-                return DateFormat('h:mm a').format(dateTime);
-              } catch (e) {
-                return "";
-              }
-            }
+        child: Column(
+          children: [
+            // Search Bar
+            Container(
+              margin: const EdgeInsets.only(bottom: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(25),
+              ),
+              child: TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: 'Search by name...',
+                  border: InputBorder.none,
+                  icon: const Icon(Icons.search, color: Colors.grey),
+                  suffixIcon: _searchQuery.isNotEmpty
+                      ? IconButton(
+                    icon: const Icon(Icons.clear, color: Colors.grey),
+                    onPressed: () {
+                      _searchController.clear();
+                    },
+                  )
+                      : null,
+                ),
+              ),
+            ),
 
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Center(child: CircularProgressIndicator(color: Colors.white,)),
-                  UIHelper.verticalSpace(10.h),
-                  const Text("Loading...", style: TextStyle(color: Colors.white))
-                ],
-              );
-            } else if (snapshot.hasError) {
-              return const Center(child: Text("Something went wrong!"));
-            } else if (!snapshot.hasData || snapshot.data!.data == null) {
-              return const Center(child: Text("No conversations found."));
-            } else {
-              return ListView.builder(
-                padding: EdgeInsets.only(bottom: 80),
-                itemCount: snapshot.data!.data!.conversations?.length ?? 0,
-                itemBuilder: (context, index) {
-                  final conversation =
-                  snapshot.data!.data!.conversations?[index];
+            Expanded(
+              child: StreamBuilder<ChatListModelData>(
+                stream: getAllChatListRx.dataFetcher,
+                builder: (context, snapshot) {
+                  String formatMessageTime(String? dateTimeString) {
+                    if (dateTimeString == null || dateTimeString.isEmpty) return "";
+                    try {
+                      final dateTime = DateTime.parse(dateTimeString);
+                      return DateFormat('h:mm a').format(dateTime);
+                    } catch (e) {
+                      return "";
+                    }
+                  }
 
-                  // Always get the first participant (index 0)
-                  final participant =
-                  conversation?.participants?.isNotEmpty == true
-                      ? conversation!.participants![0].participantable
-                      : null;
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Center(child: CircularProgressIndicator(color: Colors.white)),
+                        UIHelper.verticalSpace(10.h),
+                        const Text("Loading...", style: TextStyle(color: Colors.white))
+                      ],
+                    );
+                  } else if (snapshot.hasError) {
+                    return const Center(child: Text("Something went wrong!"));
+                  } else if (!snapshot.hasData || snapshot.data!.data == null) {
+                    return const Center(child: Text("No conversations found."));
+                  } else {
+                    // Store all conversations and filter them
+                    if (_allConversations.isEmpty) {
+                      _allConversations = snapshot.data!.data!.conversations ?? [];
+                      _filteredConversations = List.from(_allConversations);
+                    }
 
-                  // Get participant info safely
-                  final participantName = participant?.name ?? "Unknown";
-                  final participantAvatar = participant?.avatar;
-                  final participantId =conversation?.participants?.isNotEmpty == true
-                      ? conversation!.participants![0].participantableId
-                      : null;
+                    return _filteredConversations.isEmpty && _searchQuery.isNotEmpty
+                        ? const Center(child: Text("No matching conversations found."))
+                        : ListView.builder(
+                      padding: const EdgeInsets.only(bottom: 80),
+                      itemCount: _filteredConversations.length,
+                      itemBuilder: (context, index) {
+                        final conversation = _filteredConversations[index];
 
-                  final lastMessage =
-                      conversation?.lastMessage?.body ?? "No messages";
-                  final messageTime =
-                  formatMessageTime(conversation?.lastMessage?.createdAt.toString());
+                        // Always get the first participant (index 0)
+                        final participant = conversation.participants?.isNotEmpty == true
+                            ? conversation.participants![0].participantable
+                            : null;
 
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 20),
+                        // Get participant info safely
+                        final participantName = participant?.name ?? "Unknown";
+                        final participantAvatar = participant?.avatar;
+                        final participantId = conversation.participants?.isNotEmpty == true
+                            ? conversation.participants![0].participantableId
+                            : null;
 
-                    child: SizedBox(
-                      height: 54,
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.transparent,
-                          shadowColor: Colors.transparent,
-                          padding: EdgeInsets.zero,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(0),
-                          ),
-                        ),
-                        onPressed: () {
-                          print('check the  conversation id : ${conversation?.id.toString()}');
-                          if (participantId != null) {
-                            Get.to(ChatToPersonScreen(
-                              conversationId: conversation?.participants?.first.conversationId
-                                  .toString(), // Use conversation.id instead
-                              name: participantName,
-                              image: participantAvatar,
-                              participantableId: participantId,
-                            ));
-                            setState(() {
-                              selectedIndexes.add(index);
-                            });
-                          }
-                        },
-                        child: Row(
-                          children: [
-                            ClipOval(
-                              child: participantAvatar != null
-                                  ? Image.network(
-                                participantAvatar,
-                                height: 53,
-                                width: 53,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Container(
-                                    height: 53,
-                                    width: 53,
-                                    color: Colors.grey,
-                                    child: const Icon(Icons.person, color: Colors.white),
-                                  );
-                                },
-                              )
-                                  : Container(
-                                height: 53,
-                                width: 53,
-                                color: Colors.grey,
-                                child: const Icon(Icons.person, color: Colors.white),
+                        final lastMessage = conversation.lastMessage?.body ?? "No messages";
+                        final messageTime = formatMessageTime(conversation.lastMessage?.createdAt.toString());
+
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 20),
+                          child: SizedBox(
+                            height: 54,
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.transparent,
+                                shadowColor: Colors.transparent,
+                                padding: EdgeInsets.zero,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(0),
+                                ),
                               ),
-                            ),
-
-                            UIHelper.horizontalSpace(10),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
+                              onPressed: () {
+                                print('check the conversation id : ${conversation.id.toString()}');
+                                if (participantId != null) {
+                                  Get.to(ChatToPersonScreen(
+                                    conversationId: conversation.participants?.first.conversationId.toString(),
+                                    name: participantName,
+                                    image: "$image_url${participantAvatar}",
+                                    participantableId: participantId,
+                                  ));
+                                  setState(() {
+                                    selectedIndexes.add(index);
+                                  });
+                                }
+                              },
+                              child: Row(
                                 children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          participantName??"",
-                                          style:
-                                          TextFontStyle.buttonTextStyle.copyWith(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 16,
-                                            color: AppColor.blackColor,
-                                          ),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                      Text(
-                                        messageTime,
-                                        style: TextFontStyle.buttonTextStyle.copyWith(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 12,
-                                          color: AppColor.blackColor                                              .withOpacity(0.6),
-                                        ),
-                                      )
-                                    ],
+                                  ClipOval(
+                                    child: participantAvatar != null
+                                        ? Image.network(
+                                      "$image_url$participantAvatar",
+                                      height: 53,
+                                      width: 53,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (context, error, stackTrace) {
+                                        return Container(
+                                          height: 53,
+                                          width: 53,
+                                          color: Colors.grey,
+                                          child: const Icon(Icons.person, color: Colors.white),
+                                        );
+                                      },
+                                    )
+                                        : Container(
+                                      height: 53,
+                                      width: 53,
+                                      color: Colors.grey,
+                                      child: const Icon(Icons.person, color: Colors.white),
+                                    ),
                                   ),
-                                  UIHelper.verticalSpace(7),
-                                  Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          lastMessage,
-                                          style: TextFontStyle.buttonTextStyle.copyWith(
-                                              fontWeight: selectedIndexes
-                                                  .contains(index)
-                                                  ? FontWeight.w400
-                                                  : FontWeight.w600,
-                                              fontSize: 12,
-                                              color: selectedIndexes
-                                                  .contains(index)
-                                                  ? AppColor.blackColor
-                                                  .withOpacity(0.7)
-                                                  : AppColor.blackColor),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
+                                  UIHelper.horizontalSpace(10),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                participantName,
+                                                style: TextFontStyle.buttonTextStyle.copyWith(
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 16,
+                                                  color: AppColor.blackColor,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                            Text(
+                                              messageTime,
+                                              style: TextFontStyle.buttonTextStyle.copyWith(
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 12,
+                                                color: AppColor.blackColor.withOpacity(0.6),
+                                              ),
+                                            )
+                                          ],
                                         ),
-                                      ),
-                                      UIHelper.horizontalSpace(30),
-                                      if (conversation?.readable == false)
-                                        CircleAvatar(
-                                          radius: 5,
-                                          backgroundColor: Colors.blue,
-                                        )
-                                    ],
+                                        UIHelper.verticalSpace(7),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                lastMessage,
+                                                style: TextFontStyle.buttonTextStyle.copyWith(
+                                                    fontWeight: selectedIndexes.contains(index)
+                                                        ? FontWeight.w400
+                                                        : FontWeight.w600,
+                                                    fontSize: 12,
+                                                    color: selectedIndexes.contains(index)
+                                                        ? AppColor.blackColor.withOpacity(0.7)
+                                                        : AppColor.blackColor),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                            UIHelper.horizontalSpace(30),
+                                            if (conversation.readable == false)
+                                              const CircleAvatar(
+                                                radius: 5,
+                                                backgroundColor: Colors.blue,
+                                              )
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
-
                                 ],
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
-
-                  );
+                          ),
+                        );
+                      },
+                    );
+                  }
                 },
-              );
-            }
-          },
+              ),
+            ),
+          ],
         ),
       ),
     );

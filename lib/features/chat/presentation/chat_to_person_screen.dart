@@ -378,102 +378,226 @@ class _ChatToPersonScreenState extends State<ChatToPersonScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Column(
               children: [
+
+
+
+
+                // Expanded(
+                //   child: _isLoading
+                //       ? const Center(
+                //           child: Text("Data is loading...",
+                //               style: TextStyle(color: Colors.white)),
+                //         )
+                //       : _errorMessage != null
+                //           ? Center(child: Text(_errorMessage!))
+                //           : _messages.isEmpty
+                //               ? Center(
+                //                   child: Container(
+                //                     height: 200.h,
+                //                     width: 300.h,
+                //                     child: Column(
+                //                       children: [
+                //                         ClipOval(
+                //                           child: Image.network(
+                //                             widget.image.toString(),
+                //                             width:
+                //                                 106, // double the radius (16 * 2)
+                //                             height: 106,
+                //                             fit: BoxFit.cover,
+                //                             errorBuilder:
+                //                                 (context, error, stackTrace) {
+                //                               return Container(
+                //                                 width: 32,
+                //                                 height: 32,
+                //                                 color: Colors
+                //                                     .grey, // Fallback color
+                //                                 child: Image.asset(
+                //                                     AppImages.profileIcon),
+                //                               );
+                //                             },
+                //                           ),
+                //                         ),
+                //                         UIHelper.verticalSpace(12.h),
+                //
+                //                         Text(widget.name.toString(),
+                //                             style:
+                //                                 TextFontStyle.buttonTextStyle),
+                //                         // UIHelper.verticalSpace(8.h),
+                //                         Text(
+                //                           "Start Conversation .Say Hi",
+                //                           style: TextFontStyle.buttonTextStyle,
+                //                         ),
+                //                       ],
+                //                     ),
+                //                   ),
+                //                 )
+                //               : ListView.builder(
+                //                   controller: _scrollController,
+                //                   physics: const ClampingScrollPhysics(),
+                //                   padding: const EdgeInsets.only(bottom: 20),
+                //                   reverse: true,
+                //                   itemCount: _messages.length,
+                //                   itemBuilder: (context, index) {
+                //                     final message = _messages[index];
+                //
+                //                     print(
+                //                         ">>>>>>>>>>>>>>>>>>>>> is me ? ${message.isMe}");
+                //
+                //                     final isSentByCurrentUser =
+                //                         message.isMe ?? false;
+                //
+                //                     return Align(
+                //                       alignment: isSentByCurrentUser
+                //                           ? Alignment.centerRight
+                //                           : Alignment.centerLeft,
+                //                       child: isSentByCurrentUser
+                //                           ? UserChatWidget(
+                //                               attachments:
+                //                                   message.attachment ?? [],
+                //                               time: formatUtcToTimeAMPM(
+                //                                   utcTimeString: message
+                //                                       .createdAt
+                //                                       .toString()),
+                //                               message: message.body ?? "",
+                //                               isMe: message.isMe!,
+                //                               // image: message.sender?.avatar.toString() ?? "",
+                //                             )
+                //                           : AdminChatWidget(
+                //                               attachments:
+                //                                   message.attachment ?? [],
+                //                               id: 3,
+                //                               time: formatUtcToTimeAMPM(
+                //                                   utcTimeString: message
+                //                                       .createdAt
+                //                                       .toString()),
+                //                               senderName: widget.name,
+                //                               message: message.body ?? "",
+                //                               image: widget.image ?? "",
+                //                             ),
+                //                     );
+                //                   },
+                //                 ),
+                // ),
+
+
+
+
+
+
+
                 Expanded(
                   child: _isLoading
                       ? const Center(
-                          child: Text("Data is loading...",
-                              style: TextStyle(color: Colors.white)),
-                        )
+                    child: Text("Data is loading...",
+                        style: TextStyle(color: Colors.white)),
+                  )
                       : _errorMessage != null
-                          ? Center(child: Text(_errorMessage!))
-                          : _messages.isEmpty
-                              ? Center(
-                                  child: Container(
-                                    height: 200.h,
-                                    width: 300.h,
-                                    child: Column(
-                                      children: [
-                                        ClipOval(
-                                          child: Image.network(
-                                            widget.image.toString(),
-                                            width:
-                                                106, // double the radius (16 * 2)
-                                            height: 106,
-                                            fit: BoxFit.cover,
-                                            errorBuilder:
-                                                (context, error, stackTrace) {
-                                              return Container(
-                                                width: 32,
-                                                height: 32,
-                                                color: Colors
-                                                    .grey, // Fallback color
-                                                child: Image.asset(
-                                                    AppImages.profileIcon),
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                        UIHelper.verticalSpace(12.h),
+                      ? Center(child: Text(_errorMessage!))
+                      : _messages.isEmpty
+                      ? Center(
+                    child: Container(
+                      height: 200.h,
+                      width: 300.h,
+                      child: Column(
+                        children: [
+                          ClipOval(
+                            child: Image.network(
+                              widget.image.toString(),
+                              width: 106,
+                              height: 106,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  width: 32,
+                                  height: 32,
+                                  color: Colors.grey,
+                                  child: Image.asset(AppImages.profileIcon),
+                                );
+                              },
+                            ),
+                          ),
+                          UIHelper.verticalSpace(12.h),
+                          Text(widget.name.toString(),
+                              style: TextFontStyle.buttonTextStyle),
+                          Text(
+                            "Start Conversation .Say Hi",
+                            style: TextFontStyle.buttonTextStyle,
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                      : ListView.builder(
+                    controller: _scrollController,
+                    physics: const ClampingScrollPhysics(),
+                    padding: const EdgeInsets.only(bottom: 20),
+                    reverse: true,
+                    itemCount: _messages.length,
+                    itemBuilder: (context, index) {
+                      final message = _messages[index];
+                      final isSentByCurrentUser = message.isMe ?? false;
 
-                                        Text(widget.name.toString(),
-                                            style:
-                                                TextFontStyle.buttonTextStyle),
-                                        // UIHelper.verticalSpace(8.h),
-                                        Text(
-                                          "Start Conversation .Say Hi",
-                                          style: TextFontStyle.buttonTextStyle,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              : ListView.builder(
-                                  controller: _scrollController,
-                                  physics: const ClampingScrollPhysics(),
-                                  padding: const EdgeInsets.only(bottom: 20),
-                                  reverse: true,
-                                  itemCount: _messages.length,
-                                  itemBuilder: (context, index) {
-                                    final message = _messages[index];
+                      // Check if we need to show a date header
+                      final currentMessageDate = message.createdAt;
+                      final bool showDateHeader;
 
-                                    print(
-                                        ">>>>>>>>>>>>>>>>>>>>> is me ? ${message.isMe}");
+                      if (index == _messages.length - 1) {
+                        // First message (since list is reversed)
+                        showDateHeader = true;
+                      } else {
+                        final previousMessage = _messages[index + 1];
+                        final previousMessageDate = previousMessage.createdAt;
 
-                                    final isSentByCurrentUser =
-                                        message.isMe ?? false;
+                        // Show header if dates are different
+                        showDateHeader = currentMessageDate != null &&
+                            previousMessageDate != null &&
+                            !_isSameDay(currentMessageDate, previousMessageDate);
+                      }
 
-                                    return Align(
-                                      alignment: isSentByCurrentUser
-                                          ? Alignment.centerRight
-                                          : Alignment.centerLeft,
-                                      child: isSentByCurrentUser
-                                          ? UserChatWidget(
-                                              attachments:
-                                                  message.attachment ?? [],
-                                              time: formatUtcToTimeAMPM(
-                                                  utcTimeString: message
-                                                      .createdAt
-                                                      .toString()),
-                                              message: message.body ?? "",
-                                              isMe: message.isMe!,
-                                              // image: message.sender?.avatar.toString() ?? "",
-                                            )
-                                          : AdminChatWidget(
-                                              attachments:
-                                                  message.attachment ?? [],
-                                              id: 3,
-                                              time: formatUtcToTimeAMPM(
-                                                  utcTimeString: message
-                                                      .createdAt
-                                                      .toString()),
-                                              senderName: widget.name,
-                                              message: message.body ?? "",
-                                              image: widget.image ?? "",
-                                            ),
-                                    );
-                                  },
-                                ),
+                      return Column(
+                        children: [
+                          if (showDateHeader)
+                            DateHeader(date: formatUtcToDate(message.createdAt)),
+                          Align(
+                            alignment: isSentByCurrentUser
+                                ? Alignment.centerRight
+                                : Alignment.centerLeft,
+                            child: isSentByCurrentUser
+                                ? UserChatWidget(
+                              attachments: message.attachment ?? [],
+                              time: formatUtcToTimeAMPM(
+                                  utcTimeString: message.createdAt.toString()),
+                              message: message.body ?? "",
+                              isMe: message.isMe!,
+                            )
+                                : AdminChatWidget(
+                              attachments: message.attachment ?? [],
+                              id: 3,
+                              time: formatUtcToTimeAMPM(
+                                  utcTimeString: message.createdAt.toString()),
+                              senderName: widget.name,
+                              message: message.body ?? "",
+                              image: widget.image ?? "",
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
                 ),
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                 // blockStatus == false?
                 // ChatBottomBarWidget(
@@ -490,6 +614,14 @@ class _ChatToPersonScreenState extends State<ChatToPersonScreen> {
                 // }, text:"Unblock",),
 
 // In your build method:
+
+
+
+
+
+
+
+
                 ChatBottomBarWidget(
                   chatController: chatController,
                   onSendTap: _sendMessage,
@@ -557,6 +689,70 @@ class EmojiReactionOverlay extends StatelessWidget {
                 ),
               );
             }).toList(),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+
+String formatUtcToDate(DateTime? utcDateTime) {
+  if (utcDateTime == null) return '';
+
+  final now = DateTime.now();
+  final today = DateTime(now.year, now.month, now.day);
+  final yesterday = DateTime(now.year, now.month, now.day - 1);
+  final messageDate = DateTime(utcDateTime.year, utcDateTime.month, utcDateTime.day);
+
+  if (messageDate == today) {
+    return 'Today';
+  } else if (messageDate == yesterday) {
+    return 'Yesterday';
+  } else {
+    return '${_getMonthName(messageDate.month)} ${messageDate.day}, ${messageDate.year}';
+  }
+}
+
+String _getMonthName(int month) {
+  const months = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+  return months[month - 1];
+}
+
+bool _isSameDay(DateTime? date1, DateTime? date2) {
+  if (date1 == null || date2 == null) return false;
+  return date1.year == date2.year &&
+      date1.month == date2.month &&
+      date1.day == date2.day;
+}
+
+// Date Header Widget
+class DateHeader extends StatelessWidget {
+  final String date;
+
+  const DateHeader({super.key, required this.date});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
+        margin: EdgeInsets.symmetric(vertical: 8.h),
+        decoration: BoxDecoration(
+          // color: Colors.grey[200],
+          border: Border.all(color: Colors.white,width: 2),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Text(
+          date,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 12.sp,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ),
