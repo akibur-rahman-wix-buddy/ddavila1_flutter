@@ -449,10 +449,7 @@ isOnBoardign = widget.userData.data?.user?.onboardComplete == 1 ? true: false;
         // Navigate back or to home screen
         Navigator.of(context).pop();
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text('Failed to update profile. Please try again.')),
-        );
+
       }
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(

@@ -3,6 +3,7 @@ import 'package:ddavila/assets_helper/app_colors.dart';
 import 'package:ddavila/assets_helper/text_font_style.dart';
 import 'package:ddavila/features/admin_app/buying/presention/buying_order.dart';
 import 'package:ddavila/features/admin_app/seling/presentation/selling_order.dart';
+import 'package:ddavila/features/admin_app/wishlist_screen/admin_wishlist_screen.dart';
 import 'package:ddavila/features/chat/presentation/chat_screen.dart';
 import 'package:ddavila/features/user_app/home_screen/presentation/home_screen.dart';
 import 'package:ddavila/features/user_app/profile_screen/presentation/profile_screen.dart';
@@ -153,35 +154,42 @@ class _NavigationScreenState extends State<NavigationScreen> {
               ),
             ),
           ),
-          Container(
-            decoration: BoxDecoration(
-              color: AppColor.cFFFFFF,
-              borderRadius: BorderRadius.circular(99.r),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Row(
-                children: [
-                  const SizedBox(width: 40),
-                  Text(
-                    'Whitelist',
-                    style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                      color: AppColor.c000000,
+          GestureDetector(
+            
+            onTap: (){
+              Get.to(AdminWishListScreen());
+            },
+            
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppColor.cFFFFFF,
+                borderRadius: BorderRadius.circular(99.r),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  children: [
+                    const SizedBox(width: 40),
+                    Text(
+                      'Whitelist',
+                      style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                        color: AppColor.c000000,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 10),
-                  FloatingActionButton.small(
-                    heroTag: 'remind',
-                    backgroundColor: AppColor.cFFFFFF,
-                    foregroundColor: AppColor.cFFFFFF,
-                    disabledElevation: 0,
-                    elevation: 0,
-                    onPressed: () {
-                      debugPrint("Whitelist");
-                    },
-                    child: SvgPicture.asset(AppIcons.whiteLoveIcon),
-                  ),
-                ],
+                    const SizedBox(width: 10),
+                    FloatingActionButton.small(
+                      heroTag: 'remind',
+                      backgroundColor: AppColor.cFFFFFF,
+                      foregroundColor: AppColor.cFFFFFF,
+                      disabledElevation: 0,
+                      elevation: 0,
+                      onPressed: () {
+                        debugPrint("Whitelist");
+                      },
+                      child: SvgPicture.asset(AppIcons.whiteLoveIcon),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

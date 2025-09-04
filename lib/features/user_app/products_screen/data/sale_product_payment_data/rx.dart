@@ -1,4 +1,6 @@
 import 'dart:developer';
+import 'package:ddavila/helpers/all_routes.dart';
+import 'package:ddavila/helpers/navigation_service.dart';
 import 'package:ddavila/helpers/toast.dart';
 import 'package:ddavila/helpers/wab_view.dart';
 import 'package:ddavila/networks/rx_base.dart';
@@ -60,7 +62,11 @@ final class PostSaleProductPaymentRx extends RxResponseInt<Map<String, dynamic>>
     if (error is DioException) {
       if (error.response!.statusCode == 400) {
         ToastUtil.showShortToast(error.response!.data["error"]);
-      } else {
+      } else if(error.response?.statusCode == 401) {
+        ToastUtil.showShortToast(error.response!.data["status"]);
+        NavigationService.navigateToRemoveuntil(Routes.loginScreen);
+
+      }else {
         ToastUtil.showShortToast(error.response!.data["message"]);
       }
     }

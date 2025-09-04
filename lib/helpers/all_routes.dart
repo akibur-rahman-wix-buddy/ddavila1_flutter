@@ -64,7 +64,7 @@ final class Routes {
   // * ##########################################################################################
   static const String adminNavigationScreen = '/adminNavigationScreen';
   static const String adminDashboard = '/adminDashboard';
-  static const String otpVerificationScreen = '/otpVerificationScreen';
+  // static const String otpVerificationScreen = '/otpVerificationScreen';
   static const String updateProfileScreen = '/updateProfileScreen';
   static const String changePassword = '/changePassword';
   static const String createAuctionScreen = '/createAuctionScreen';
@@ -216,9 +216,9 @@ final class RouteGenerator {
             ));
 
 
-                builder: (context) => OtpVerificationScreen(
-                      email: args['email'],
-                    ));
+                // builder: (context) => OtpVerificationScreen(
+                //       email: args['email'],
+                //     ));
 
       // * Forget OTP Screen
       case Routes.forgetOTPScreen:

@@ -47,6 +47,7 @@ final class Endpoints {
       "/auctions/running?page=$pageNum";
   static String adminDashboard() => "/seller/dashboard/index";
   static String buyingOrderBoard() => "/auth_buying_orders";
+  static String getAllProductDataBoard() => "/seller/product";
   static String sellingOrderBoard() => "/auth_selling_orders";
 
   // * category API
@@ -76,14 +77,14 @@ final class Endpoints {
   static String sellingOrderConfirmApiLink({dynamic productId})=> "/orders/$productId";
   static String busyingOrderConfirmApiLink({dynamic productId})=> "/orders/$productId/accept";
 
-  static String stripeCardAddApiLink() => "/stripe/card/add";
-  static String verificationOtpApiLink() => "/verify-otp-password";
-  static String mySelfApiLink() => "/me";
-  static String getStateApiLink() => "/states";
-  static String getStripeBitPaymentApiLink() => "/stripe/onboading";
-  static String updateProfileUrl() => "/update/user";
-  static String passwordUpdate() => "/password/change";
-  static String stripeConnectApiLink() => "/stripe/connect";
-  static String sellingOrderConfirmApiLink({dynamic productId}) =>
-      "/orders/$productId";
+  // static String stripeCardAddApiLink() => "/stripe/card/add";
+  // static String verificationOtpApiLink() => "/verify-otp-password";
+  // static String mySelfApiLink() => "/me";
+  // static String getStateApiLink() => "/states";
+  // static String getStripeBitPaymentApiLink() => "/stripe/onboading";
+  // static String updateProfileUrl() => "/update/user";
+  // static String passwordUpdate() => "/password/change";
+  // static String stripeConnectApiLink() => "/stripe/connect";
+  // static String sellingOrderConfirmApiLink({dynamic productId}) =>
+  //     "/orders/$productId";
 }
