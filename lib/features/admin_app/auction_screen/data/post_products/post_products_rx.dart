@@ -25,10 +25,9 @@ final class PostProductsAPIRx extends RxResponseInt<Map<String, dynamic>> {
     required dynamic shippingCost,
     required dynamic price,
     required dynamic shipWithin,
-    required List<XFile>
-        images, // Changed to List<XFile> to match PostProductsAPI
-    required List<String>
-        propertyItem, // List of strings for product properties
+    required List<XFile> images,
+    required List<dynamic> propertyItem,
+    required List<dynamic> propertyValue,
   }) async {
     try {
       // Call the updated postProductSale API
@@ -43,6 +42,7 @@ final class PostProductsAPIRx extends RxResponseInt<Map<String, dynamic>> {
         shipWithin: shipWithin,
         images: images,
         propertyItem: propertyItem,
+        propertyValue: propertyValue,
       );
 
       log(">>>>>>>>>>>>>>> Product post response: $data");

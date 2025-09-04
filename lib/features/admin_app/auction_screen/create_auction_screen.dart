@@ -88,12 +88,12 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
   void _setAlignment(TextAlign alignment) =>
       setState(() => _alignment = alignment);
 
-  void _logTitleValuePairs() {
-    // Pretty print titleValuePairs in JSON format
-    const encoder = JsonEncoder.withIndent('  ');
-    final formattedJson = encoder.convert(titleValuePairs);
-    log('Title-Value Pairs:\n$formattedJson');
-  }
+  // void _logTitleValuePairs() {
+  //   // Pretty print titleValuePairs in JSON format
+  //   const encoder = JsonEncoder.withIndent('  ');
+  //   final formattedJson = encoder.convert(titleValuePairs);
+  //   log('Title-Value Pairs:\n$formattedJson');
+  // }
 
   Future<void> _resetFile() async {
     try {
@@ -889,6 +889,8 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                         fontWeight: FontWeight.w800,
                       ),
                     ),
+
+                    // * Add Property Button (Add)
                     GestureDetector(
                       onTap: () {
                         setState(() {
@@ -926,7 +928,7 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                             'titleController': TextEditingController(),
                             'valueController': TextEditingController(),
                           });
-                          _logTitleValuePairs();
+                          //_logTitleValuePairs();
                         });
                       },
                       child: Text(
@@ -942,6 +944,7 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                   ],
                 ),
                 UIHelper.verticalSpaceMedium,
+
                 StreamBuilder<PropertyModel>(
                   stream: getPropertyAPIRXObj.dataFetcher,
                   builder: (context, snapshot) {
@@ -978,6 +981,7 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                // * Title Text
                                 Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
@@ -1052,8 +1056,8 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                                         if (index < titleValuePairs.length) {
                                           titleValuePairs[index] = {
                                             'title': value,
-                                            'value':
-                                                row['selectedValue'] as String,
+                                            // 'value':
+                                            //     row['selectedValue'] as String,
                                           };
                                         }
                                         print('Title Changed: $value');
@@ -1080,6 +1084,8 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                                   ),
                                 ),
                                 UIHelper.verticalSpace(10),
+
+                                // * value text
                                 StreamBuilder<SubPropertyModel>(
                                   stream: getSubPropertyAPIRXObj.dataFetcher,
                                   builder: (context, subSnapshot) {
@@ -1167,10 +1173,10 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                                   }
                                   propertyRows[index]['titleController']
                                       ?.dispose();
-                                  propertyRows[index]['valueController']
-                                      ?.dispose();
+                                  // propertyRows[index]['valueController']
+                                  //     ?.dispose();
                                   propertyRows.removeAt(index);
-                                  _logTitleValuePairs();
+                                  // _logTitleValuePairs();
                                 });
                               },
                               child: Padding(
@@ -1207,12 +1213,19 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                     ),
                     CustomButton(
                       onTap: () {
+                        print(titleValuePairs);
+                        var titleList =
+                            titleValuePairs.map((e) => e['title']).toList();
+                        var valueList =
+                            titleValuePairs.map((e) => e['value']).toList();
+                        print(titleList);
+                        print(valueList);
                         _saveText();
                         log("Description Data: $descriptionHtmlText");
                         log("Select Sub Category: ${selectedSubCategoryId.toString()}");
                         log("Select Category: ${selectedCategoryId.toString()}");
                         log("Images: $imagePaths");
-                        _logTitleValuePairs();
+                        // _logTitleValuePairs();
                         NavigationService.navigateToWithArgs(
                             Routes.finalAuctionScreen, {
                           'titleText': _titleController.text,
@@ -1220,7 +1233,8 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                           'subCategory': selectedSubCategoryId.toString(),
                           'category': selectedCategoryId.toString(),
                           'imageItem': imagePaths,
-                          'property': titleValuePairs,
+                          'propertyTitle': titleList,
+                          'propertyValue': valueList,
                         });
                       },
                       text: 'Next',

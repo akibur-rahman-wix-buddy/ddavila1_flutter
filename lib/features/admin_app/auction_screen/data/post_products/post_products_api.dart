@@ -23,8 +23,8 @@ final class PostProductsAPI {
     required dynamic price,
     required dynamic shipWithin,
     required List<XFile> images, // List of XFile for images from image_picker
-    required List<String>
-        propertyItem, // List of strings for product properties
+    required List<dynamic> propertyItem, // List of dynamic for product properties
+    required List<dynamic> propertyValue, // List of dynamic for product properties
   }) async {
     try {
       // Create FormData for multipart request
@@ -38,6 +38,7 @@ final class PostProductsAPI {
         "price": price,
         "ship_within": shipWithin,
         "product_prop_title[]": propertyItem,
+        "product_prop_value[]": propertyValue,
       });
 
       // Attach multiple images as MultipartFile under images[]

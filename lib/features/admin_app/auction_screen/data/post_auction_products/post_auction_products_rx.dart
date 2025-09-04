@@ -30,8 +30,8 @@ final class PostAuctionProductAPIRx
     required dynamic auction_end_at,
     required List<XFile>
         images, // Changed to List<XFile> to match PostProductsAPI
-    required List<String>
-        propertyItem, // List of strings for product properties
+    required List<dynamic> propertyItem,
+    required List<dynamic> propertyValue,
   }) async {
     try {
       // Call the updated postProductSale API
@@ -46,6 +46,7 @@ final class PostAuctionProductAPIRx
         shipWithin: shipWithin,
         images: images,
         propertyItem: propertyItem,
+        propertyValue: propertyValue,
         auction_end_at: auction_end_at,
       );
 

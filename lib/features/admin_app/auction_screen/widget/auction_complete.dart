@@ -1,24 +1,40 @@
+import 'package:ddavila/assets_helper/text_font_style.dart';
+import 'package:ddavila/helpers/all_routes.dart';
+import 'package:ddavila/helpers/navigation_service.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../networks/endpoints.dart';
-
+import 'package:intl/intl.dart';
 
 class AuctionCompleteView extends StatelessWidget {
+  final dynamic id;
+  final dynamic slug;
   final dynamic title;
   final dynamic price;
   final dynamic endDate;
   final dynamic image;
   final dynamic winner;
+
   const AuctionCompleteView({
     super.key,
     required this.price,
     required this.title,
     required this.image,
     required this.endDate,
-    required this.winner
-
+    required this.winner,
+    required this.id,
+    required this.slug,
   });
 
+  /// date formatter
+  String formatDate(dynamic date) {
+    try {
+      DateTime parsedDate = date is String ? DateTime.parse(date) : date;
+      return DateFormat('dd/MM/yyyy').format(parsedDate);
+    } catch (e) {
+      return date.toString(); // fallback
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +81,6 @@ class AuctionCompleteView extends StatelessWidget {
               ),
             ),
 
-
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: Column(
@@ -73,23 +88,26 @@ class AuctionCompleteView extends StatelessWidget {
                 children: [
                   /// Title + Action Button
                   Row(
-                    mainAxisAlignment:
-                    MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
                         child: Text(
                           title,
-                          style: const TextStyle(
+                          style:
+                              TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                             color: Colors.black87,
                           ),
                         ),
                       ),
-
-                      /// Button text depends on tab
                       ElevatedButton(
                         onPressed: () {
+                          NavigationService.navigateToWithArgs(
+                              Routes.productsBidScreen, {
+                            "productId": id.toString(),
+                            "slag": slug.toString(),
+                          });
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue,
@@ -102,49 +120,58 @@ class AuctionCompleteView extends StatelessWidget {
                         child: Text(
                           "View Details",
                           style:
-                          const TextStyle(color: Colors.white),
+                              TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       )
                     ],
                   ),
                   const SizedBox(height: 6),
 
-                  /// Current Bid
+                  /// Price
                   Row(
                     children: [
-                      const Text(
+                      Text(
                         "Bidding price: ",
-                        style: TextStyle(
+                        style:
+                            TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
                           fontSize: 14,
-                          color: Colors.grey,
+                          color: Colors.black,
                         ),
                       ),
                       Text(
                         "\$$price",
-                        style: const TextStyle(
-                          fontSize: 16,
+                        style:
+                            TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                          fontSize: 16.sp,
                           fontWeight: FontWeight.bold,
                           color: Colors.black87,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
-
-                  /// Time Left
-                   Text(
-                    "Auction Ended:  $endDate",
-                    style: TextStyle(
-                      fontSize: 14,
+                  const SizedBox(
+                    height: 4,
+                  ),
+                  Text(
+                    "Auction Ended: ${formatDate(endDate)}",
+                    style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                      fontSize: 12.sp,
                       color: Colors.blue,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  const SizedBox(height: 4),
-                   Text(
-                    "$winner",
-                    style: TextStyle(
-                      fontSize: 14,
+                  const SizedBox(
+                    height: 4,
+                  ),
+                  Text(
+                    (winner == null || winner.toString().isEmpty)
+                        ? "No Winner Assigned"
+                        : winner.toString(),
+                    style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                      fontSize: 12.sp,
                       color: Colors.red,
                       fontWeight: FontWeight.w500,
                     ),
