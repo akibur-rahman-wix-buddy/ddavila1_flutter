@@ -14,20 +14,28 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 
 class FinalAuctionScreen extends StatefulWidget {
-  dynamic titleText, descriptionText, subCategory, category, property, imageItem;
+  dynamic titleText,
+      descriptionText,
+      subCategory,
+      category,
+      propertyTitle,
+      propertyValue,
+      imageItem;
   FinalAuctionScreen(
       {super.key,
       required titleText,
       required descriptionText,
       required subCategory,
       required category,
-      required property,
+      required propertyTitle,
+      required propertyValue,
       required imageItem}) {
     this.titleText = titleText;
     this.descriptionText = descriptionText;
     this.subCategory = subCategory;
     this.category = category;
-    this.property = property;
+    this.propertyTitle = propertyTitle;
+    this.propertyValue = propertyValue;
     this.imageItem = imageItem;
   }
 
@@ -51,7 +59,8 @@ class _FinalAuctionScreenState extends State<FinalAuctionScreen> {
     log('Final Auction Description: ${widget.descriptionText}');
     log('Final Auction Sub Category: ${widget.subCategory}');
     log('Final Auction Category: ${widget.category}');
-    log('Final Auction Property: ${widget.property}');
+    log('Final Auction Property Title: ${widget.propertyTitle}');
+    log('Final Auction Property Value: ${widget.propertyValue}');
     log('Final Auction Images: ${widget.imageItem}');
     log('#############################################################################################');
     return Scaffold(
@@ -358,15 +367,6 @@ class _FinalAuctionScreenState extends State<FinalAuctionScreen> {
                     ),
                   ),
                   CustomButton(
-
-
-
-
-                    // onTap: (){
-                    //   print(">>>>>>>>>>>>>>>>>>>> this is category item ${widget.property}");
-                    // },
-
-
                     onTap: () async {
                       // Convert List<String> to List<XFile>
                       List<XFile> imagees = (widget.imageItem as List<dynamic>)
@@ -381,7 +381,7 @@ class _FinalAuctionScreenState extends State<FinalAuctionScreen> {
                         log("###################################################");
 
                         bool success =
-                        await postAuctionProductAPIRx.postProductAuctionRX(
+                            await postAuctionProductAPIRx.postProductAuctionRX(
                           title: widget.titleText.toString(),
                           description: widget.descriptionText,
                           categoryId: widget.category,
@@ -389,16 +389,13 @@ class _FinalAuctionScreenState extends State<FinalAuctionScreen> {
                           auction_end_at: auctionEndDateController.text,
                           type: 'auction',
                           shippingCost:
-                          double.tryParse(shippingCostController.text) ??
-                              0.0,
+                              double.tryParse(shippingCostController.text) ??
+                                  0.0,
                           price: startingPriceController.text,
                           shipWithin: shipWithinController.text,
                           images: imagees,
-                          propertyItem: widget.property
-                              .map<String>(
-                                (item) => "${item['title']}, ${item['value']}",
-                          )
-                              .toList(),
+                          propertyItem: widget.propertyTitle,
+                          propertyValue: widget.propertyValue,
                         );
                         if (success) {
                           ToastUtil.showShortToast(
@@ -408,11 +405,8 @@ class _FinalAuctionScreenState extends State<FinalAuctionScreen> {
                           log('==========================>>>>>> Auction Starting Price : ${startingPriceController.text}');
                           ToastUtil.showShortToast(
                             'Product Posted UnSuccessful',
-
                           );
                         }
-
-
                       } else {
                         log("################# Auction False ####################");
                         log('Buy Now Price: ${buyNowPriceController.text}');
@@ -432,11 +426,8 @@ class _FinalAuctionScreenState extends State<FinalAuctionScreen> {
                           price: buyNowPriceController.text,
                           shipWithin: shipWithinController.text,
                           images: imagees,
-                          propertyItem: widget.property
-                              // .map<String>(
-                              //   (item) => "${item['title']}, ${item['value']}",
-                              // )
-                              // .toList(),
+                          propertyItem: widget.propertyTitle,
+                          propertyValue: widget.propertyValue,
                         );
                         if (success) {
                           ToastUtil.showShortToast(

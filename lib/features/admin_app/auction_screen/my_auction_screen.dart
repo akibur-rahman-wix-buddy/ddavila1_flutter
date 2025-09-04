@@ -1,3 +1,4 @@
+import 'package:ddavila/assets_helper/text_font_style.dart';
 import 'package:ddavila/features/admin_app/auction_screen/model/auction_model.dart';
 import 'package:ddavila/features/admin_app/auction_screen/model/auction_running_model.dart';
 import 'package:ddavila/features/admin_app/auction_screen/widget/auction_complete.dart';
@@ -57,117 +58,128 @@ class _AuctionScreenState extends State<AuctionScreen> {
               Expanded(
                 child: selectedIndex == 1
                     ? StreamBuilder<AuctionModel>(
-                    stream: auctionCompleteApiRxObj.dataFetcher,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState ==
-                          ConnectionState.waiting) {
-                        return const Center(
-                            child: CircularProgressIndicator());
-                      }
+                        stream: auctionCompleteApiRxObj.dataFetcher,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          }
 
-                      if (snapshot.hasError) {
-                        return Center(
-                            child: Text('Error: ${snapshot.error}'));
-                      }
+                          if (snapshot.hasError) {
+                            return Center(
+                                child: Text('Error: ${snapshot.error}'));
+                          }
 
-                      if (!snapshot.hasData || snapshot.data?.data == null) {
-                        return const Center(
-                            child: Text('No profile data available.'));
-                      }
-                      completeMaxPage = snapshot.data?.data?.lastPage ?? 1;
+                          if (!snapshot.hasData ||
+                              snapshot.data?.data == null) {
+                            return const Center(
+                                child: Text('No profile data available.'));
+                          }
+                          completeMaxPage = snapshot.data?.data?.lastPage ?? 1;
 
-                      return Column(
-                        children: [
-                          Expanded(
-                            child: ListView.builder(
-                              padding: EdgeInsets.zero,
-                              shrinkWrap: true,
-                              itemCount:
-                              snapshot.data?.data?.data?.length ?? 0,
-                              itemBuilder: (context, index) {
-                                final value =
-                                snapshot.data?.data?.data?[index];
+                          return Column(
+                            children: [
+                              Expanded(
+                                child: ListView.builder(
+                                  padding: EdgeInsets.zero,
+                                  shrinkWrap: true,
+                                  itemCount:
+                                      snapshot.data?.data?.data?.length ?? 0,
+                                  itemBuilder: (context, index) {
+                                    final value =
+                                        snapshot.data?.data?.data?[index];
 
-                                return AuctionCompleteView(
-                                  price: value?.price ?? 00,
-                                  title: value?.title,
-                                  image:
-                                  value?.images?.first.toString() ?? "",
-                                  endDate: value?.auctionEndAt,
-                                  winner: value?.winner,
-                                );
-                              },
-                            ),
-                          ),
+                                    return AuctionCompleteView(
+                                      id: value?.id ?? 0,
+                                      slug: value?.slug ?? "",
+                                      price: value?.highestBid ?? 00,
+                                      title: value?.title,
+                                      image:
+                                          value?.images?.first.toString() ?? "",
+                                      endDate: value?.auctionEndAt,
+                                      winner: value?.winner,
+                                    );
+                                  },
+                                ),
+                              ),
 
-                          /// Pagination
-                          _buildPagination(
-                            completeCurrentPage,
-                            completeMaxPage,
+                              /// Pagination
+                              _buildPagination(
+                                completeCurrentPage,
+                                completeMaxPage,
                                 (page) {
-                              setState(() => completeCurrentPage = page);
-                              auctionCompleteApiRxObj
-                                  .getAuctionComplete(page);
-                            },
-                          )
-                        ],
-                      );
-                    })
+                                  setState(() => completeCurrentPage = page);
+                                  auctionCompleteApiRxObj
+                                      .getAuctionComplete(page);
+                                },
+                              )
+                            ],
+                          );
+                        })
                     : StreamBuilder<AuctionRunningModel>(
-                    stream: auctionOngoingApiRxObj.dataFetcher,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState ==
-                          ConnectionState.waiting) {
-                        return const Center(
-                            child: CircularProgressIndicator());
-                      }
+                        stream: auctionOngoingApiRxObj.dataFetcher,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          }
 
-                      if (snapshot.hasError) {
-                        return Center(
-                            child: Text('Error: ${snapshot.error}'));
-                      }
+                          if (snapshot.hasError) {
+                            return Center(
+                                child: Text('Error: ${snapshot.error}'));
+                          }
 
-                      if (!snapshot.hasData || snapshot.data?.data == null) {
-                        return const Center(
-                            child: Text('No profile data available.'));
-                      }
+                          if (!snapshot.hasData ||
+                              snapshot.data?.data == null) {
+                            return const Center(
+                                child: Text('No profile data available.'));
+                          }
 
-                      ongoingMaxPage = snapshot.data?.data?.lastPage ?? 1;
-                      final items = snapshot.data?.data?.items;
+                          ongoingMaxPage = snapshot.data?.data?.lastPage ?? 1;
+                          final items = snapshot.data?.data?.items;
 
-                      return Column(
-                        children: [
-                          Expanded(
-                            child: ListView.builder(
-                              padding: EdgeInsets.zero,
-                              shrinkWrap: true,
-                              itemCount: items?.length ?? 0,
-                              itemBuilder: (context, index) {
-                                final value = items?[index];
+                          return Column(
+                            children: [
+                              Expanded(
+                                child: ListView.builder(
+                                  padding: EdgeInsets.zero,
+                                  shrinkWrap: true,
+                                  itemCount: items?.length ?? 0,
+                                  itemBuilder: (context, index) {
+                                    final value = items?[index];
 
-                                return AuctionRunningView(
-                                  currentBid: value?.highestBid ?? 00,
-                                  title: value?.title,
-                                  image:
-                                  value?.images?.first.toString() ?? "",
-                                  timeLeft: value?.auctionEndAt,
-                                );
-                              },
-                            ),
-                          ),
+                                    return AuctionRunningView(
+                                      currentBid: (value?.highestBid != null &&
+                                              value!.highestBid != 0)
+                                          ? value.highestBid
+                                          : (value?.startingPrice != null &&
+                                                  value!.startingPrice != 0)
+                                              ? value.startingPrice
+                                              : 0,
+                                      title: value?.title,
+                                      image:
+                                          value?.images?.first.toString() ?? "",
+                                      timeLeft: value?.auctionEndAt,
+                                    );
+                                  },
+                                ),
+                              ),
 
-                          /// Pagination
-                          _buildPagination(
-                            ongoingCurrentPage,
-                            ongoingMaxPage,
+                              /// Pagination
+                              _buildPagination(
+                                ongoingCurrentPage,
+                                ongoingMaxPage,
                                 (page) {
-                              setState(() => ongoingCurrentPage = page);
-                              auctionOngoingApiRxObj.getAuctionOngoing(page);
-                            },
-                          )
-                        ],
-                      );
-                    }),
+                                  setState(() => ongoingCurrentPage = page);
+                                  auctionOngoingApiRxObj
+                                      .getAuctionOngoing(page);
+                                },
+                              )
+                            ],
+                          );
+                        }),
               ),
             ],
           ),
@@ -195,8 +207,7 @@ class _AuctionScreenState extends State<AuctionScreen> {
             onTap: () => onPageSelected(page),
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 4),
-              padding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               decoration: BoxDecoration(
                 color: isSelected ? Colors.blue : Colors.grey.shade200,
                 borderRadius: BorderRadius.circular(10),
@@ -233,9 +244,9 @@ class _AuctionScreenState extends State<AuctionScreen> {
           alignment: Alignment.center,
           child: Text(
             text,
-            style: TextStyle(
-              color: isSelected ? Colors.white : Colors.grey.shade700,
-              fontWeight: FontWeight.w500,
+            style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+              color: isSelected ? Colors.white : Colors.black,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ),

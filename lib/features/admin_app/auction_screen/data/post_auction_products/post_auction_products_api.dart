@@ -24,8 +24,8 @@ final class PostAuctionProductAPI {
     required dynamic shipWithin,
     required dynamic auction_end_at,
     required List<XFile> images,
-    required List<String>
-    propertyItem,
+    required List<dynamic> propertyItem,
+    required List<dynamic> propertyValue,
   }) async {
     try {
       // Create FormData for multipart request
@@ -40,6 +40,7 @@ final class PostAuctionProductAPI {
         "starting_price": price,
         "ship_within": shipWithin,
         "product_prop_title[]": propertyItem,
+        "product_prop_value[]": propertyValue,
       });
 
       // Attach multiple images as MultipartFile under images[]

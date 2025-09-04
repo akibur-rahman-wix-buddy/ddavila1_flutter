@@ -18,15 +18,13 @@ class AdminWishListScreen extends StatefulWidget {
   State<AdminWishListScreen> createState() => _AdminWishListScreenState();
 }
 
-
 class _AdminWishListScreenState extends State<AdminWishListScreen> {
-
   @override
   void initState() {
-    // TODO: implement initState
     getWishlistApiRxObj.getWishList();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,25 +39,20 @@ class _AdminWishListScreenState extends State<AdminWishListScreen> {
               UIHelper.verticalSpace(40.h),
               Text(
                 'My Wish List',
-                style: TextFontStyle.textLine7w400cFFFFFFDmSans
-                    .copyWith(
-                  color: Color(0xff132235),
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w700
-                ),
+                style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                    color: Color(0xff132235),
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w700),
               ),
               UIHelper.verticalSpace(8.h),
               Text(
                 'Keep an eye on the items you’re interest in, your watchlist let’s you track live auctions without placing a bid.',
-                style: TextFontStyle.textLine7w400cFFFFFFDmSans
-                    .copyWith(
+                style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
                     color: Color(0xff132235),
                     fontSize: 12.sp,
-                    fontWeight: FontWeight.w400
-                ),
+                    fontWeight: FontWeight.w400),
               ),
               UIHelper.verticalSpace(18.h),
-
               StreamBuilder<WishlistModel>(
                   stream: getWishlistApiRxObj.dataFetcher,
                   builder: (context, snapshot) {
@@ -83,7 +76,6 @@ class _AdminWishListScreenState extends State<AdminWishListScreen> {
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
-
                         final product = wishlist[index].product;
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 16),
@@ -130,21 +122,23 @@ class _AdminWishListScreenState extends State<AdminWishListScreen> {
                                   ),
                                 ),
 
-
                                 Padding(
                                   padding: const EdgeInsets.all(12.0),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       /// Title + Action Button
                                       Row(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Expanded(
                                             child: Text(
-                                              product?.title?? "",
-                                              style: const TextStyle(
+                                              product?.title ?? "",
+                                              style: TextFontStyle
+                                                  .textLine7w400cFFFFFFDmSans
+                                                  .copyWith(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w600,
                                                 color: Colors.black87,
@@ -153,52 +147,14 @@ class _AdminWishListScreenState extends State<AdminWishListScreen> {
                                           ),
 
                                           /// Button text depends on tab
-                                          SvgPicture.asset(AppIcons.heart, height: 24.h, width: 24.w,),
-
+                                          SvgPicture.asset(
+                                            AppIcons.heart,
+                                            height: 24.h,
+                                            width: 24.w,
+                                          ),
                                         ],
                                       ),
                                       const SizedBox(height: 6),
-
-                                      /// Current Bid
-                                      Row(
-                                        children: [
-                                          const Text(
-                                            "Your Bid  ",
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.grey,
-                                            ),
-                                          ),
-                                          Text(
-                                            product?.bid.toString()?? "",
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black87,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 12),
-
-                                      /// Time Left
-                                      const Text(
-                                        "O bids",
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Color(0xff161515),
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      const Text(
-                                        "From Unknown",
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Color(0xff161515),
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
                                     ],
                                   ),
                                 )
@@ -209,8 +165,6 @@ class _AdminWishListScreenState extends State<AdminWishListScreen> {
                       },
                     );
                   }),
-
-
             ],
           ),
         ),

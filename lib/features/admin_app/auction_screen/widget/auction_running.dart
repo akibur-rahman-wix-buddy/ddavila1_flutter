@@ -1,21 +1,34 @@
+import 'package:ddavila/assets_helper/app_colors.dart';
+import 'package:ddavila/assets_helper/text_font_style.dart';
 import 'package:ddavila/networks/endpoints.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'package:intl/intl.dart';
 
 class AuctionRunningView extends StatelessWidget {
   final dynamic title;
   final dynamic currentBid;
   final dynamic timeLeft;
   final dynamic image;
+
   const AuctionRunningView({
     super.key,
     required this.currentBid,
     required this.title,
     required this.image,
     required this.timeLeft,
-
   });
 
+  String formatDate(dynamic date) {
+    try {
+      // যদি timeLeft string হয়
+      DateTime parsedDate = date is String ? DateTime.parse(date) : date;
+      return DateFormat('dd/MM/yyyy').format(parsedDate);
+    } catch (e) {
+      return date.toString(); // fallback
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +75,6 @@ class AuctionRunningView extends StatelessWidget {
               ),
             ),
 
-
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: Column(
@@ -70,28 +82,27 @@ class AuctionRunningView extends StatelessWidget {
                 children: [
                   /// Title + Action Button
                   Row(
-                    mainAxisAlignment:
-                    MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
                         child: Text(
                           title,
-                          style: const TextStyle(
-                            fontSize: 16,
+                          style:
+                              TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                            fontSize: 16.sp,
                             fontWeight: FontWeight.w600,
                             color: Colors.black87,
                           ),
                         ),
                       ),
-
-                      /// Button text depends on tab
                       ElevatedButton(
-                        onPressed: () {
-                        },
+                        onPressed: () {},
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue,
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 8),
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
@@ -99,7 +110,10 @@ class AuctionRunningView extends StatelessWidget {
                         child: Text(
                           "Edit",
                           style:
-                          const TextStyle(color: Colors.white),
+                              TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       )
                     ],
@@ -109,16 +123,18 @@ class AuctionRunningView extends StatelessWidget {
                   /// Current Bid
                   Row(
                     children: [
-                      const Text(
+                      Text(
                         "Current Bid: ",
-                        style: TextStyle(
+                        style:
+                            TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
                           fontSize: 14,
                           color: Colors.grey,
                         ),
                       ),
                       Text(
                         "\$$currentBid",
-                        style: const TextStyle(
+                        style:
+                            TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: Colors.black87,
@@ -128,21 +144,12 @@ class AuctionRunningView extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
 
-                  /// Time Left
+                  /// Ends Date
                   Text(
-                    "Time Left",
-                    style: TextStyle(
+                    "Ends: ${formatDate(timeLeft)}",
+                    style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
                       fontSize: 14,
-                      color: Colors.blue,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    "$timeLeft",
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.red,
+                      color: AppColor.c4096FF,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
