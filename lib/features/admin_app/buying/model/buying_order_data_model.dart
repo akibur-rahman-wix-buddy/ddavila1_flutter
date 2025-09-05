@@ -1093,10 +1093,10 @@ class User {
   DateTime? emailVerifiedAt;
   StripeAccountId? stripeAccountId;
   dynamic onboardComplete;
-  dynamic country;
-  City? city;
-  State? state;
-  Address? address;
+  String? country; // Already a String
+  String? city;    // Change from City? to String?
+  String? state;   // Change from State? to String?
+  String? address; // Change from Address? to String?
   String? phone;
   bool? isBanned;
   String? zipCode;
@@ -1134,24 +1134,22 @@ class User {
     email: json["email"] != null && emailValues.map.containsKey(json["email"])
         ? emailValues.map[json["email"]]
         : null,
-    avatar: json["avatar"] != null && avatarValues.map.containsKey(json["avatar"])
+    avatar: json["avatar"] != null &&
+        avatarValues.map.containsKey(json["avatar"])
         ? avatarValues.map[json["avatar"]]
         : null,
-    emailVerifiedAt: json["email_verified_at"] == null ? null : DateTime.parse(json["email_verified_at"]),
-    stripeAccountId: json["stripe_account_id"] != null && stripeAccountIdValues.map.containsKey(json["stripe_account_id"])
+    emailVerifiedAt: json["email_verified_at"] == null
+        ? null
+        : DateTime.parse(json["email_verified_at"]),
+    stripeAccountId: json["stripe_account_id"] != null &&
+        stripeAccountIdValues.map.containsKey(json["stripe_account_id"])
         ? stripeAccountIdValues.map[json["stripe_account_id"]]
         : null,
     onboardComplete: json["onboard_complete"],
     country: json["country"],
-    city: json["city"] != null && cityValues.map.containsKey(json["city"])
-        ? cityValues.map[json["city"]]
-        : null,
-    state: json["state"] != null && stateValues.map.containsKey(json["state"])
-        ? stateValues.map[json["state"]]
-        : null,
-    address: json["address"] != null && addressValues.map.containsKey(json["address"])
-        ? addressValues.map[json["address"]]
-        : null,
+    city: json["city"], // Directly use the string value
+    state: json["state"], // Directly use the string value
+    address: json["address"], // Directly use the string value
     phone: json["phone"],
     isBanned: json["is_banned"],
     zipCode: json["zip_code"],
@@ -1168,9 +1166,9 @@ class User {
     "stripe_account_id": stripeAccountIdValues.reverse[stripeAccountId],
     "onboard_complete": onboardComplete,
     "country": country,
-    "city": cityValues.reverse[city],
-    "state": stateValues.reverse[state],
-    "address": addressValues.reverse[address],
+    "city": city,
+    "state": state,
+    "address": address,
     "phone": phone,
     "is_banned": isBanned,
     "zip_code": zipCode,
