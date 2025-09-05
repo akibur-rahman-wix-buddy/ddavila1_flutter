@@ -47,6 +47,7 @@ final class Endpoints {
       "/auctions/running?page=$pageNum";
   static String adminDashboard() => "/seller/dashboard/index";
   static String buyingOrderBoard() => "/auth_buying_orders";
+  static String bidHistoryApiLink() => "/auth/auctions";
   static String getAllProductDataBoard() => "/seller/product";
   static String sellingOrderBoard() => "/auth_selling_orders";
 

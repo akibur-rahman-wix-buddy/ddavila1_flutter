@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:ddavila/features/admin_app/admin_navigation.dart';
 import 'package:ddavila/features/admin_app/auction_screen/create_auction_screen.dart';
 import 'package:ddavila/features/admin_app/auction_screen/final_auction_screen.dart';
+import 'package:ddavila/features/admin_app/bit_history/presentation/bid_history_screen.dart';
 import 'package:ddavila/features/admin_app/dashboard_screen/admin_dashboard_screen.dart';
 import 'package:ddavila/features/auth_screen/presentation/forget_otp_screen.dart';
 import 'package:ddavila/features/auth_screen/presentation/forget_screen.dart';
@@ -72,6 +73,7 @@ final class Routes {
   static const String changePassword = '/changePassword';
   static const String createAuctionScreen = '/createAuctionScreen';
   static const String finalAuctionScreen = '/finalAuctionScreen';
+  static const String bidHistoryScreen = '/bidHistoryScreen';
 }
 
 final class RouteGenerator {
@@ -122,6 +124,14 @@ final class RouteGenerator {
                 widget: const ScreenTitle(widget: SignUpScreen()),
                 settings: settings)
             : CupertinoPageRoute(builder: (context) => const SignUpScreen());
+
+      // * Sign In Screen
+      case Routes.bidHistoryScreen:
+        return Platform.isIOS
+            ? UltimateSmoothTransitionRoute(
+                widget: const ScreenTitle(widget: BidHistoryScreen()),
+                settings: settings)
+            : CupertinoPageRoute(builder: (context) => const BidHistoryScreen());
 
       // * Sign In Screen
       case Routes.navigationScreen:
