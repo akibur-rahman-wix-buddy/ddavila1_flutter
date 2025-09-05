@@ -92,7 +92,7 @@ android {
 
     defaultConfig {
         applicationId "com.ddavila.nexus.ddavila"
-        minSdk 21
+        minSdkVersion flutter.minSdkVersion
         targetSdk 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

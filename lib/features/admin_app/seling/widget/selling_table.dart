@@ -825,18 +825,18 @@ class OrderDataSource extends DataGridSource {
 
     // Format shipping address
     String shippingAddress = 'No Address';
-    if (data.shippingAddress != null) {
-      final address = data.shippingAddress!;
+    if (data.user != null) {
+      final address = data.user!;
       List<String> addressParts = [];
 
-      if (address.street != null && address.street!.isNotEmpty) {
-        addressParts.add(address.street!);
+      if (address.address != null && address.address!.isNotEmpty) {
+        addressParts.add(address.address!);
       }
       if (address.city != null && address.city!.isNotEmpty) {
         addressParts.add(address.city!);
       }
-      if (address.postalCode != null && address.postalCode!.isNotEmpty) {
-        addressParts.add(address.postalCode!);
+      if (address.state != null && address.state!.isNotEmpty) {
+        addressParts.add(address.state!);
       }
       if (address.country != null && address.country!.isNotEmpty) {
         addressParts.add(address.country!);
