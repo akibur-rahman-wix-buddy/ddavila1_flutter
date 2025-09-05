@@ -516,6 +516,8 @@
 
 
 
+import 'dart:convert';
+
 import 'package:ddavila/networks/api_acess.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
@@ -636,6 +638,11 @@ class _BuyingTableState extends State<BuyingTable> {
                       columnName: 'Status',
                       width: 120,
                       label: _buildHeader('Status', Alignment.center),
+                    ),
+                    GridColumn(
+                      columnName: 'shippingAddress',
+                      width: 120,
+                      label: _buildHeader('Shipping Address', Alignment.center),
                     ),
                     GridColumn(
                       columnName: 'Tracking',
@@ -787,6 +794,36 @@ class OrderDataSource extends DataGridSource {
         'No Products';
     String orderDate = data.orderedAt?.toString().split(' ')[0] ?? 'N/A';
     String tracking = data.trackingNumber ?? 'No tracking';
+
+    // String shippingAddress = 'No Address';
+    // if (data.shippingAddress != null && data.shippingAddress!.isNotEmpty) {
+    //   try {
+    //     final addressJson = json.decode(data.shippingAddress!);
+    //     final address = ShippingAddress.fromJson(addressJson);
+    //
+    //     List<String> addressParts = [];
+    //     if (address.street != null && address.street!.isNotEmpty) {
+    //       addressParts.add(address.street!);
+    //     }
+    //     if (address.city != null && address.city!.isNotEmpty) {
+    //       addressParts.add(address.city!);
+    //     }
+    //     if (address.postalCode != null && address.postalCode!.isNotEmpty) {
+    //       addressParts.add(address.postalCode!);
+    //     }
+    //     if (address.country != null && address.country!.isNotEmpty) {
+    //       addressParts.add(address.country!);
+    //     }
+    //
+    //     if (addressParts.isNotEmpty) {
+    //       shippingAddress = addressParts.join(', ');
+    //     }
+    //   } catch (e) {
+    //     print('Error parsing shipping address: $e');
+    //     shippingAddress = data.shippingAddress!; // Fallback to raw string
+    //   }
+    // }
+
     String status = data.status?.toString().split('.').last ?? 'Pending';
     status = status[0].toUpperCase() + status.substring(1).toLowerCase();
 
