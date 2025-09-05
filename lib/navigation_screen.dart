@@ -225,35 +225,40 @@ class _NavigationScreenState extends State<NavigationScreen> {
               ),
             ),
           ),
-          Container(
-            decoration: BoxDecoration(
-              color: AppColor.cFFFFFF,
-              borderRadius: BorderRadius.circular(99.r),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Row(
-                children: [
-                  const SizedBox(width: 25),
-                  Text(
-                    'Bid History',
-                    style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                      color: AppColor.c000000,
+          GestureDetector(
+            onTap: (){
+              NavigationService.navigateTo(Routes.bidHistoryScreen);
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppColor.cFFFFFF,
+                borderRadius: BorderRadius.circular(99.r),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  children: [
+                    const SizedBox(width: 25),
+                    Text(
+                      'Bid History',
+                      style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                        color: AppColor.c000000,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 10),
-                  FloatingActionButton.small(
-                    heroTag: 'remind',
-                    backgroundColor: AppColor.cFFFFFF,
-                    foregroundColor: AppColor.cFFFFFF,
-                    disabledElevation: 0,
-                    elevation: 0,
-                    onPressed: () {
-                      debugPrint("Bid History");
-                    },
-                    child: SvgPicture.asset(AppIcons.bidIcon),
-                  ),
-                ],
+                    const SizedBox(width: 10),
+                    FloatingActionButton.small(
+                      heroTag: 'remind',
+                      backgroundColor: AppColor.cFFFFFF,
+                      foregroundColor: AppColor.cFFFFFF,
+                      disabledElevation: 0,
+                      elevation: 0,
+                      onPressed: () {
+                        debugPrint("Bid History");
+                      },
+                      child: SvgPicture.asset(AppIcons.bidIcon),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
