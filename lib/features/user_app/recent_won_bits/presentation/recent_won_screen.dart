@@ -63,11 +63,11 @@ class _RecentWonScreenState extends State<RecentWonScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text('Recent Won Items'),
-      //   centerTitle: true,
-      //   backgroundColor: Colors.blueAccent,
-      // ),
+      appBar: AppBar(
+        title: const Text('Recent Won Items'),
+        centerTitle: true,
+        backgroundColor: Colors.blueAccent,
+      ),
       body: Column(
         children: [
           StreamBuilder<RecentWonDataModel>(

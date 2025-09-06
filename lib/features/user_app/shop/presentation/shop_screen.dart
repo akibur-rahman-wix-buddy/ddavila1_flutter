@@ -116,12 +116,12 @@ class _ShopScreenState extends State<ShopScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   leading: SizedBox(),
-      //   title: const Text('Shop'),
-      //   centerTitle: true,
-      //   backgroundColor: Colors.blueAccent,
-      // ),
+      appBar: AppBar(
+        leading: SizedBox(),
+        title: const Text('Shop'),
+        centerTitle: true,
+        backgroundColor: Colors.blueAccent,
+      ),
       body: FutureBuilder<ShopAllProductsDataModel?>(
         future: shopDataFuture,
         builder: (context, snapshot) {
