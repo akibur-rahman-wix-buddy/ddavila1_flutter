@@ -1,3 +1,5 @@
+// * #####################################################
+// ignore_for_file: must_be_immutable
 import 'dart:convert';
 import 'dart:developer';
 import 'package:ddavila/assets_helper/app_colors.dart';
@@ -20,13 +22,47 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
-class CreateAuctionScreen extends StatefulWidget {
-  const CreateAuctionScreen({super.key});
+class EditProductsScreen extends StatefulWidget {
+  dynamic productTitle,
+      productId,
+      productImages,
+      description,
+      price,
+      type,
+      bid,
+      categoryId,
+      subCategoryId,
+      // * auction data
+      shippingCost, // * default
+      startingPrice, // * auction true
+      auctionEndDate, // * auction true
+      buyNowPrice, // * sales true
+      shipWithIn // * default
+      ;
+
+  EditProductsScreen({
+    super.key,
+    this.productTitle,
+    this.productId,
+    this.productImages,
+    this.description,
+    this.price,
+    this.type,
+    this.bid,
+    this.shippingCost,
+    this.startingPrice,
+    this.auctionEndDate,
+    this.categoryId,
+    this.subCategoryId,
+    this.buyNowPrice,
+    this.shipWithIn,
+  });
+
   @override
-  State<CreateAuctionScreen> createState() => _CreateAuctionScreenState();
+  State<EditProductsScreen> createState() => _EditProductsScreenState();
 }
 
-class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
+class _EditProductsScreenState extends State<EditProductsScreen> {
   final TextEditingController _coreFeaturesController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   String fontStyle = 'Calibri';
@@ -51,6 +87,8 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
   List<Map<String, dynamic>> propertyRows = [];
   List<String> valueOptions = ['Add New Item'];
   List<Map<String, String>> titleValuePairs = [];
+  bool _isCategoryInitialized = false; // Flag to track initialization
+
   // * ########## Image
   List<Map<String, String>> _cardImages = [];
   List<String> imagePaths = [];
@@ -59,6 +97,12 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
   void initState() {
     super.initState();
     _loadSavedText();
+    _assignData();
+    for (var img in widget.productImages) {
+      _cardImages
+          .add({'src': 'https://ddvila.softvencefsd.xyz/$img', 'link': ''});
+    }
+    print("Product Images: ${widget.productImages}");
     getCategoryAPIRXObj.getCategoryRX();
     getPropertyAPIRXObj.getPropertyRX();
     propertyRows.add({
@@ -67,6 +111,36 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
       'titleController': TextEditingController(),
       'valueController': TextEditingController(),
     });
+  }
+
+  // * ######################## Assign Data ############################
+  void _assignData() {
+    _titleController.text = widget.productTitle ?? '';
+    _descriptionController.text = _removeHtmlTags(widget.description);
+    log('Assigning Data - Product Title: ${widget.productTitle}, Description: ${widget.description}');
+    if (widget.categoryId != null) {
+      selectedCategoryId = int.tryParse(widget.categoryId.toString());
+      _categoryController.text = ''; // Will be updated after API fetch
+    }
+    if (widget.subCategoryId != null) {
+      selectedSubCategoryId = int.tryParse(widget.subCategoryId.toString());
+      _subCategoryController.text = ''; // Will be updated after API fetch
+    }
+
+    log('Final Product ID: ${widget.productId}');
+    log('Product Title: ${widget.productTitle}');
+    log('Product Description: ${widget.description}');
+    log('Product Buy Now Price: ${widget.buyNowPrice}');
+    log('Product Shipping Cost: ${widget.shippingCost}');
+    log('Product Ship Within: ${widget.shipWithIn}');
+    log('Product Starting Price: ${widget.startingPrice}');
+    log('Product Auction End: ${widget.auctionEndDate}');
+    log('Product Bid: ${widget.bid}');
+  }
+
+  String _removeHtmlTags(String htmlString) {
+    final RegExp exp = RegExp(r'<[^>]*>', multiLine: true, caseSensitive: true);
+    return htmlString.replaceAll(exp, '');
   }
 
   @override
@@ -87,13 +161,6 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
   void _toggleUnderline() => setState(() => _isUnderlined = !_isUnderlined);
   void _setAlignment(TextAlign alignment) =>
       setState(() => _alignment = alignment);
-
-  // void _logTitleValuePairs() {
-  //   // Pretty print titleValuePairs in JSON format
-  //   const encoder = JsonEncoder.withIndent('  ');
-  //   final formattedJson = encoder.convert(titleValuePairs);
-  //   log('Title-Value Pairs:\n$formattedJson');
-  // }
 
   // *  ####################### HTML EDITOR #########################
   Future<void> _resetFile() async {
@@ -119,7 +186,10 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
     try {
       final directory = await getApplicationDocumentsDirectory();
       final file = File('${directory.path}/editor_text.html');
-      if (!await file.exists()) return;
+      if (!await file.exists()) {
+        log('No saved text file found, using widget.description');
+        return;
+      }
 
       final savedText = await file.readAsString();
       final RegExp divRegex = RegExp(r'<div>(.*?)</div>', dotAll: true);
@@ -130,14 +200,15 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
 
       if (mounted) {
         setState(() {
+          if (_descriptionController.text.isEmpty) {
+            _descriptionController.text = textContent;
+          }
           _coreFeaturesController.text = '';
-          _descriptionController.text = '';
+          log('Loaded saved text: $textContent');
         });
       }
     } catch (e) {
-      if (mounted) {
-        log('Failed to load saved content');
-      }
+      log('Failed to load saved content: $e');
     }
   }
 
@@ -146,7 +217,6 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
       final directory = await getApplicationDocumentsDirectory();
       final file = File('${directory.path}/editor_text.html');
 
-      // Process Core Features
       String coreFeaturesText = _coreFeaturesController.text;
       String styledCoreFeatures = coreFeaturesText
           .replaceAll('&', '&amp;')
@@ -157,7 +227,6 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
       if (_isItalic) styledCoreFeatures = '<i>$styledCoreFeatures</i>';
       if (_isUnderlined) styledCoreFeatures = '<u>$styledCoreFeatures</u>';
 
-      // Process Description
       String descriptionText = _descriptionController.text;
       String styledDescription = descriptionText
           .replaceAll('&', '&amp;')
@@ -168,7 +237,6 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
       if (_isItalic) styledDescription = '<i>$styledDescription</i>';
       if (_isUnderlined) styledDescription = '<u>$styledDescription</u>';
 
-      // Combine for saving to file
       String htmlContent = '''
 <div>
  <h2>Core Features</h2>
@@ -178,10 +246,8 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
 </div>
 ''';
 
-      // Save to file
       await file.writeAsString(htmlContent);
 
-      // Log the HTML content separately
       coreFeaturesHtmlText = coreFeaturesHtml = '''
 <div>
  ${styledCoreFeatures.replaceAll('\n', '<br>')}
@@ -194,17 +260,14 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
 </div>
 ''';
 
-      // Log immediately after setting
-      log('Description Data: $descriptionHtmlText');
-      log('Core Features Data: $coreFeaturesHtmlText');
+      log('Saved Description Data: $descriptionHtmlText');
+      log('Saved Core Features Data: $coreFeaturesHtmlText');
 
       if (mounted) {
         log('Saved as HTML and logged successfully!');
       }
     } catch (e) {
-      if (mounted) {
-        log('Failed to save content');
-      }
+      log('Failed to save content: $e');
     }
   }
 
@@ -368,7 +431,7 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
   Widget build(BuildContext context) {
     final hasAnyImage = _cardImages.isNotEmpty;
     return Scaffold(
-      appBar: CustomAppBar(text: 'Create Auction'),
+      appBar: CustomAppBar(text: 'Edit Products'),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -464,7 +527,73 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                 ),
                 UIHelper.verticalSpace(10),
 
-                // * // * ########## Image Picker ##################
+                // * ########## Image Picker ##################
+                // GestureDetector(
+                //   onTap: _showImageSourceDialog,
+                //   child: DottedBorderContainer(
+                //     child: Column(
+                //       mainAxisAlignment: MainAxisAlignment.center,
+                //       children: [
+                //         hasAnyImage
+                //             ? SizedBox(
+                //                 height: 60,
+                //                 child: ListView.builder(
+                //                   scrollDirection: Axis.horizontal,
+                //                   itemCount: _cardImages.length,
+                //                   itemBuilder: (context, index) {
+                //                     final image = _cardImages[index];
+                //                     return Padding(
+                //                       padding: const EdgeInsets.symmetric(
+                //                           horizontal: 4),
+                //                       child: image['src']!.startsWith('data:')
+                //                           ? Image.memory(
+                //                               base64Decode(image['src']!
+                //                                   .split(',')
+                //                                   .last),
+                //                               width: 48,
+                //                               height: 48,
+                //                               fit: BoxFit.cover,
+                //                             )
+                //                           : Image.network(
+                //                               image['src']!,
+                //                               width: 48,
+                //                               height: 48,
+                //                               fit: BoxFit.cover,
+                //                             ),
+                //                     );
+                //                   },
+                //                 ),
+                //               )
+                //             : CircleAvatar(
+                //                 radius: 24,
+                //                 backgroundColor: Colors.grey.shade100,
+                //                 child: Image.asset(AppImages.picImage),
+                //               ),
+                //         const SizedBox(height: 12),
+                //         Text(
+                //           "Click to Upload Front Side of Card",
+                //           style:
+                //               TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                //             color: AppColor.blackColor,
+                //             fontSize: 16,
+                //             fontWeight: FontWeight.w800,
+                //           ),
+                //           textAlign: TextAlign.center,
+                //         ),
+                //         const SizedBox(height: 6),
+                //         Text(
+                //           "(Max. File size: 25 MB)",
+                //           style:
+                //               TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                //             color: AppColor.blackColor,
+                //             fontSize: 14,
+                //             fontWeight: FontWeight.w800,
+                //           ),
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
                 GestureDetector(
                   onTap: _showImageSourceDialog,
                   child: DottedBorderContainer(
@@ -567,7 +696,7 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                   ),
                 ),
 
-                // * ########################################################
+                // * ##################################################################
                 UIHelper.verticalSpace(10),
                 Align(
                   alignment: Alignment.centerLeft,
@@ -709,9 +838,13 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                                   maxLines: null,
                                   minLines: 20,
                                   textAlign: _alignment,
-                                  decoration: const InputDecoration(
+                                  decoration: InputDecoration(
                                     hintText: 'Write here...',
-                                    border: OutlineInputBorder(),
+                                    border: const OutlineInputBorder(),
+                                    errorText:
+                                        _descriptionController.text.isEmpty
+                                            ? 'Description cannot be empty'
+                                            : null,
                                   ),
                                   style: TextStyle(
                                     fontFamily: fontStyle,
@@ -726,6 +859,10 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                                         ? TextDecoration.underline
                                         : TextDecoration.none,
                                   ),
+                                  onChanged: (value) {
+                                    log('Description changed: $value');
+                                    setState(() {});
+                                  },
                                 ),
                               ),
                             ),
@@ -749,6 +886,8 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                   ),
                 ),
                 UIHelper.verticalSpace(10),
+
+                // * Second Category & Sub Category
                 StreamBuilder<CategoryModel>(
                   stream: getCategoryAPIRXObj.dataFetcher,
                   builder: (context, snapshot) {
@@ -757,14 +896,66 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                     }
 
                     if (snapshot.hasError) {
+                      log('Category API Error: ${snapshot.error}');
                       return Text('Error: ${snapshot.error}');
                     }
 
                     final categoryData = snapshot.data;
                     final categories = categoryData?.data ?? [];
+                    log('Categories Loaded: ${categories.length}, widget.categoryId: ${widget.categoryId}, widget.subCategoryId: ${widget.subCategoryId}');
 
-                    if (selectedCategoryId == null && categories.isNotEmpty) {
+                    // Pre-select category based on widget.categoryId
+                    if (categories.isNotEmpty && selectedCategoryId != null) {
                       WidgetsBinding.instance.addPostFrameCallback((_) {
+                        if (!mounted) return;
+                        final selectedCategory = categories.firstWhere(
+                          (category) => category.id == selectedCategoryId,
+                          orElse: () {
+                            log('No matching category found for ID: $selectedCategoryId');
+                            return categories.first;
+                          },
+                        );
+                        final subcategories =
+                            selectedCategory.subcategories ?? [];
+                        log('Selected Category: ${selectedCategory.title}, Subcategories: ${subcategories.length}');
+
+                        // * Category and Subcategory are loaded
+                        selectedCategoryId = selectedCategory.id;
+                        selectedCategoryTitle = selectedCategory.title;
+                        _categoryController.text = selectedCategory.title ?? '';
+
+                        if (subcategories.isNotEmpty &&
+                            widget.subCategoryId != null) {
+                          final selectedSubCategory = subcategories.firstWhere(
+                            (sub) => sub.id == widget.subCategoryId,
+                            orElse: () {
+                              log('No matching subcategory found for ID: ${widget.subCategoryId}');
+                              return subcategories.first;
+                            },
+                          );
+                          selectedSubCategoryId = selectedSubCategory.id;
+                          selectedSubCategoryTitle = selectedSubCategory.title;
+                          _subCategoryController.text =
+                              selectedSubCategory.title ?? '';
+                          log('Selected Subcategory: ${selectedSubCategory.title} (ID: ${selectedSubCategory.id})');
+                        } else {
+                          selectedSubCategoryId = null;
+                          selectedSubCategoryTitle = null;
+                          _subCategoryController.text = subcategories.isEmpty
+                              ? 'No subcategories available'
+                              : subcategories.first.title ?? '';
+                          log('Subcategories empty or not found for category ID: $selectedCategoryId');
+                        }
+
+                        // setState(() {
+
+                        // });
+                      });
+                    } else if (categories.isNotEmpty &&
+                        selectedCategoryId == null) {
+                      // Default to first category if no widget.categoryId is provided
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        if (!mounted) return;
                         setState(() {
                           selectedCategoryId = categories.first.id;
                           selectedCategoryTitle = categories.first.title;
@@ -778,11 +969,13 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                                 subcategories.first.title;
                             _subCategoryController.text =
                                 subcategories.first.title ?? '';
+                            log('Default Subcategory: ${subcategories.first.title} (ID: ${subcategories.first.id})');
                           } else {
                             selectedSubCategoryId = null;
                             selectedSubCategoryTitle = null;
                             _subCategoryController.text =
                                 'No subcategories available';
+                            log('No subcategories for default category');
                           }
                         });
                       });
@@ -852,12 +1045,14 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                                         subcategories.first.title;
                                     _subCategoryController.text =
                                         subcategories.first.title ?? '';
+                                    log('Subcategory set to: ${subcategories.first.title} (ID: ${subcategories.first.id})');
                                   } else {
                                     _subCategoryController.text =
                                         'No subcategories available';
+                                    log('No subcategories available for category: $value');
                                   }
                                 });
-                                print("Category ID: $selectedCategoryId");
+                                log("Category ID: $selectedCategoryId");
                               },
                             ),
                           ],
@@ -905,7 +1100,7 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                                   selectedSubCategoryTitle = selected?.title;
                                   _subCategoryController.text = value;
                                 });
-                                log("Sub Category ID: $selectedSubCategoryId");
+                                log("Sub Category ID: $selectedSubCategoryId, Title: $selectedSubCategoryTitle");
                               },
                             ),
                           ],
@@ -928,8 +1123,6 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                         fontWeight: FontWeight.w800,
                       ),
                     ),
-
-                    // * Add Property Button (Add)
                     GestureDetector(
                       onTap: () {
                         setState(() {
@@ -967,7 +1160,6 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                             'titleController': TextEditingController(),
                             'valueController': TextEditingController(),
                           });
-                          //_logTitleValuePairs();
                         });
                       },
                       child: Text(
@@ -1011,16 +1203,12 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                         final valueController =
                             row['valueController'] as TextEditingController;
 
-                        // Store selected title
-                        var selectedTitle = row['selectedTitle'] as String?;
-
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                // * Title Text
                                 Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
@@ -1035,10 +1223,6 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                                   ),
                                 ),
                                 UIHelper.verticalSpace(10),
-
-                                // * ############################################################
-                                // * ##################### Add Properties #######################
-                                // * ############################################################
                                 SizedBox(
                                   width: 150.w,
                                   child: DropDownCustomTextField(
@@ -1063,11 +1247,8 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                                         } else {
                                           row['selectedTitle'] = value;
                                           titleController.text = value;
-                                          selectedTitle = titleController.text;
-                                          // Clear previous value when title changes
                                           row['selectedValue'] = '';
                                           valueController.clear();
-                                          // Call API to fetch sub-properties for the selected title
                                           getSubPropertyAPIRXObj
                                               .getSubPropertyRX(value);
                                         }
@@ -1095,8 +1276,8 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                                         if (index < titleValuePairs.length) {
                                           titleValuePairs[index] = {
                                             'title': value,
-                                            // 'value':
-                                            //     row['selectedValue'] as String,
+                                            'value':
+                                                row['selectedValue'] as String,
                                           };
                                         }
                                         print('Title Changed: $value');
@@ -1123,15 +1304,12 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                                   ),
                                 ),
                                 UIHelper.verticalSpace(10),
-
-                                // * value text
                                 StreamBuilder<SubPropertyModel>(
                                   stream: getSubPropertyAPIRXObj.dataFetcher,
                                   builder: (context, subSnapshot) {
                                     List<String> subPropertyOptions = [
                                       'Add New Item'
                                     ];
-
                                     final subPropertyData = subSnapshot.data;
                                     if (subPropertyData != null &&
                                         subPropertyData.data != null) {
@@ -1212,17 +1390,12 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                                   }
                                   propertyRows[index]['titleController']
                                       ?.dispose();
-                                  // propertyRows[index]['valueController']
-                                  //     ?.dispose();
                                   propertyRows.removeAt(index);
-                                  // _logTitleValuePairs();
                                 });
                               },
                               child: Padding(
                                 padding: EdgeInsets.only(top: 30.h),
-                                child: SvgPicture.asset(
-                                  AppIcons.blueCross,
-                                ),
+                                child: SvgPicture.asset(AppIcons.blueCross),
                               ),
                             ),
                           ],
@@ -1231,14 +1404,14 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                     );
                   },
                 ),
-                // * ############################# Property Section Ended ##################################
-
                 UIHelper.verticalSpaceMedium,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     CustomButton(
-                      onTap: () {},
+                      onTap: () {
+                        NavigationService.goBack;
+                      },
                       text: 'Back',
                       context: context,
                       minWidth: 170,
@@ -1260,13 +1433,15 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                         print(titleList);
                         print(valueList);
                         _saveText();
+
                         log("Description Data: $descriptionHtmlText");
                         log("Select Sub Category: ${selectedSubCategoryId.toString()}");
                         log("Select Category: ${selectedCategoryId.toString()}");
                         log("Images: $imagePaths");
-                        // _logTitleValuePairs();
+
                         NavigationService.navigateToWithArgs(
-                            Routes.finalAuctionScreen, {
+                            Routes.editFinalProductsScreen, {
+                          'productID': widget.productId,
                           'titleText': _titleController.text,
                           'descriptionText': descriptionHtmlText,
                           'subCategory': selectedSubCategoryId.toString(),
@@ -1274,6 +1449,13 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                           'imageItem': imagePaths,
                           'propertyTitle': titleList,
                           'propertyValue': valueList,
+                          'type': widget.type,
+                          //* auction data
+                          'auctionEndDate': widget.auctionEndDate.toString(),
+                          'buyNowPrice': widget.buyNowPrice.toString(),
+                          'shipWithin': widget.shipWithIn.toString(),
+                          'shippingCost': widget.shippingCost.toString(),
+                          'startingPrice': widget.startingPrice.toString(),
                         });
                       },
                       text: 'Next',
@@ -1440,7 +1622,6 @@ class DropDownCustomTextField extends StatelessWidget {
   }
 }
 
-// * ###################################################################################
 class DottedBorderContainer extends StatelessWidget {
   final Widget child;
 

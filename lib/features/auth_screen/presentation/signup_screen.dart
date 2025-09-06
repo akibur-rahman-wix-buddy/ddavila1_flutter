@@ -72,10 +72,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Future<void> _submitForm() async {
-
     if (_formKey.currentState!.validate() && isChecked) {
       setState(() {
-        isLoading =true;
+        isLoading = true;
       });
       print(">>>>>>>>>>>> ${_usernameController.text} ");
       print(">>>>>>>>>>>> ${_emailController.text} ");
@@ -83,22 +82,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
       print(">>>>>>>>>>>> ${_confirmPasswordController.text} ");
       print(">>>>>>>>>>>> ${isChecked} ");
 
- bool success =      await signUpApiRx.signUp(
+      bool success = await signUpApiRx.signUp(
           email: _emailController.text,
           name: _usernameController.text,
           confirmPassword: _confirmPasswordController.text,
           terms: isChecked,
           password: _passwordController.text);
 
-   if(success){
-
-     NavigationService.navigateToWithArgs(Routes.otpVerificationScreen,{
-       "email":_emailController.text
-     });
-     setState(() {
-       isLoading = false;
-     });
-   }
+      if (success) {
+        NavigationService.navigateToWithArgs(
+            Routes.otpVerificationScreen, {"email": _emailController.text});
+        setState(() {
+          isLoading = false;
+        });
+      }
       setState(() {
         isLoading = false;
       });
@@ -257,7 +254,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     },
                     decoration: InputDecoration(
                       suffixIcon: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -314,7 +311,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     },
                     decoration: InputDecoration(
                       suffixIcon: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -369,16 +366,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   const SizedBox(height: 56),
                   // Sign Up Button
-                isLoading? CircularProgressIndicator(color: Colors.blueAccent,):  CustomButton(
-                    text: 'Sign Up',
-                    context: context,
-                    color:
-                        isChecked && _formKey.currentState?.validate() == true
-                            ? Colors.blueAccent
-                            : Colors.grey,
-                    minWidth: double.infinity,
-                    onTap: _submitForm,
-                  ),
+                  isLoading
+                      ? CircularProgressIndicator(
+                          color: Colors.blueAccent,
+                        )
+                      : CustomButton(
+                          text: 'Sign Up',
+                          context: context,
+                          color: isChecked &&
+                                  _formKey.currentState?.validate() == true
+                              ? Colors.blueAccent
+                              : Colors.grey,
+                          minWidth: double.infinity,
+                          onTap: _submitForm,
+                        ),
                 ],
               ),
             ),

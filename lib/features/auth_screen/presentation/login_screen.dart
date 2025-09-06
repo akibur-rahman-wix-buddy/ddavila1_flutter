@@ -1,4 +1,3 @@
-
 import 'package:ddavila/assets_helper/app_colors.dart';
 import 'package:ddavila/assets_helper/app_image.dart';
 import 'package:ddavila/assets_helper/text_font_style.dart';
@@ -29,10 +28,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   SizedBox(height: 250),
                   Image.asset(AppImages.appLogo, height: 100, width: 200),
-                  SizedBox(height:
-                  210),
+                  SizedBox(height: 210),
                   CustomButton(
-
                     onTap: () {
                       NavigationService.navigateTo(Routes.signInScreen);
                     },
@@ -44,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(height: 16),
                   CustomButton(
                     onTap: () {
-                      NavigationService.navigateTo(Routes.roleScreen);
+                      NavigationService.navigateTo(Routes.signUpScreen);
                     },
                     minWidth: double.infinity,
                     text: 'Sign Up',

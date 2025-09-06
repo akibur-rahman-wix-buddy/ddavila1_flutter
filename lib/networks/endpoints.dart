@@ -23,6 +23,8 @@ final class Endpoints {
 // Authentication API
   static String logInUrl() => "/login";
   static String signUpUrl() => "/register";
+  static String forgetEmail() => "/forget-password";
+  static String forgetOTPVerify() => "/verify-otp-password";
   static String chatterListUrl() => "/messages";
   static String getChatList({dynamic participantableId}) =>
       "/messages/$participantableId";
@@ -66,16 +68,24 @@ final class Endpoints {
   static String postProductsSale() => "/seller/product";
 
   static String postProductsAuction() => "/seller/product";
-  static String stripeCardAddApiLink()=> "/stripe/card/add";
-  static String verificationOtpApiLink()=> "/verify-otp-password";
-  static String mySelfApiLink()=> "/me";
-  static String getStateApiLink()=> "/states";
-  static String getStripeBitPaymentApiLink()=> "/stripe/onboading";
-  static String updateProfileUrl()=> "/update/user";
-  static String passwordUpdate()=> "/password/change";
-  static String stripeConnectApiLink()=> "/stripe/connect";
-  static String sellingOrderConfirmApiLink({dynamic productId})=> "/orders/$productId";
-  static String busyingOrderConfirmApiLink({dynamic productId})=> "/orders/$productId/accept";
+  static String stripeCardAddApiLink() => "/stripe/card/add";
+  static String verificationOtpApiLink() => "/verify-otp-password";
+  static String mySelfApiLink() => "/me";
+  static String getStateApiLink() => "/states";
+  static String getStripeBitPaymentApiLink() => "/stripe/onboading";
+  static String updateProfileUrl() => "/update/user";
+  static String passwordUpdate() => "/password/change";
+  static String stripeConnectApiLink() => "/stripe/connect";
+  static String sellingOrderConfirmApiLink({dynamic productId}) =>
+      "/orders/$productId";
+  static String busyingOrderConfirmApiLink({dynamic productId}) =>
+      "/orders/$productId/accept";
+
+  static String deleteProduct(dynamic productId) =>
+      "/seller/product/delete/$productId";
+
+  static String editSaleProduct(dynamic productId) =>
+      "/seller/product/$productId";
 
   // static String stripeCardAddApiLink() => "/stripe/card/add";
   // static String verificationOtpApiLink() => "/verify-otp-password";

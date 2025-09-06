@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 import 'package:ddavila/assets_helper/app_image.dart';
 import 'package:ddavila/common_widgets/custom_button.dart';
 import 'package:ddavila/helpers/all_routes.dart';
@@ -8,7 +10,10 @@ import 'package:ddavila/assets_helper/text_font_style.dart';
 
 class ForgetOTPScreen extends StatefulWidget {
   final dynamic email;
-  const ForgetOTPScreen({super.key, this.email});
+  const ForgetOTPScreen({
+    super.key,
+    this.email,
+  });
 
   @override
   State<ForgetOTPScreen> createState() => _ForgetOTPScreenState();
@@ -54,7 +59,7 @@ class _ForgetOTPScreenState extends State<ForgetOTPScreen> {
     });
 
     try {
-      bool success = await verificationOtpRx.verificationInfo(
+      bool success = await forgetOTPVerifyAPIRX.forgetOTPVerifyRx(
         email: widget.email,
         otp: otp,
       );
@@ -64,7 +69,10 @@ class _ForgetOTPScreenState extends State<ForgetOTPScreen> {
       });
 
       if (success) {
-        NavigationService.navigateTo(Routes.successScreen);
+        NavigationService.navigateToWithArgs(Routes.resetNewPassScreen, {
+          'email': widget.email,
+          'otp': otp,
+        });
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("OTP Verified Successfully!")),
         );
@@ -150,8 +158,8 @@ class _ForgetOTPScreenState extends State<ForgetOTPScreen> {
                       text: "Submit",
                       context: context,
                       onTap: () {
-                        //_verifyOtp();
-                        NavigationService.navigateTo(Routes.resetNewPassScreen);
+                        _verifyOtp();
+                        // NavigationService.navigateTo(Routes.resetNewPassScreen);
                       },
                     ),
             ],

@@ -54,14 +54,12 @@ class _SignInScreenState extends State<SignInScreen> {
           password: _passwordController.text,
         );
 
-      if(success){
-
-        // Navigate to home screen or next screen after successful login
-        NavigationService.navigateToRemoveuntil(Routes.navigationScreen);
-      }else{
-        ToastUtil.showLongToast(" login failed");
-      }
-
+        if (success) {
+          // Navigate to home screen or next screen after successful login
+          NavigationService.navigateToRemoveuntil(Routes.navigationScreen);
+        } else {
+          ToastUtil.showLongToast(" login failed");
+        }
 
         if (success) {
           // Navigate to home screen or next screen after successful login
@@ -69,7 +67,6 @@ class _SignInScreenState extends State<SignInScreen> {
         } else {
           ToastUtil.showLongToast(" login failed");
         }
-
       } catch (e) {
         // Show error message
         ScaffoldMessenger.of(context).showSnackBar(
@@ -192,7 +189,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     obscureText: _obscurePassword,
                     decoration: InputDecoration(
                       suffixIcon: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: IconButton(
                           icon: Icon(
                             _obscurePassword
@@ -230,7 +227,8 @@ class _SignInScreenState extends State<SignInScreen> {
                     alignment: Alignment.centerRight,
                     child: TextButton(
                       onPressed: () {
-                        NavigationService.navigateTo(Routes.forgetPasswordScreen);
+                        NavigationService.navigateTo(
+                            Routes.forgetPasswordScreen);
                       },
                       child: Text(
                         'Forgot Password?',
