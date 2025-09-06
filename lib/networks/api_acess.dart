@@ -2,6 +2,8 @@
 // * #### Authentication ####
 // ########################################################
 
+import 'package:ddavila/features/admin_app/all_product/data/delete_products/delete_products_rx.dart';
+import 'package:ddavila/features/admin_app/all_product/data/edit_products/edit_seller_products_rx.dart';
 import 'package:ddavila/features/admin_app/auction_screen/data/get_category/get_category_rx.dart';
 import 'package:ddavila/features/admin_app/auction_screen/data/get_property/get_property_rx.dart';
 import 'package:ddavila/features/admin_app/auction_screen/data/get_property/get_sub_property_rx.dart';
@@ -19,6 +21,8 @@ import 'package:ddavila/features/admin_app/seling/data/selling_order_confirm_Api
 import 'package:ddavila/features/admin_app/seling/data/selling_order_data/buying_order_rx.dart';
 import 'package:ddavila/features/admin_app/seling/model/selling_order_data_model.dart';
 import 'package:ddavila/features/admin_app/wishlist_screen/model/wishlist_model.dart';
+import 'package:ddavila/features/auth_screen/data/forget_otp_email/forget_otp_rx.dart';
+import 'package:ddavila/features/auth_screen/data/forget_otp_verify/forget_otp_verify_rx.dart';
 import 'package:ddavila/features/auth_screen/data/rx_sign_up/rx.dart';
 import 'package:ddavila/features/auth_screen/data/stripe_card_add/rx.dart';
 import 'package:ddavila/features/auth_screen/data/varify_otp/rx.dart';
@@ -71,7 +75,8 @@ import '../features/auth_screen/complete_account_info/data/post_create_profile/r
 import '../features/auth_screen/complete_account_info/model/state_model.dart';
 import '../features/user_app/home_screen/data/rx_home_category_Data/rx.dart';
 import '../features/user_app/products_screen/model/state_data_model.dart';
-import '../features/user_app/profile_screen/data/update_password/rx.dart' show UpdatePasswordRx;
+import '../features/user_app/profile_screen/data/update_password/rx.dart'
+    show UpdatePasswordRx;
 
 SignInApiRx signInApiRx = SignInApiRx(
   empty: <String, dynamic>{},
@@ -79,6 +84,16 @@ SignInApiRx signInApiRx = SignInApiRx(
 );
 
 SendMessageRx sendMessageRx = SendMessageRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+ForgetEmailApiRx forgetEmailApiRx = ForgetEmailApiRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+ForgetOTPVerifyAPIRX forgetOTPVerifyAPIRX = ForgetOTPVerifyAPIRX(
   empty: <String, dynamic>{},
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );
@@ -123,13 +138,10 @@ VerificationOtpRx verificationOtpRx = VerificationOtpRx(
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );
 
-
-
 GetAllChatListRx getAllChatListRx = GetAllChatListRx(
   empty: ChatListModelData(),
   dataFetcher: BehaviorSubject<ChatListModelData>(),
 );
-
 
 MySelfRx mySelfRx = MySelfRx(
   empty: MySelfModelData(),
@@ -250,27 +262,22 @@ CompleteProfileApiRx completeProfileApiRxObj = CompleteProfileApiRx(
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );
 
-
 BitPaymentRx bitPaymentRx = BitPaymentRx(
   empty: <String, dynamic>{},
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );
-
 
 UpdatePasswordRx updatePasswordRx = UpdatePasswordRx(
   empty: <String, dynamic>{},
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );
 
-
 SellingOrderConfirmRx sellingOrderConfirmRx = SellingOrderConfirmRx(
   empty: <String, dynamic>{},
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );
 
-UpdateProfileApiRx  updateProfileApiRx = UpdateProfileApiRx(
-
-);
+UpdateProfileApiRx updateProfileApiRx = UpdateProfileApiRx();
 
 GetStateApiRX getStateApiRXObj = GetStateApiRX(
   empty: StatesModel(),
@@ -282,13 +289,22 @@ PostProductsAPIRx postProductsAPIRxObj = PostProductsAPIRx(
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );
 
-
 PostAuctionProductAPIRx postAuctionProductAPIRx = PostAuctionProductAPIRx(
   empty: <String, dynamic>{},
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );
 
 BuyingOrderConfirmRx buyingOrderConfirmRx = BuyingOrderConfirmRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+DeleteProductAPIRX deleteProductAPIRX = DeleteProductAPIRX(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+EditSellerProductAPIRX editSellerProductAPIRX = EditSellerProductAPIRX(
   empty: <String, dynamic>{},
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );

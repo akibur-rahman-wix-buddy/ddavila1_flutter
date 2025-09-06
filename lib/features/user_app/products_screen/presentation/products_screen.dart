@@ -792,7 +792,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                               ],
                             ),
 
-// Add this section to show the properties when expanded
+                            // * Add this section to show the properties when expanded
                             if (_isCoreFeaturesExpanded &&
                                 data.properties != null &&
                                 data.properties!.isNotEmpty)

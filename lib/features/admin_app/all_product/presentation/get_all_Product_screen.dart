@@ -1,10 +1,5 @@
-
-
-
-
-
+// ignore_for_file: avoid_print
 import 'package:ddavila/assets_helper/app_colors.dart';
-import 'package:ddavila/assets_helper/app_icons.dart';
 import 'package:ddavila/assets_helper/app_image.dart';
 import 'package:ddavila/assets_helper/text_font_style.dart';
 import 'package:ddavila/constants/app_constants.dart';
@@ -16,10 +11,10 @@ import 'package:ddavila/helpers/all_routes.dart';
 import 'package:ddavila/helpers/di.dart';
 import 'package:ddavila/helpers/navigation_service.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';
+import 'package:ddavila/networks/api_acess.dart';
 import 'package:ddavila/networks/endpoints.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shimmer/shimmer.dart';
@@ -64,7 +59,10 @@ class _GetAllProductScreenState extends State<GetAllProductScreen> {
     });
     try {
       final result = await _getAllProductRX.getBuyingOrderRX();
-      if (result != null && result.success == true && result.data != null && result.data!.data.isNotEmpty) {
+      if (result != null &&
+          result.success == true &&
+          result.data != null &&
+          result.data!.data.isNotEmpty) {
         setState(() {
           _products = result;
           _filteredProducts = result.data!.data;
@@ -91,8 +89,9 @@ class _GetAllProductScreenState extends State<GetAllProductScreen> {
         _filteredProducts = _products?.data?.data ?? [];
       } else {
         _filteredProducts = _products?.data?.data.where((product) {
-          return product.title?.toLowerCase().contains(query) ?? false;
-        }).toList() ?? [];
+              return product.title?.toLowerCase().contains(query) ?? false;
+            }).toList() ??
+            [];
       }
     });
   }
@@ -131,7 +130,8 @@ class _GetAllProductScreenState extends State<GetAllProductScreen> {
                 ),
                 filled: true,
                 fillColor: Colors.white,
-                contentPadding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 12.w),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 10.h, horizontal: 12.w),
               ),
             ),
           ),
@@ -165,7 +165,7 @@ class _GetAllProductScreenState extends State<GetAllProductScreen> {
     }
 
     return GridView.builder(
-      padding: EdgeInsets.all(16.r),
+      padding: EdgeInsets.all(10.r),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 16.w,
@@ -197,7 +197,8 @@ class _GetAllProductScreenState extends State<GetAllProductScreen> {
       onTap: () {
         print(">>>>>>>>>>>>>>> here is the product type after ${product.type}");
         if (product.type.toString() == "sale") {
-          print(">>>>>>>>>>>>>>>>>>> here is the stripe connected value $isStripeConnected");
+          print(
+              ">>>>>>>>>>>>>>>>>>> here is the stripe connected value $isStripeConnected");
           if (isStripeConnected == true && isProfileConnected == true) {
             NavigationService.navigateToWithArgs(
               Routes.productDetailsScreen,
@@ -212,7 +213,8 @@ class _GetAllProductScreenState extends State<GetAllProductScreen> {
           print(">>>>>>>>>>>>>>> here is the product type ${product.type}");
         } else if (product.type.toString() == "auction") {
           print(">>>>>>>>>>>>>>>>>>> this is the else product");
-          print(">>>>>>>>>>>>>>>>>>> here is the stripe connected value $isStripeConnected");
+          print(
+              ">>>>>>>>>>>>>>>>>>> here is the stripe connected value $isStripeConnected");
           if (isStripeConnected == true && isProfileConnected == true) {
             NavigationService.navigateToWithArgs(
               Routes.productsBidScreen,
@@ -224,7 +226,8 @@ class _GetAllProductScreenState extends State<GetAllProductScreen> {
             Get.to(() => const StripeCardScreen());
           }
           print(">>>>>>>>>>>>>>> here is the product type ${product.type}");
-          print(">>>>>>>>>>>>>>> here is the not sale, and this is id product id ${product.id}");
+          print(
+              ">>>>>>>>>>>>>>> here is the not sale, and this is id product id ${product.id}");
         }
       },
       child: Container(
@@ -256,25 +259,25 @@ class _GetAllProductScreenState extends State<GetAllProductScreen> {
                   ),
                   child: product.images != null && product.images!.isNotEmpty
                       ? ClipRRect(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(12.r),
-                      topRight: Radius.circular(12.r),
-                    ),
-                    child: Image.network(
-                      '$image_url${product.images![0]}',
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Image.asset(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(12.r),
+                            topRight: Radius.circular(12.r),
+                          ),
+                          child: Image.network(
+                            '$image_url${product.images![0]}',
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Image.asset(
+                                AppImages.tshirtImage,
+                                fit: BoxFit.cover,
+                              );
+                            },
+                          ),
+                        )
+                      : Image.asset(
                           AppImages.tshirtImage,
                           fit: BoxFit.cover,
-                        );
-                      },
-                    ),
-                  )
-                      : Image.asset(
-                    AppImages.tshirtImage,
-                    fit: BoxFit.cover,
-                  ),
+                        ),
                 ),
               ],
             ),
@@ -311,27 +314,90 @@ class _GetAllProductScreenState extends State<GetAllProductScreen> {
                     ),
                   ),
                   UIHelper.verticalSpace(8.h),
-                  ElevatedButton(
-                    onPressed: () {
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          NavigationService.navigateToWithArgs(
+                              Routes.editProductsScreen, {
+                            "productId": product.id,
+                            "productType": product.type,
+                            "productTitle": product.title,
+                            "price": product.price,
+                            "description": product.description,
+                            "type": product.type,
+                            "bid": product.bid,
+                            "buyNowPrice": product.price,
+                            "shippingCost": product.shippingCost,
+                            "shipWithIn": product.shipWithin,
+                            "startingPrice": product.startingPrice,
+                            "auctionEndDate": product.auctionEndAt,
+                            "categoryId": product.categoryId,
+                            "subcategoryId": product.subCategoryId,
+                            "productImages": product.images,
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blueAccent,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 8,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                        ),
+                        child: Text(
+                          "Edit",
+                          style:
+                              TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () async {
+                          bool? result = await showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text('Confirm Deletion'),
+                              content: const Text(
+                                  'Are you sure you want to delete this product?'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(false),
+                                  child: const Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(true),
+                                  child: const Text('Delete'),
+                                ),
+                              ],
+                            ),
+                          );
 
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blueAccent,
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.r),
+                          if (result == true) {
+                            // Call delete API
+                            bool isDeleted = await deleteProductAPIRX
+                                .deleteProducts(productID: product.id);
+                            if (isDeleted) {
+                              // Refresh product list
+                              _fetchProducts();
+                            }
+                          }
+                        },
+                        icon: Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                        ),
                       ),
-                    ),
-                    child: const Text(
-                      "Edit",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
+                    ],
                   )
-
                 ],
               ),
             ),
@@ -341,9 +407,3 @@ class _GetAllProductScreenState extends State<GetAllProductScreen> {
     );
   }
 }
-
-
-
-
-
-

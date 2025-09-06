@@ -151,11 +151,9 @@ class _NavigationScreenState extends State<NavigationScreen> {
             ),
           ),
           GestureDetector(
-            
-            onTap: (){
+            onTap: () {
               Get.to(AdminWishListScreen());
             },
-            
             child: Container(
               decoration: BoxDecoration(
                 color: AppColor.cFFFFFF,
@@ -167,7 +165,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
                   children: [
                     const SizedBox(width: 40),
                     Text(
-                      'Whitelist',
+                      'Wishlist',
                       style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
                         color: AppColor.c000000,
                       ),
@@ -180,7 +178,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
                       disabledElevation: 0,
                       elevation: 0,
                       onPressed: () {
-                        debugPrint("Whitelist");
+                        debugPrint("Wishlist");
                       },
                       child: SvgPicture.asset(AppIcons.whiteLoveIcon),
                     ),
@@ -190,11 +188,9 @@ class _NavigationScreenState extends State<NavigationScreen> {
             ),
           ),
           GestureDetector(
-
-            onTap: (){
+            onTap: () {
               Get.to(GetAllProductScreen());
             },
-
             child: Container(
               decoration: BoxDecoration(
                 color: AppColor.cFFFFFF,
@@ -219,7 +215,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
                       disabledElevation: 0,
                       elevation: 0,
                       onPressed: () {
-                        debugPrint("Whitelist");
+                        debugPrint("Wishlist");
                       },
                       child: SvgPicture.asset(AppIcons.productIcon),
                     ),

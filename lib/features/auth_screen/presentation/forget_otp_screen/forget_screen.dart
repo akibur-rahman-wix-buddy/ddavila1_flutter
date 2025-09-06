@@ -5,6 +5,8 @@ import 'package:ddavila/assets_helper/text_font_style.dart';
 import 'package:ddavila/common_widgets/custom_button.dart';
 import 'package:ddavila/helpers/all_routes.dart';
 import 'package:ddavila/helpers/navigation_service.dart';
+import 'package:ddavila/helpers/toast.dart';
+import 'package:ddavila/networks/api_acess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -35,41 +37,38 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
 
   // * Method to handle sign in
   Future<void> _signIn() async {
-    // if (_formKey.currentState!.validate()) {
-    //   setState(() {
-    //     _isLoading = true;
-    //   });
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
 
-    //   try {
-    //     bool success = await signInApiRx.signIn(
-    //       email: _emailController.text,
-    //       password: _passwordController.text,
-    //     );
-    //     if (success) {
-    //       // Navigate to home screen or next screen after successful login
-    //       NavigationService.navigateTo(Routes.navigationScreen);
-    //     } else {
-    //       ToastUtil.showLongToast("Failed");
-    //     }
-    //   } catch (e) {
-    //     // Show error message
-    //     ScaffoldMessenger.of(context).showSnackBar(
-    //       SnackBar(
-    //         content: Text('Failed: ${e.toString()}'),
-    //         backgroundColor: Colors.red,
-    //       ),
-    //     );
-    //   } finally {
-    //     if (mounted) {
-    //       setState(() {
-    //         _isLoading = false;
-    //       });
-    //     }
-    //   }
-    // }
-    NavigationService.navigateToWithArgs(Routes.forgetOTPScreen, {
-      'email': _emailController.text,
-    });
+      try {
+        bool success = await forgetEmailApiRx.signIn(
+          email: _emailController.text,
+        );
+        if (success) {
+          NavigationService.navigateToWithArgs(Routes.forgetOTPScreen, {
+            'email': _emailController.text,
+          });
+        } else {
+          ToastUtil.showLongToast("Failed");
+        }
+      } catch (e) {
+        // Show error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      } finally {
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      }
+    }
   }
 
   @override

@@ -1,12 +1,14 @@
 import 'dart:io';
 import 'package:ddavila/features/admin_app/admin_navigation.dart';
+import 'package:ddavila/features/admin_app/all_product/presentation/edit_products_screen.dart';
+import 'package:ddavila/features/admin_app/all_product/presentation/final_edit_screen.dart';
 import 'package:ddavila/features/admin_app/auction_screen/create_auction_screen.dart';
 import 'package:ddavila/features/admin_app/auction_screen/final_auction_screen.dart';
 import 'package:ddavila/features/admin_app/auction_screen/my_auction_screen.dart';
 import 'package:ddavila/features/admin_app/bit_history/presentation/bid_history_screen.dart';
 import 'package:ddavila/features/admin_app/dashboard_screen/admin_dashboard_screen.dart';
-import 'package:ddavila/features/auth_screen/presentation/forget_otp_screen.dart';
-import 'package:ddavila/features/auth_screen/presentation/forget_screen.dart';
+import 'package:ddavila/features/auth_screen/presentation/forget_otp_screen/forget_otp_screen.dart';
+import 'package:ddavila/features/auth_screen/presentation/forget_otp_screen/forget_screen.dart';
 import 'package:ddavila/features/auth_screen/presentation/login_screen.dart';
 import 'package:ddavila/features/auth_screen/presentation/otp_varification_screen.dart';
 import 'package:ddavila/features/auth_screen/presentation/reset_password_screen.dart';
@@ -75,7 +77,12 @@ final class Routes {
   static const String changePassword = '/changePassword';
   static const String createAuctionScreen = '/createAuctionScreen';
   static const String finalAuctionScreen = '/finalAuctionScreen';
+  // * ############################ Edit Profile ########################################
+  static const String editProductsScreen = '/editProductsScreen';
+  static const String editFinalProductsScreen = '/editFinalProductsScreen';
+
   static const String bidHistoryScreen = '/bidHistoryScreen';
+
 }
 
 final class RouteGenerator {
@@ -249,12 +256,10 @@ final class RouteGenerator {
                 ),
                 settings: settings)
             : CupertinoPageRoute(
-
                 builder: (context) => OtpVerificationScreen(
                       email: args['email'],
                     ),
                 settings: settings);
-
 
       // * Forget OTP Screen
       case Routes.forgetOTPScreen:
@@ -273,12 +278,20 @@ final class RouteGenerator {
 
       // * Reset New Password Screen
       case Routes.resetNewPassScreen:
+        final Map args = settings.arguments as Map;
         return Platform.isIOS
             ? UltimateSmoothTransitionRoute(
-                widget: const ScreenTitle(widget: ResetPasswordScreen()),
+                widget: ScreenTitle(
+                    widget: ResetPasswordScreen(
+                  email: args['email'],
+                  otp: args['otp'],
+                )),
                 settings: settings)
             : CupertinoPageRoute(
-                builder: (context) => const ResetPasswordScreen());
+                builder: (context) => ResetPasswordScreen(
+                      email: args['email'],
+                      otp: args['otp'],
+                    ));
 
       case Routes.productsBidScreen:
         final Map args = settings.arguments as Map;
@@ -357,6 +370,96 @@ final class RouteGenerator {
                 settings: settings)
             : CupertinoPageRoute(
                 builder: (context) => const CreateAuctionScreen());
+
+      // * ########################### Edit Products #####################################
+      case Routes.editProductsScreen:
+        final Map args = settings.arguments as Map;
+        return Platform.isIOS
+            ? UltimateSmoothTransitionRoute(
+                widget: ScreenTitle(
+                  widget: EditProductsScreen(
+                    productTitle: args['productTitle'],
+                    productId: args['productId'],
+                    productImages: args['productImages'],
+                    description: args['description'],
+                    type: args['type'],
+                    price: args['price'],
+                    bid: args['bid'],
+                    shipWithIn: args['shipWithIn'],
+                    buyNowPrice: args['buyNowPrice'],
+                    shippingCost: args['shippingCost'],
+                    startingPrice: args['startingPrice'],
+                    auctionEndDate: args['auctionEndDate'],
+                    categoryId: args['categoryId'],
+                    subCategoryId: args['subcategoryId'],
+                  ),
+                ),
+                settings: settings)
+            : CupertinoPageRoute(
+                builder: (context) => EditProductsScreen(
+                  productTitle: args['productTitle'],
+                  productId: args['productId'],
+                  productImages: args['productImage'],
+                  description: args['description'],
+                  type: args['type'],
+                  price: args['price'],
+                  bid: args['bid'],
+                  buyNowPrice: args['buyNowPrice'],
+                  shippingCost: args['shippingCost'],
+                  startingPrice: args['startingPrice'],
+                  auctionEndDate: args['auctionEndDate'],
+                  categoryId: args['categoryId'],
+                  subCategoryId: args['subCategoryId'],
+                ),
+              );
+
+      // * ###############################################################################
+      // * ########################### Edit Products Final Phase #########################
+      // * ###############################################################################
+
+      case Routes.editFinalProductsScreen:
+        final Map args = settings.arguments as Map;
+        return Platform.isAndroid
+            ? UltimateSmoothTransitionRoute(
+                widget: FinalProductEditScreen(
+                  productID: args['productID'],
+                  descriptionText: args['descriptionText'],
+                  subCategory: args['subCategory'],
+                  category: args['category'],
+                  propertyTitle: args['propertyTitle'],
+                  propertyValue: args['propertyValue'],
+                  imageItem: args['imageItem'],
+                  titleText: args['titleText'],
+                  type: args['type'],
+
+                  // * auction data
+                  auctionEndDate: args['auctionEndDate'],
+                  buyNowPrice: args['buyNowPrice'],
+                  shipWithin: args['shipWithin'],
+                  shippingCost: args['shippingCost'],
+                  startingPrice: args['startingPrice'],
+                ),
+                settings: settings,
+              )
+            : CupertinoPageRoute(
+                builder: (context) => FinalProductEditScreen(
+                  productID: args['productID'],
+                  descriptionText: args['descriptionText'],
+                  subCategory: args['subCategory'],
+                  category: args['category'],
+                  propertyTitle: args['propertyTitle'],
+                  propertyValue: args['propertyValue'],
+                  imageItem: args['imageItem'],
+                  titleText: args['titleText'],
+                  type: args['type'],
+                  // * auction data
+                  auctionEndDate: args['auctionEndDate'],
+                  buyNowPrice: args['buyNowPrice'],
+                  shipWithin: args['shipWithin'],
+                  shippingCost: args['shippingCost'],
+                  startingPrice: args['startingPrice'],
+                ),
+              );
 
       default:
         return null;
