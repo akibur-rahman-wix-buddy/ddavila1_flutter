@@ -31,9 +31,17 @@
 
 
 
+import 'dart:developer';
+
+import 'package:ddavila/helpers/all_routes.dart';
+import 'package:ddavila/helpers/di.dart';
+import 'package:ddavila/helpers/navigation_service.dart';
+import 'package:ddavila/helpers/toast.dart';
+import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../../../constants/app_constants.dart' show kKeyIsLoggedIn;
 import '../../../../networks/rx_base.dart';
 import 'api.dart';
 
@@ -62,4 +70,32 @@ final class SendMessageRx extends RxResponseInt<Map> {
       return null;
     }
   }
+
+
+
+  @override
+  handleErrorWithReturn(dynamic error) {
+    if (error is DioException) {
+      final statusCode = error.response?.statusCode;
+      final errorMessage = error.response?.data?["error"] ??
+          error.response?.data?["message"] ??
+          "An unknown error occurred.";
+
+      if (statusCode == 401) {
+
+        appData.write(kKeyIsLoggedIn, false);
+        NavigationService.navigateToReplacement(Routes.loginScreen);
+      } else {
+        ToastUtil.showShortToast(errorMessage);
+      }
+    } else {
+      ToastUtil.showShortToast("An unexpected error occurred.");
+    }
+
+    log(error.toString());
+    dataFetcher.sink.addError(error);
+    return null;
+  }
+
+
 }
