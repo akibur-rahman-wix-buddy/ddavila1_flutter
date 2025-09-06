@@ -85,4 +85,5 @@ class AppIcons {
   static const String heart = '$iconsRoute/heart.svg';
   static const String blueCross = '$iconsRoute/blueCross.svg';
   static const String calendarIcon = '$iconsRoute/calenderIcon.svg';
+  static const String shopIcon = '$iconsRoute/shop.svg';
 }

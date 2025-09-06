@@ -218,7 +218,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return GestureDetector(
       onTap: () => NavigationService.navigateTo(Routes.searchScreen),
       child: CustomTextField(
-        fieldWidth: 300,
+        fieldWidth: 250,
         borderRadius: 58,
         hintText: 'Search...',
         isEnabled: false,

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:ddavila/features/admin_app/admin_navigation.dart';
 import 'package:ddavila/features/admin_app/auction_screen/create_auction_screen.dart';
 import 'package:ddavila/features/admin_app/auction_screen/final_auction_screen.dart';
+import 'package:ddavila/features/admin_app/auction_screen/my_auction_screen.dart';
 import 'package:ddavila/features/admin_app/bit_history/presentation/bid_history_screen.dart';
 import 'package:ddavila/features/admin_app/dashboard_screen/admin_dashboard_screen.dart';
 import 'package:ddavila/features/auth_screen/presentation/forget_otp_screen.dart';
@@ -55,6 +56,7 @@ final class Routes {
   static const String filterScreen = '/filterScreen';
   static const String searchScreen = '/searchScreen';
   static const String productsBidScreen = '/productsBidScreen';
+  static const String auctionScreen = '/auctionScreen';
   static const String navigationScreen = '/navigationScreen';
 
   // * =============> Cart navigation <============= */
@@ -108,6 +110,13 @@ final class RouteGenerator {
                 widget: const ScreenTitle(widget: RoleScreen()),
                 settings: settings)
             : CupertinoPageRoute(builder: (context) => const RoleScreen());
+      // * Role Screen
+      // case Routes.auctionScreen:
+      //   return Platform.isIOS
+      //       ? UltimateSmoothTransitionRoute(
+      //           widget: const ScreenTitle(widget: AuctionScreen()),
+      //           settings: settings)
+      //       : CupertinoPageRoute(builder: (context) => const AuctionScreen());
 
       // * Sign In Screen
       case Routes.signInScreen:
@@ -202,6 +211,19 @@ final class RouteGenerator {
             : CupertinoPageRoute(
                 builder: (context) => ProductsScreen(
                       slug: args['slug'],
+                    ));
+
+      case Routes.auctionScreen:
+        final Map args = settings.arguments as Map;
+        return Platform.isAndroid
+            ? UltimateSmoothTransitionRoute(
+                widget: AuctionScreen(
+                  isBack: args['isBack'],
+                ),
+                settings: settings)
+            : CupertinoPageRoute(
+                builder: (context) => AuctionScreen(
+                  isBack: args['isBack'],
                     ));
 
       case Routes.updateProfileScreen:
