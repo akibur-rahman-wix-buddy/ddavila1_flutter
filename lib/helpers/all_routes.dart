@@ -284,13 +284,12 @@ final class RouteGenerator {
                 widget: ScreenTitle(
                     widget: ResetPasswordScreen(
                   email: args['email'],
-                  otp: args['otp'],
+
                 )),
                 settings: settings)
             : CupertinoPageRoute(
                 builder: (context) => ResetPasswordScreen(
                       email: args['email'],
-                      otp: args['otp'],
                     ));
 
       case Routes.productsBidScreen:
