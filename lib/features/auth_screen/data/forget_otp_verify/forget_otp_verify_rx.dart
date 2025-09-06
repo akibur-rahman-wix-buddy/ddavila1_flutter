@@ -26,7 +26,7 @@ final class ForgetOTPVerifyAPIRX extends RxResponseInt<Map<String, dynamic>> {
         otp: otp,
       );
 
-      String token = data['data']['token'];
+      String token = data['token'];
       log(">>>>>>>>>>>>>>> login token is : $token");
       await handleSuccessWithReturn(data);
 
@@ -40,7 +40,7 @@ final class ForgetOTPVerifyAPIRX extends RxResponseInt<Map<String, dynamic>> {
   @override
   handleSuccessWithReturn(Map<String, dynamic> data) {
     // Extract the token from the response
-    String token = data['data']['token'];
+    String token = data['token'];
 
     log(">>>>>>>>>>>>>>>>>>>>>>> here is the token:${token}");
 
