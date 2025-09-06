@@ -40,6 +40,17 @@ class _BidHistoryScreenState extends State<BidHistoryScreen> {
       dataFetcher: _dataFetcher,
     );
 
+
+    String formatDate(String isoDate) {
+      try {
+        DateTime date = DateTime.parse(isoDate);
+        return "${date.month}/${date.day}/${date.year}";
+      } catch (e) {
+        return "Invalid date";
+      }
+    }
+
+
     // Fetch data initially
     _fetchData();
 
@@ -116,13 +127,6 @@ class _BidHistoryScreenState extends State<BidHistoryScreen> {
         title: const Text('My Auction History'),
         backgroundColor: Colors.blue[800],
         elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh, color: Colors.white),
-            onPressed: _fetchData,
-            tooltip: 'Refresh',
-          ),
-        ],
       ),
       body: StreamBuilder<BidHistoryDataModel>(
         stream: _dataFetcher.stream,
@@ -204,7 +208,7 @@ class _BidHistoryScreenState extends State<BidHistoryScreen> {
                         ),
                         Spacer(),
                         SizedBox(
-                          width: 250,
+                          width: 200,
                           child: TextField(
                             controller: _searchController,
                             decoration: InputDecoration(
@@ -228,30 +232,30 @@ class _BidHistoryScreenState extends State<BidHistoryScreen> {
 
               const SizedBox(height: 8),
 
-              // Selected Row Details (if any)
-              if (_selectedRow != null)
-                Container(
-                  padding: EdgeInsets.all(16),
-                  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.blue[50],
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.blue[100]!),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Selected Bid Details - ID: ${_selectedRow!.id}',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue[800],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+              // // Selected Row Details (if any)
+              // if (_selectedRow != null)
+              //   Container(
+              //     padding: EdgeInsets.all(16),
+              //     margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              //     decoration: BoxDecoration(
+              //       color: Colors.blue[50],
+              //       borderRadius: BorderRadius.circular(8),
+              //       border: Border.all(color: Colors.blue[100]!),
+              //     ),
+              //     child: Column(
+              //       crossAxisAlignment: CrossAxisAlignment.start,
+              //       children: [
+              //         Text(
+              //           'Selected Bid Details - ID: ${_selectedRow!.id}',
+              //           style: TextStyle(
+              //             fontSize: 16,
+              //             fontWeight: FontWeight.bold,
+              //             color: Colors.blue[800],
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
 
               // Data Grid Section
               Expanded(

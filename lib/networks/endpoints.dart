@@ -77,6 +77,8 @@ final class Endpoints {
   static String stripeConnectApiLink()=> "/stripe/connect";
   static String sellingOrderConfirmApiLink({dynamic productId})=> "/orders/$productId";
   static String busyingOrderConfirmApiLink({dynamic productId})=> "/orders/$productId/accept";
+  static String shopApiLink({dynamic pageNumber})=> "/products?page=$pageNumber";
+  static String recentWonProductApi({dynamic pageNumber})=> "/bids/leatest/won/today?page=$pageNumber";
 
   // static String stripeCardAddApiLink() => "/stripe/card/add";
   // static String verificationOtpApiLink() => "/verify-otp-password";

@@ -54,6 +54,10 @@ import 'package:ddavila/features/user_app/products_screen/model/sale_product_det
 import 'package:ddavila/features/user_app/profile_screen/data/stripe_connect_data/rx.dart';
 import 'package:ddavila/features/user_app/profile_screen/model/my_self_model_data.dart';
 import 'package:ddavila/features/user_app/profile_screen/model/stripe_connect_data_model.dart';
+import 'package:ddavila/features/user_app/recent_won_bits/data/recent_won_product/rx.dart';
+import 'package:ddavila/features/user_app/recent_won_bits/model/recent_won_data_model.dart';
+import 'package:ddavila/features/user_app/shop/data/shop_all_products/rx.dart';
+import 'package:ddavila/features/user_app/shop/model/shop_all_products.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:ddavila/features/auth_screen/data/rx_sign_in/rx.dart';
 
@@ -219,6 +223,17 @@ GetPropertyAPIRX getPropertyAPIRXObj = GetPropertyAPIRX(
 StripeConnectRx stripeConnectRx = StripeConnectRx(
   empty: StripeConnectDataModel(),
   dataFetcher: BehaviorSubject<StripeConnectDataModel>(),
+);
+
+
+GetShopRx getShopRx = GetShopRx(
+  empty: ShopAllProductsDataModel(),
+  dataFetcher: BehaviorSubject<ShopAllProductsDataModel>(),
+);
+
+GetRecentWonProductRx getRecentWonProductRx = GetRecentWonProductRx(
+  empty: RecentWonDataModel(),
+  dataFetcher: BehaviorSubject<RecentWonDataModel>(),
 );
 
 GetSubPropertyAPIRX getSubPropertyAPIRXObj = GetSubPropertyAPIRX(

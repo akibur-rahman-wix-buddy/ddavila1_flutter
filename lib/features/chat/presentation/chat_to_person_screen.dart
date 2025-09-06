@@ -142,7 +142,7 @@ class _ChatToPersonScreenState extends State<ChatToPersonScreen> {
             EndpointAuthorizableChannelTokenAuthorizationDelegate
                 .forPrivateChannel(
           authorizationEndpoint:
-              Uri.parse("https://app.thehobbynexus.com/api/broadcasting/auth"),
+              Uri.parse("https://ddvila.softvencefsd.xyz/api/broadcasting/auth"),
           headers: {
             "Authorization": "Bearer ${appData.read(kKeyAccessToken)}",
           },

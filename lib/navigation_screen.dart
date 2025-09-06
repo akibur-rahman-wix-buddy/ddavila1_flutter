@@ -8,6 +8,7 @@ import 'package:ddavila/features/admin_app/wishlist_screen/admin_wishlist_screen
 import 'package:ddavila/features/chat/presentation/chat_screen.dart';
 import 'package:ddavila/features/user_app/home_screen/presentation/home_screen.dart';
 import 'package:ddavila/features/user_app/profile_screen/presentation/profile_screen.dart';
+import 'package:ddavila/features/user_app/shop/presentation/shop_screen.dart';
 import 'package:ddavila/helpers/all_routes.dart';
 import 'package:ddavila/helpers/navigation_service.dart';
 import 'package:ddavila/networks/api_acess.dart';
@@ -17,6 +18,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'assets_helper/app_icons.dart';
+import 'features/user_app/recent_won_bits/presentation/recent_won_screen.dart';
 
 class NavigationScreen extends StatefulWidget {
   const NavigationScreen({super.key});
@@ -36,9 +38,10 @@ class _NavigationScreenState extends State<NavigationScreen> {
 
   final List<Widget> _screens = [
     const HomeScreen(),
-    // const ProductsScreen(),
-    // const ChatScreen(),
+
+    const ShopScreen(),
     const ChatScreen(),
+    const RecentWonScreen(),
     const ProfileScreen(),
   ];
 
@@ -264,7 +267,9 @@ class _NavigationScreenState extends State<NavigationScreen> {
           ),
           GestureDetector(
             onTap: () {
-              NavigationService.navigateTo(Routes.createAuctionScreen);
+              NavigationService.navigateToWithArgs(Routes.auctionScreen,{
+                "isBack":true
+              });
             },
             child: Container(
               decoration: BoxDecoration(
@@ -357,9 +362,10 @@ class _NavigationScreenState extends State<NavigationScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _buildNavItem(AppIcons.navHome, 0),
-              // _buildNavItem(AppIcons.navNote, 1),
-              _buildNavItem(AppIcons.navMessage, 1),
-              _buildNavItem(AppIcons.navProfile, 2),
+              _buildNavItem(AppIcons.shopIcon, 1),
+              _buildNavItem(AppIcons.navMessage, 2),
+              _buildNavItem(AppIcons.voucherCard, 3),
+              _buildNavItem(AppIcons.navProfile, 4),
             ],
           ),
         ),

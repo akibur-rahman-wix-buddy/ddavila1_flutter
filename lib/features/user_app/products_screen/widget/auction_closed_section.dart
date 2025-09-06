@@ -5,6 +5,7 @@ import 'package:ddavila/common_widgets/custom_button.dart';
 import 'package:ddavila/features/user_app/products_screen/presentation/product_bid_screen.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';
 import 'package:ddavila/networks/api_acess.dart';
+import 'package:ddavila/networks/endpoints.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../model/live_action_details_model.dart';
@@ -91,10 +92,29 @@ class AuctionClosedSection extends StatelessWidget {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Image.asset(
-                                      AppImages.profile,
-                                      height: 40,
-                                      width: 40,
+                                    ClipOval(
+
+                                      child: Image.network(
+                                        "$image_url${winningBit?.user?.avatar.toString()}",
+                                        height: 45,
+                                        width: 45,
+                                        errorBuilder: (context, error, stackTrace) {
+                                          // Return a fallback widget when the image fails to load
+                                          return Container(
+                                            height: 45,
+                                            width: 45,
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey[300],
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: Icon(
+                                              Icons.person,
+                                              color: Colors.grey[600],
+                                              size: 24,
+                                            ),
+                                          );
+                                        },
+                                      ),
                                     ),
                                     UIHelper.horizontalSpace(10),
                                     Column(
