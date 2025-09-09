@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:ddavila/assets_helper/app_colors.dart';
 import 'package:ddavila/assets_helper/app_icons.dart';
 import 'package:ddavila/assets_helper/app_image.dart';
@@ -12,9 +14,6 @@ import 'package:ddavila/networks/endpoints.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
-import '../../../../helpers/all_routes.dart';
-import '../../../../helpers/navigation_service.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});

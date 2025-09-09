@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, deprecated_member_use
 import 'package:ddavila/assets_helper/app_colors.dart';
 import 'package:ddavila/assets_helper/app_image.dart';
 import 'package:ddavila/assets_helper/text_font_style.dart';

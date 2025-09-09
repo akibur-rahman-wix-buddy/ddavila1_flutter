@@ -1,9 +1,6 @@
 // ignore_for_file: unused_local_variable
-
 import 'dart:developer';
 import 'package:ddavila/constants/app_constants.dart';
-import 'package:ddavila/features/user_app/home_screen/model/home_category_data_model.dart';
-import 'package:ddavila/features/user_app/profile_screen/model/my_self_model_data.dart';
 import 'package:ddavila/features/user_app/profile_screen/model/stripe_connect_data_model.dart';
 import 'package:ddavila/helpers/all_routes.dart';
 import 'package:ddavila/helpers/di.dart';

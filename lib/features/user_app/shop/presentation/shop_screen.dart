@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, sized_box_for_whitespace
+// ignore_for_file: avoid_print, sized_box_for_whitespace, library_private_types_in_public_api
 
 import 'package:ddavila/assets_helper/app_icons.dart';
 import 'package:ddavila/common_widgets/custom_textfiled.dart';
@@ -255,7 +255,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                 borderRadius: const BorderRadius.vertical(
                                     top: Radius.circular(12)),
                                 child: Image.network(
-                                  "$image_url${product.firstImage}" ?? '',
+                                  "$image_url${product.firstImage}",
                                   height: 120,
                                   width: double.infinity,
                                   fit: BoxFit.cover,

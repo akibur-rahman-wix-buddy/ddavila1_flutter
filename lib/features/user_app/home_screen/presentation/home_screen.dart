@@ -1,4 +1,6 @@
 
+// ignore_for_file: avoid_print, use_build_context_synchronously, unnecessary_null_comparison
+
 import 'package:ddavila/assets_helper/app_colors.dart';
 import 'package:ddavila/assets_helper/app_icons.dart';
 import 'package:ddavila/assets_helper/app_image.dart';
@@ -19,7 +21,6 @@ import 'package:ddavila/helpers/di.dart';
 import 'package:ddavila/helpers/navigation_service.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';
 import 'package:ddavila/networks/api_acess.dart';
-import 'package:ddavila/networks/endpoints.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';

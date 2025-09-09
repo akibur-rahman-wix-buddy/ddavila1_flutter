@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:ddavila/assets_helper/text_font_style.dart';
 import 'package:ddavila/helpers/all_routes.dart';
 import 'package:ddavila/helpers/navigation_service.dart';
@@ -168,11 +170,13 @@ class AuctionCompleteView extends StatelessWidget {
                   ),
                   Text(
                     (winner == null || winner.toString().isEmpty)
-                        ? "No Winner Assigned"
+                        ? "No Winner"
                         : winner.toString(),
                     style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
                       fontSize: 12.sp,
-                      color: Colors.red,
+                      color: (winner == null || winner.toString().isEmpty)
+                          ? Colors.red
+                          : Colors.green,
                       fontWeight: FontWeight.w500,
                     ),
                   ),

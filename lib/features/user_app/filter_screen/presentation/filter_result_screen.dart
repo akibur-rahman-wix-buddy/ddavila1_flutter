@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element, unnecessary_null_comparison, avoid_print, unnecessary_brace_in_string_interps
+
 import 'package:ddavila/assets_helper/app_colors.dart';
 import 'package:ddavila/assets_helper/app_icons.dart';
 import 'package:ddavila/assets_helper/app_image.dart';
@@ -6,7 +8,6 @@ import 'package:ddavila/constants/app_constants.dart';
 import 'package:ddavila/features/auth_screen/complete_account_info/complete_account_info_screen.dart';
 import 'package:ddavila/features/auth_screen/presentation/card_add_in_stripe.dart';
 import 'package:ddavila/features/user_app/filter_screen/model/FilterProductDataModel.dart';
-import 'package:ddavila/features/user_app/filter_screen/model/filter_fatch_data_model.dart';
 import 'package:ddavila/helpers/all_routes.dart';
 import 'package:ddavila/helpers/di.dart';
 import 'package:ddavila/helpers/navigation_service.dart';
@@ -33,7 +34,6 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blueAccent,
@@ -51,7 +51,8 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
     if (widget.filteredProducts == null ||
         widget.filteredProducts!.data == null ||
         widget.filteredProducts!.data!.data.isEmpty) {
-      return const Center(child: Text('No products found matching your filters'));
+      return const Center(
+          child: Text('No products found matching your filters'));
     }
 
     return GridView.builder(
@@ -69,6 +70,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
       },
     );
   }
+
   Widget _buildShimmerEffect() {
     return Shimmer.fromColors(
       baseColor: Colors.grey[300]!,
@@ -81,34 +83,26 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
     );
   }
 
-
-
-
-
-
-  Widget _buildProductItem( Product
-  product) {
+  Widget _buildProductItem(Product product) {
     return GestureDetector(
-
       onTap: () {
-        print(">>>>>>>>>>>>>>> here is the product type  after ${product.type}");
+        print(
+            ">>>>>>>>>>>>>>> here is the product type  after ${product.type}");
         if (product.type.toString() == "sale") {
-
-
-
-          print(">>>>>>>>>>>>>>>>>>> here is the  stripe connected value ${isStripeConnected}");
-          if(isStripeConnected == true && isProfileConnected == true){
-
+          print(
+              ">>>>>>>>>>>>>>>>>>> here is the  stripe connected value ${isStripeConnected}");
+          if (isStripeConnected == true && isProfileConnected == true) {
             NavigationService.navigateToWithArgs(
               Routes.productDetailsScreen,
-              {"slug": product.slug,},
+              {
+                "slug": product.slug,
+              },
             );
-          }else if(isStripeConnected == false ){
+          } else if (isStripeConnected == false) {
             Get.to(StripeCardScreen());
-          }else if(isProfileConnected == false ){
+          } else if (isProfileConnected == false) {
             Get.to(CompleteAccountInfoScreen());
           }
-
 
           print(">>>>>>>>>>>>>>> here is the product id ${product.id}");
           print(">>>>>>>>>>>>>>> here is the product type ${product.type}");
@@ -116,29 +110,25 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
           //   Routes.productDetailsScreen,
           //   {"slug": product.slug},
           // );
-        }else if (product.type.toString() == "auction")  {
-
+        } else if (product.type.toString() == "auction") {
           print(">>>>>>>>>>>>>>>>>>> this is the else product ");
 
-
-          print(">>>>>>>>>>>>>>>>>>> here is the  stripe connected value ${isStripeConnected}");
-          if(isStripeConnected == true && isProfileConnected == true){
-
-
-
-
+          print(
+              ">>>>>>>>>>>>>>>>>>> here is the  stripe connected value ${isStripeConnected}");
+          if (isStripeConnected == true && isProfileConnected == true) {
             NavigationService.navigateToWithArgs(
               Routes.productsBidScreen,
               {"slag": product.slug, "productId": product.id},
             );
-          }else if(isProfileConnected == false ){
+          } else if (isProfileConnected == false) {
             Get.to(CompleteAccountInfoScreen());
-          }else if(isStripeConnected == false ){
+          } else if (isStripeConnected == false) {
             Get.to(StripeCardScreen());
           }
 
           print(">>>>>>>>>>>>>>> here is the product type ${product.type}");
-          print(">>>>>>>>>>>>>>> here is the not sale , and this is id product id ${product.id}");
+          print(
+              ">>>>>>>>>>>>>>> here is the not sale , and this is id product id ${product.id}");
           // NavigationService.navigateToWithArgs(
           //   Routes.productsBidScreen,
           //   {"slag": product.slug, "productId": product..id},
@@ -175,25 +165,25 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                   ),
                   child: product.images != null
                       ? ClipRRect(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(12.r),
-                      topRight: Radius.circular(12.r),
-                    ),
-                    child: Image.network(
-                      '$image_url${product.images[0]}',
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Image.asset(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(12.r),
+                            topRight: Radius.circular(12.r),
+                          ),
+                          child: Image.network(
+                            '$image_url${product.images[0]}',
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Image.asset(
+                                AppImages.tshirtImage,
+                                fit: BoxFit.cover,
+                              );
+                            },
+                          ),
+                        )
+                      : Image.asset(
                           AppImages.tshirtImage,
                           fit: BoxFit.cover,
-                        );
-                      },
-                    ),
-                  )
-                      : Image.asset(
-                    AppImages.tshirtImage,
-                    fit: BoxFit.cover,
-                  ),
+                        ),
                 ),
                 Positioned(
                   top: 8.h,
@@ -215,7 +205,9 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                         ],
                       ),
                       child: SvgPicture.asset(
-                        product.bookmark ?? false ? AppIcons.liveIcon : AppIcons.loveIcon,
+                        product.bookmark ?? false
+                            ? AppIcons.liveIcon
+                            : AppIcons.loveIcon,
                         height: 16.h,
                         width: 16.w,
                       ),
@@ -232,7 +224,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    product.title ?? 'No Title',
+                    product.title.toString(),
                     style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
                       color: AppColor.c000000,
                       fontSize: 14.sp,
@@ -243,7 +235,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                   ),
                   UIHelper.verticalSpace(4.h),
                   Text(
-                    product.type?.toString().split('.').last ?? '',
+                    product.type.toString().split('.').last,
                     style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
                       color: AppColor.c666666,
                       fontSize: 12.sp,
@@ -251,7 +243,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                   ),
                   UIHelper.verticalSpace(8.h),
                   Text(
-                    '\$${product.price?.toStringAsFixed(2) ?? '0.00'}',
+                    '\$${product.price.toStringAsFixed(2)}',
                     style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
                       color: AppColor.c6940C9,
                       fontSize: 16.sp,
@@ -266,22 +258,6 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
       ),
     );
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   // Widget _buildProductCard(FilterDatum product) {
   //   return Card(
