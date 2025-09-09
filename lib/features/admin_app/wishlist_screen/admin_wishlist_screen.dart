@@ -1,3 +1,4 @@
+// ignore_for_file: unused_field, prefer_final_fields, avoid_print, deprecated_member_use
 import 'package:ddavila/assets_helper/app_colors.dart';
 import 'package:ddavila/assets_helper/app_icons.dart';
 import 'package:ddavila/constants/app_constants.dart';
