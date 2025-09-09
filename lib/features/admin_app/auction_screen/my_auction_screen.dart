@@ -92,9 +92,10 @@ class _AuctionScreenState extends State<AuctionScreen> {
                           }
 
                           if (!snapshot.hasData ||
-                              snapshot.data?.data == null) {
+                              snapshot.data?.data == null ||
+                              (snapshot.data?.data?.data?.isEmpty ?? true)) {
                             return const Center(
-                                child: Text('No profile data available.'));
+                                child: Text('No Product available'));
                           }
                           completeMaxPage = snapshot.data?.data?.lastPage ?? 1;
 
@@ -118,7 +119,8 @@ class _AuctionScreenState extends State<AuctionScreen> {
                                       image:
                                           value?.images?.first.toString() ?? "",
                                       endDate: value?.auctionEndAt,
-                                      winner: value?.winner,
+                                      winner:
+                                          value?.winner?.name ?? "No Winner",
                                     );
                                   },
                                 ),
@@ -152,9 +154,10 @@ class _AuctionScreenState extends State<AuctionScreen> {
                           }
 
                           if (!snapshot.hasData ||
-                              snapshot.data?.data == null) {
+                              snapshot.data?.data == null ||
+                              (snapshot.data?.data?.items?.isEmpty ?? true)) {
                             return const Center(
-                                child: Text('No profile data available.'));
+                                child: Text('No Product available'));
                           }
 
                           ongoingMaxPage = snapshot.data?.data?.lastPage ?? 1;
@@ -182,6 +185,24 @@ class _AuctionScreenState extends State<AuctionScreen> {
                                       image:
                                           value?.images?.first.toString() ?? "",
                                       timeLeft: value?.auctionEndAt,
+
+                                      // * Edit purpose
+                                      price: value?.price.toString() ?? 0,
+                                      type: value?.type.toString() ?? "",
+                                      shipping_cost:
+                                          value?.shippingCost.toString() ?? 0,
+                                      ship_within:
+                                          value?.shipWithin.toString() ?? "",
+                                      auction_end_at:
+                                          value?.auctionEndAt.toString() ?? "",
+                                      starting_price:
+                                          value?.startingPrice.toString() ?? 0,
+                                      imagesList: value?.images ?? [],
+                                      category_id:
+                                          value?.categoryId.toString() ?? 0,
+                                      sub_category_id:
+                                          value?.subCategoryId.toString() ?? 0,
+                                      id: value?.id.toString() ?? 0,
                                     );
                                   },
                                 ),

@@ -1,7 +1,6 @@
 
 import 'package:ddavila/assets_helper/app_colors.dart';
 import 'package:ddavila/assets_helper/text_font_style.dart';
-import 'package:ddavila/features/user_app/products_screen/presentation/product_bid_screen.dart';
 import 'package:ddavila/features/user_app/products_screen/widget/active_auction_section.dart';
 import 'package:flutter/material.dart';
 import '../model/live_action_details_model.dart';

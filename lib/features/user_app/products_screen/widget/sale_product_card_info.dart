@@ -2,7 +2,6 @@ import 'package:ddavila/common_widgets/custom_button.dart';
 import 'package:ddavila/assets_helper/app_colors.dart';
 import 'package:ddavila/assets_helper/text_font_style.dart';
 import 'package:ddavila/features/user_app/products_screen/model/sale_product_details_data_model.dart';
-import 'package:ddavila/helpers/di.dart';
 import 'package:ddavila/helpers/html_text_viewer.dart';
 import 'package:ddavila/helpers/toast.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';

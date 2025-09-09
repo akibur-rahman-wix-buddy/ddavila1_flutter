@@ -1,7 +1,5 @@
 // ignore_for_file: unused_local_variable
-
 import 'dart:developer';
-import 'package:ddavila/features/user_app/home_screen/model/category_wise_data_model.dart';
 import 'package:ddavila/features/user_app/products_screen/model/sale_product_details_data_model.dart';
 import 'package:ddavila/helpers/toast.dart';
 import 'package:ddavila/networks/rx_base.dart';
