@@ -170,7 +170,7 @@ class _GetAllProductScreenState extends State<GetAllProductScreen> {
         crossAxisCount: 2,
         crossAxisSpacing: 16.w,
         mainAxisSpacing: 16.h,
-        childAspectRatio: 0.7,
+        childAspectRatio: 0.66,
       ),
       itemCount: _filteredProducts.length,
       itemBuilder: (context, index) {
@@ -286,15 +286,18 @@ class _GetAllProductScreenState extends State<GetAllProductScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    product.title ?? 'No Title',
-                    style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                      color: AppColor.c000000,
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w600,
+                  SizedBox(
+                    height: 40.h,
+                    child: Text(
+                      product.title ?? 'No Title',
+                      style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                        color: AppColor.c000000,
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
                   ),
                   UIHelper.verticalSpace(4.h),
                   Text(
