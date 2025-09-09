@@ -85,7 +85,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 fit: BoxFit.cover,
                                 errorBuilder: (context, error, stackTrace) {
                                   return Image.asset(
-                                    AppImages.profile, // fallback asset image
+                                    AppImages.picImage, // fallback asset image
                                     height: 80,
                                     width: 80,
                                     fit: BoxFit.cover,

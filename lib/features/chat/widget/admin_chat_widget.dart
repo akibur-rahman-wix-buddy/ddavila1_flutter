@@ -25,6 +25,7 @@ class AdminChatWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(">>>>>>>>>>>>>>> this is admin site list of attachment ${attachments.map((item){item.filePath.toString();}).toString()}");
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
       child: Column(
@@ -130,6 +131,70 @@ class AdminChatWidget extends StatelessWidget {
     );
   }
 
+  // Widget _buildAttachmentsGrid(BuildContext context, List<Attachment> attachments) {
+  //   final imageCount = attachments.length;
+  //   final maxImagesToShow = 4;
+  //   final remainingImages = imageCount > maxImagesToShow ? imageCount - maxImagesToShow : 0;
+  //
+  //   return GestureDetector(
+  //     onTap: () => _openImageGallery(context, attachments),
+  //     child: Container(
+  //       constraints: BoxConstraints(
+  //         maxWidth: MediaQuery.of(context).size.width * 0.6,
+  //       ),
+  //       child: GridView.count(
+  //         shrinkWrap: true,
+  //         physics: const NeverScrollableScrollPhysics(),
+  //         crossAxisCount: imageCount == 1 ? 1 : 2,
+  //         mainAxisSpacing: 4,
+  //         crossAxisSpacing: 4,
+  //         childAspectRatio: 1,
+  //         children: List.generate(
+  //           imageCount > maxImagesToShow ? maxImagesToShow : imageCount,
+  //               (index) {
+  //             final attachment = attachments[index];
+  //             final imageUrl = attachment.filePath != null
+  //                 ? '$image_url${attachment.filePath}'
+  //                 : null;
+  //
+  //             // For the 4th image when there are more than 4 images
+  //             if (index == maxImagesToShow - 1 && remainingImages > 0) {
+  //               return Stack(
+  //                 fit: StackFit.expand,
+  //                 children: [
+  //                   _buildImageItem(context, imageUrl),
+  //                   Container(
+  //                     color: Colors.black54,
+  //                     alignment: Alignment.center,
+  //                     child: Text(
+  //                       '+$remainingImages',
+  //                       style: const TextStyle(
+  //                         color: Colors.white,
+  //                         fontSize: 24,
+  //                         fontWeight: FontWeight.bold,
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ],
+  //               );
+  //             }
+  //
+  //             return _buildImageItem(context, imageUrl);
+  //           },
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
+
+
+
+
+
+
+
+
+
   Widget _buildAttachmentsGrid(BuildContext context, List<Attachment> attachments) {
     final imageCount = attachments.length;
     final maxImagesToShow = 4;
@@ -152,8 +217,11 @@ class AdminChatWidget extends StatelessWidget {
             imageCount > maxImagesToShow ? maxImagesToShow : imageCount,
                 (index) {
               final attachment = attachments[index];
-              final imageUrl = attachment.filePath != null
-                  ? '$image_url${attachment.filePath}'
+
+              // Fix the file path by replacing backslashes with forward slashes
+              final fixedPath = attachment.filePath?.replaceAll(r"\/", "//");
+              final imageUrl = fixedPath != null
+                  ? '$image_url$fixedPath'
                   : null;
 
               // For the 4th image when there are more than 4 images
@@ -185,6 +253,10 @@ class AdminChatWidget extends StatelessWidget {
       ),
     );
   }
+
+
+
+
 
   Widget _buildImageItem(BuildContext context, String? imageUrl) {
     if (imageUrl == null) {

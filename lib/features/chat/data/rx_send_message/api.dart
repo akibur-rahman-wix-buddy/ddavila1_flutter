@@ -1,4 +1,3 @@
-
 import 'dart:developer';
 import 'dart:io';
 
@@ -19,40 +18,38 @@ final class AddMessageApi {
   Future<Map<String, dynamic>> addChat({
     dynamic message,
     dynamic toUserId,
-    List<XFile>? avatars, // Changed from XFile? to List<XFile>?
+    XFile? avatar, // Changed from List<XFile>? to single XFile?
   }) async {
     try {
+      MultipartFile? imageFile;
 
-
-      List<MultipartFile> imageFiles = [];
-
-      for (var img in avatars!) {
-        final fileExists = await File(img.path).exists();
-        log("📸 Checking image: ${img.path} => exists: $fileExists");
+      // Handle single image upload
+      if (avatar != null) {
+        final fileExists = await File(avatar.path).exists();
+        log("📸 Checking image: ${avatar.path} => exists: $fileExists");
 
         if (fileExists) {
-          MultipartFile file = await MultipartFile.fromFile(
-            img.path,
-            filename: img.name,
+          imageFile = await MultipartFile.fromFile(
+            avatar.path,
+            filename: avatar.name,
           );
-          imageFiles.add(file);
         } else {
-          log("⚠️ Skipping non-existent image: ${img.path}");
+          log("⚠️ Skipping non-existent image: ${avatar.path}");
+          throw Exception("Selected image file does not exist");
         }
       }
 
-
       log(">>>>>>>>>>>>>>>>> this is the message value: $message");
-      log(">>>>>>>>>>>>>>>>> this is the message value: $imageFiles");
+      log(">>>>>>>>>>>>>>>>> this is the image file: ${imageFile?.filename}");
 
       FormData data;
 
-      if (message.toString().isEmpty) {
+      if (message.toString().isEmpty && imageFile != null) {
         data = FormData.fromMap({
           "to_user_id": toUserId,
-          "files[]": imageFiles,
+          "files[]": imageFile, // Changed from "files[]" to "file"
         });
-      } else if (avatars.isEmpty) {
+      } else if (avatar == null) {
         data = FormData.fromMap({
           "message": message,
           if (toUserId != null) "to_user_id": toUserId,
@@ -61,26 +58,18 @@ final class AddMessageApi {
         data = FormData.fromMap({
           if (message != null) "message": message,
           if (toUserId != null) "to_user_id": toUserId,
-          "files[]": imageFiles,
+          "files[]": imageFile, // Changed from "files[]" to "file"
         });
       }
-
-      // // Prepare FormData
-      // final FormData data = FormData.fromMap({
-      //   if (message != null)"message": message,
-      //   if (toUserId != null) "to_user_id": toUserId,
-      //   "files[]": imageFiles,
-      // });
 
       print("Request Data: ${data.fields}");
 
       // Make API call
       final Response response =
-          await postHttp(Endpoints.postSentMessage(), data);
+      await postHttp(Endpoints.postSentMessage(), data);
 
       if (response.statusCode == 200) {
         final responseData = response.data;
-        ToastUtil.showShortToast('Message sent successfully.');
         return responseData;
       } else {
         throw DataSource.DEFAULT.getFailure();

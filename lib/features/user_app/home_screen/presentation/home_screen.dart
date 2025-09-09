@@ -106,14 +106,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _buildSearchField(),
-                    Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          NavigationService.navigateTo(Routes.filterScreen);
-                        },
-                        child: SvgPicture.asset(AppIcons.filterIcon),
+                    Expanded(child: _buildSearchField()),
+                    SizedBox(
+                      width: 50,
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            NavigationService.navigateTo(Routes.filterScreen);
+                          },
+                          child: SvgPicture.asset(AppIcons.filterIcon),
+                        ),
                       ),
                     ),
                   ],
@@ -218,7 +221,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return GestureDetector(
       onTap: () => NavigationService.navigateTo(Routes.searchScreen),
       child: CustomTextField(
-        fieldWidth: 250,
         borderRadius: 58,
         hintText: 'Search...',
         isEnabled: false,
@@ -712,7 +714,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            '\$${product.price}',
+                            '\$${product.type == "sale"? product.price : product.highestBid}',
                             style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
                               fontSize: 18,
                               color: Colors.black,

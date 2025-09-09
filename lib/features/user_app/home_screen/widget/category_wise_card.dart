@@ -11,7 +11,7 @@ import 'package:shimmer/shimmer.dart';
 import '../../../../helpers/navigation_service.dart' show NavigationService;
 
 class CategoryProductsWidget extends StatefulWidget {
-  const CategoryProductsWidget({super.key,required this.id, required this.screenName});
+  const  CategoryProductsWidget({super.key,required this.id, required this.screenName});
   final dynamic id;
   final dynamic screenName;
 
@@ -200,7 +200,7 @@ class _CategoryProductsWidgetState extends State<CategoryProductsWidget> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          '\$${product.price.toString() ?? ""}',
+          '\$${product.type == "sale"? product.price : product.highestBid}',
           style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
             fontSize: 18,
             color: Colors.black,
