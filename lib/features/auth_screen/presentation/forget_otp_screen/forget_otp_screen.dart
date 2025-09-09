@@ -1,5 +1,7 @@
 // ignore_for_file: unused_element
 
+import 'dart:async';
+
 import 'package:ddavila/assets_helper/app_image.dart';
 import 'package:ddavila/common_widgets/custom_button.dart';
 import 'package:ddavila/helpers/all_routes.dart';
@@ -21,10 +23,19 @@ class ForgetOTPScreen extends StatefulWidget {
 
 class _ForgetOTPScreenState extends State<ForgetOTPScreen> {
   final List<TextEditingController> _controllers =
-      List.generate(4, (_) => TextEditingController());
+  List.generate(4, (_) => TextEditingController());
   final List<FocusNode> _focusNodes = List.generate(4, (_) => FocusNode());
 
   bool _isLoading = false;
+  bool _canResend = false;
+  int _resendCountdown = 60;
+  late Timer _resendTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _startResendTimer();
+  }
 
   @override
   void dispose() {
@@ -34,7 +45,28 @@ class _ForgetOTPScreenState extends State<ForgetOTPScreen> {
     for (var node in _focusNodes) {
       node.dispose();
     }
+    _resendTimer.cancel();
     super.dispose();
+  }
+
+  void _startResendTimer() {
+    setState(() {
+      _canResend = false;
+      _resendCountdown = 60;
+    });
+
+    _resendTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_resendCountdown > 0) {
+        setState(() {
+          _resendCountdown--;
+        });
+      } else {
+        setState(() {
+          _canResend = true;
+        });
+        timer.cancel();
+      }
+    });
   }
 
   void _onOtpChanged(String value, int index) {
@@ -42,6 +74,24 @@ class _ForgetOTPScreenState extends State<ForgetOTPScreen> {
       _focusNodes[index + 1].requestFocus();
     } else if (value.isEmpty && index > 0) {
       _focusNodes[index - 1].requestFocus();
+    }
+  }
+
+  Future<void> _resendOtp() async {
+    if (!_canResend) return;
+
+    try {
+      // Call your resend OTP API here
+      // await resendOtpRx.resendOtpInfo(email: widget.email);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("OTP sent successfully!")),
+      );
+      _startResendTimer();
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to resend OTP: $e")),
+      );
     }
   }
 
@@ -76,11 +126,7 @@ class _ForgetOTPScreenState extends State<ForgetOTPScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("OTP Verified Successfully!")),
         );
-
-        // * Just navigate to the reset password screen as your api requirement.
-        // NavigationService.navigateTo(Routes.resetNewPassScreen);
       }
-      // No else needed here because the error is already handled in verificationInfo
     } catch (e) {
       setState(() {
         _isLoading = false;
@@ -129,7 +175,7 @@ class _ForgetOTPScreenState extends State<ForgetOTPScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: List.generate(
                   4,
-                  (index) => SizedBox(
+                      (index) => SizedBox(
                     width: 60,
                     child: TextField(
                       controller: _controllers[index],
@@ -150,18 +196,27 @@ class _ForgetOTPScreenState extends State<ForgetOTPScreen> {
                 ),
               ),
               const SizedBox(height: 24),
-
+              // Resend OTP button with countdown
+              TextButton(
+                onPressed: _canResend ? _resendOtp : null,
+                child: Text(
+                  _canResend
+                      ? "Resend OTP"
+                      : "Resend in $_resendCountdown seconds",
+                  style: TextStyle(
+                    color: _canResend ? Colors.blue : Colors.grey,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
               // Show button or loading indicator
               _isLoading
                   ? const CircularProgressIndicator()
                   : CustomButton(
-                      text: "Submit",
-                      context: context,
-                      onTap: () {
-                        _verifyOtp();
-                        // NavigationService.navigateTo(Routes.resetNewPassScreen);
-                      },
-                    ),
+                text: "Submit",
+                context: context,
+                onTap: _verifyOtp,
+              ),
             ],
           ),
         ),

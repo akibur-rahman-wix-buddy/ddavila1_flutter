@@ -16,7 +16,6 @@ class ProductInfoCard extends StatefulWidget {
   final double myShippingCost;
   final double totalAmount;
   final bool isWhiteListing;
-  final bool isProcessing;
   final dynamic myId;
   final String slug;
   final ValueChanged<bool> onToggleProcessing;
@@ -30,7 +29,6 @@ class ProductInfoCard extends StatefulWidget {
     required this.myShippingCost,
     required this.totalAmount,
     required this.isWhiteListing,
-    required this.isProcessing,
     required this.myId,
     required this.slug,
     required this.onToggleProcessing,
@@ -43,6 +41,7 @@ class ProductInfoCard extends StatefulWidget {
 
 class _ProductInfoCardState extends State<ProductInfoCard> {
   bool _isCoreFeaturesExpanded = false;
+  bool isProcessing = false;
 
   @override
   Widget build(BuildContext context) {
@@ -203,18 +202,36 @@ class _ProductInfoCardState extends State<ProductInfoCard> {
                   Text("\$${widget.totalAmount.toStringAsFixed(2)}",
                       style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.black)),
                 ]),
-                widget.isProcessing
-                    ? const CircularProgressIndicator(color: Colors.blueAccent)
-                    : CustomButton(
-                  onTap: () {
-                    widget.onToggleProcessing(true);
-                    postSaleProductPaymentRx.saleProductStripePayment(productId: data.id);
-                    widget.onToggleProcessing(false);
+
+
+                CustomButton(
+
+                  minWidth: 200,
+                  onTap: isProcessing
+                      ? null // Disable button when processing
+                      : () async {
+                    setState(() {
+                      isProcessing = true;
+                    });
+
+                    try {
+                      await postSaleProductPaymentRx.saleProductStripePayment(
+                          productId: data.id
+                      );
+                    } catch (e) {
+                      // Handle error if needed
+                      print('Payment error: $e');
+                    } finally {
+                      setState(() {
+                        isProcessing = false;
+                      });
+                    }
                   },
-                  text: widget.isProcessing ? "Buying..." : 'Buy Now',
+                  text: isProcessing?"Buying...": 'Buy now',
                   context: context,
-                  minWidth: 150,
                 ),
+
+
               ],
             ),
             UIHelper.verticalSpace(24.h),

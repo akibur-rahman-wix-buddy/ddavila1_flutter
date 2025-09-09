@@ -45,7 +45,6 @@ class ProductDetailsBody extends StatelessWidget {
             myShippingCost: myShippingCost,
             totalAmount: totalAmount,
             isWhiteListing: isWhiteListing,
-            isProcessing: isProcessing,
             myId: myId,
             onToggleProcessing: onToggleProcessing,
             onToggleWhiteListing: onToggleWhiteListing,

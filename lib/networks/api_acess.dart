@@ -24,6 +24,7 @@ import 'package:ddavila/features/admin_app/seling/model/selling_order_data_model
 import 'package:ddavila/features/admin_app/wishlist_screen/model/wishlist_model.dart';
 import 'package:ddavila/features/auth_screen/data/forget_otp_email/forget_otp_rx.dart';
 import 'package:ddavila/features/auth_screen/data/forget_otp_verify/forget_otp_verify_rx.dart';
+import 'package:ddavila/features/auth_screen/data/resend_code/rx.dart';
 import 'package:ddavila/features/auth_screen/data/reset_password/rx.dart';
 import 'package:ddavila/features/auth_screen/data/rx_sign_up/rx.dart';
 import 'package:ddavila/features/auth_screen/data/stripe_card_add/rx.dart';
@@ -136,6 +137,11 @@ StripeCardAddRx stripeCardAddRx = StripeCardAddRx(
 );
 
 VerificationOtpRx verificationOtpRx = VerificationOtpRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+
+ResendOtpRx resendOtpRx = ResendOtpRx(
   empty: <String, dynamic>{},
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );
