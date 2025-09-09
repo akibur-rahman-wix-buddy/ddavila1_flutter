@@ -12,6 +12,7 @@ import 'package:ddavila/features/auth_screen/presentation/card_add_in_stripe.dar
 import 'package:ddavila/features/user_app/home_screen/data/rx_search_result/rx.dart';
 import 'package:ddavila/features/user_app/home_screen/model/product_search_data_model.dart';
 import 'package:ddavila/helpers/all_routes.dart';
+import 'package:ddavila/helpers/debounceer.dart';
 import 'package:ddavila/helpers/di.dart';
 import 'package:ddavila/helpers/navigation_service.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';
@@ -551,7 +552,8 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
                 ),
                 UIHelper.verticalSpace(8.h),
                 Text(
-                  '\$${product.price?.toStringAsFixed(2) ?? '0.00'}',
+
+                  '\$${product.type == "sale"? product.price?.toStringAsFixed(2) : product.highestBid?.toStringAsFixed(2)}',
                   style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
                     color: AppColor.c6940C9,
                     fontSize: 16.sp,
@@ -699,22 +701,3 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
   }
 }
 
-class Debouncer {
-  final int milliseconds;
-  Timer? _timer;
-
-  Debouncer({required this.milliseconds});
-
-  void run(VoidCallback action) {
-    _timer?.cancel();
-    _timer = Timer(Duration(milliseconds: milliseconds), action);
-  }
-
-  void cancel() {
-    _timer?.cancel();
-  }
-
-  void dispose() {
-    cancel();
-  }
-}

@@ -31,7 +31,8 @@ class _ShopScreenState extends State<ShopScreen> {
   final ScrollController _scrollController = ScrollController();
   bool isLoadingMore = false;
   List<Product> allProducts = [];
-  final Map<int, bool> _isProcessingMap = {}; // Map to track loading state for each product
+  final Map<int, bool> _isProcessingMap =
+      {}; // Map to track loading state for each product
   bool isStripeConnected = appData.read(kKeyCardAttributes) ?? false;
   bool isProfileConnected = appData.read(kKeyOnboarding) ?? false;
 
@@ -97,11 +98,11 @@ class _ShopScreenState extends State<ShopScreen> {
 
     return '$days d ${hours.toString().padLeft(2, '0')}h ${minutes.toString().padLeft(2, '0')}m ${seconds.toString().padLeft(2, '0')}s';
   }
+
   Widget _buildSearchField() {
     return GestureDetector(
       onTap: () => NavigationService.navigateTo(Routes.searchScreen),
       child: CustomTextField(
-        fieldWidth: 250,
         borderRadius: 58,
         hintText: 'Search...',
         isEnabled: false,
@@ -116,12 +117,12 @@ class _ShopScreenState extends State<ShopScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   leading: SizedBox(),
-      //   title: const Text('Shop'),
-      //   centerTitle: true,
-      //   backgroundColor: Colors.blueAccent,
-      // ),
+      appBar: AppBar(
+        leading: SizedBox(),
+        title: const Text('Shop'),
+        centerTitle: true,
+        backgroundColor: Colors.blueAccent,
+      ),
       body: FutureBuilder<ShopAllProductsDataModel?>(
         future: shopDataFuture,
         builder: (context, snapshot) {
@@ -141,14 +142,13 @@ class _ShopScreenState extends State<ShopScreen> {
           return SafeArea(
             child: Column(
               children: [
-
                 UIHelper.verticalSpace(20.h),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      _buildSearchField(),
+                      Expanded(child: _buildSearchField()),
                       Padding(
                         padding: const EdgeInsets.all(4.0),
                         child: GestureDetector(
@@ -165,9 +165,10 @@ class _ShopScreenState extends State<ShopScreen> {
                   child: GridView.builder(
                     controller: _scrollController,
                     padding: const EdgeInsets.all(8.0),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      childAspectRatio:0.61,
+                      childAspectRatio: 0.61,
                       crossAxisSpacing: 8.0,
                       mainAxisSpacing: 8.0,
                     ),
@@ -195,7 +196,8 @@ class _ShopScreenState extends State<ShopScreen> {
                           DateTime.parse(product.auctionEndAt!)
                               .toLocal()
                               .isBefore(DateTime.now());
-                      final isProcessing = _isProcessingMap[product.id] ?? false;
+                      final isProcessing =
+                          _isProcessingMap[product.id] ?? false;
 
                       return GestureDetector(
                         onTap: () {
@@ -270,9 +272,9 @@ class _ShopScreenState extends State<ShopScreen> {
                                   },
                                   errorBuilder: (context, error, stackTrace) =>
                                       Container(
-
-                                        height: 120,
-                                          child: const Icon(Icons.error, size: 50)),
+                                          height: 120,
+                                          child: const Icon(Icons.error,
+                                              size: 50)),
                                 ),
                               ),
                               Padding(
@@ -293,7 +295,8 @@ class _ShopScreenState extends State<ShopScreen> {
                                           style: const TextStyle(
                                               color: Colors.green)),
                                     if (isAuction && product.highestBid != null)
-                                      Text('Current Bid \$${product.highestBid}',
+                                      Text(
+                                          'Current Bid \$${product.highestBid}',
                                           style: const TextStyle(
                                               color: Colors.green)),
                                     if (product.shippingCost != null)
@@ -307,9 +310,12 @@ class _ShopScreenState extends State<ShopScreen> {
                                             color: Colors.grey, fontSize: 12),
                                       ),
 
-                                      Text(isTimeOver? 'Status: TIME OVER': 'Status: Running',
-                                          style:
-                                              const TextStyle(color: Colors.red)),
+                                    Text(
+                                        isTimeOver
+                                            ? 'Status: TIME OVER'
+                                            : 'Status: Running',
+                                        style:
+                                            const TextStyle(color: Colors.red)),
                                     ElevatedButton(
                                       onPressed: () async {
                                         if (isSale && product.price != null) {
@@ -370,11 +376,10 @@ class _ShopScreenState extends State<ShopScreen> {
                                             ),
                                     ),
 
-                                      //  Text(
-                                      //   isSale ?'✨ This product is on sale! Grab it before it\'s gone.':isAuction?"🔥 Auction live—place your bid now before time runs out!":"🔒 Auction finished—stay tuned for the next one!",
-                                      //   style: TextStyle(color: Colors.green),
-                                      // ),
-
+                                    //  Text(
+                                    //   isSale ?'✨ This product is on sale! Grab it before it\'s gone.':isAuction?"🔥 Auction live—place your bid now before time runs out!":"🔒 Auction finished—stay tuned for the next one!",
+                                    //   style: TextStyle(color: Colors.green),
+                                    // ),
                                   ],
                                 ),
                               ),

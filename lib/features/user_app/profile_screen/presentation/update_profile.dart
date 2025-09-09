@@ -29,6 +29,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   File? _imageFile;
   bool _isLoading = false;
   bool isOnBoardign = false;
+  bool stripeIsLoading = false;
 
 
 
@@ -330,18 +331,27 @@ isOnBoardign = widget.userData.data?.user?.onboardComplete == 1 ? true: false;
                     ),
 
                     UIHelper.verticalSpace(16.h),
-                    CustomButton(
+                 stripeIsLoading?CircularProgressIndicator(color: Colors.blueAccent,):   CustomButton(
                       text: isOnBoardign ? "Manage Stripe" : "Connect Stripe",
                       context: context,
                       minWidth: 150.w,
                       onTap: () async {
+                        setState(() {
+                          stripeIsLoading = true;
+                        });
                         final stripeData = await stripeConnectRx.stripeConnectInfo();
 
                         if (stripeData != null && stripeData.data?.dashboardUrl != null) {
                           Get.to(
                             WebViewLink(link: stripeData.data!.dashboardUrl!),
                           );
+                          setState(() {
+                            stripeIsLoading = false;
+                          });
                         } else {
+                          setState(() {
+                            stripeIsLoading = false;
+                          });
                           ToastUtil.showShortToast("Stripe URL not available.");
                         }
                       },

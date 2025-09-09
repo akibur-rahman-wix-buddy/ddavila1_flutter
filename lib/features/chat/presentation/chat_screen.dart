@@ -44,6 +44,20 @@ class _ChatScreenState extends State<ChatScreen> {
     super.dispose();
   }
 
+  String formatUtcToTimeAMPM({required String utcTimeString}) {
+    DateTime utcDateTime = DateTime.parse(utcTimeString).toUtc();
+
+    // Convert to your local time (e.g. GMT+6 for Bangladesh)
+    DateTime localTime = utcDateTime.add(Duration(hours: 6));
+
+    // Format to 12-hour with AM/PM
+    String formattedTime = DateFormat('hh:mm a').format(localTime);
+    return formattedTime;
+  }
+
+
+
+
   void _filterConversations() {
     if (_searchQuery.isEmpty) {
       _filteredConversations = List.from(_allConversations);
@@ -244,7 +258,9 @@ class _ChatScreenState extends State<ChatScreen> {
                                               ),
                                             ),
                                             Text(
-                                              messageTime,
+
+                                              formatUtcToTimeAMPM(
+                                                  utcTimeString: conversation.lastMessage!.createdAt.toString()),
                                               style: TextFontStyle.buttonTextStyle.copyWith(
                                                 fontWeight: FontWeight.w400,
                                                 fontSize: 12,

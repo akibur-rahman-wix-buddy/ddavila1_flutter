@@ -236,7 +236,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
               ),
               const SizedBox(height: 4),
               Text(
-                "na********@chaublog.com",
+                widget.email.toString(),
                 style: TextFontStyle.textLine20w400cFFFFFFDvSans
                     .copyWith(color: Colors.blueAccent, fontSize: 16),
               ),

@@ -11,9 +11,7 @@ import 'package:ddavila/constants/app_constants.dart';
 import 'package:ddavila/features/user_app/products_screen/model/state_data_model.dart';
 import 'package:ddavila/features/user_app/products_screen/widget/bit_auction_details_container.dart';
 import 'package:ddavila/features/user_app/products_screen/widget/bit_product_header_section.dart';
-import 'package:ddavila/helpers/all_routes.dart';
 import 'package:ddavila/helpers/di.dart';
-import 'package:ddavila/helpers/navigation_service.dart';
 import 'package:ddavila/helpers/toast.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';
 import 'package:ddavila/networks/api_acess.dart';
@@ -53,6 +51,7 @@ class _ProductsBidScreenState extends State<ProductsBidScreen> {
   dynamic stateName;
   dynamic myStateName = appData.read(kKeyMyState);
   dynamic myShippingCost;
+
 
   bool isTimeFinished(String dateTimeString) {
     if (dateTimeString.isEmpty) return false;
@@ -424,7 +423,7 @@ class _ProductsBidScreenState extends State<ProductsBidScreen> {
 
 
 
-class PaymentDetails extends StatelessWidget {
+class PaymentDetails extends StatefulWidget {
   final BidData product;
   final dynamic myShippingCost;
   final dynamic productPercentage;
@@ -438,11 +437,17 @@ class PaymentDetails extends StatelessWidget {
     required this.stateName,
   });
 
+  @override
+  State<PaymentDetails> createState() => _PaymentDetailsState();
+}
+
+class _PaymentDetailsState extends State<PaymentDetails> {
+  bool paymentIsLoading= false;
   double calculateTotalAmount(BidData product) {
     // Convert string amount to double first
     double productPrice = double.tryParse(product.amount?.toString() ?? '0') ?? 0.0;
-    double taxAmount = productPrice * (productPercentage ?? 0.0) / 100;
-    double shippingCost = double.tryParse(myShippingCost?.toString() ?? '0') ?? 0.0;
+    double taxAmount = productPrice * (widget.productPercentage ?? 0.0) / 100;
+    double shippingCost = double.tryParse(widget.myShippingCost?.toString() ?? '0') ?? 0.0;
 
     return productPrice + taxAmount + shippingCost;
   }
@@ -450,9 +455,9 @@ class PaymentDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Convert string amount to double first
-    double productAmount = double.tryParse(product.amount?.toString() ?? '0') ?? 0.0;
-    double taxAmount = productAmount * (productPercentage ?? 0.0) / 100;
-    double shippingAmount = double.tryParse(myShippingCost?.toString() ?? '0') ?? 0.0;
+    double productAmount = double.tryParse(widget.product.amount?.toString() ?? '0') ?? 0.0;
+    double taxAmount = productAmount * (widget.productPercentage ?? 0.0) / 100;
+    double shippingAmount = double.tryParse(widget.myShippingCost?.toString() ?? '0') ?? 0.0;
 
     return Column(
       children: [
@@ -482,7 +487,7 @@ class PaymentDetails extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Tax: $stateName ${"(${productPercentage??0.00} %)"} ',
+              'Tax: ${widget.stateName} ${"(${widget.productPercentage??0.00} %)"} ',
               style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
                 fontSize: 14.0.sp,
                 fontWeight: FontWeight.bold,
@@ -538,7 +543,7 @@ class PaymentDetails extends StatelessWidget {
               ),
             ),
             Text(
-              '\$${calculateTotalAmount(product).toStringAsFixed(2)}',
+              '\$${calculateTotalAmount(widget.product).toStringAsFixed(2)}',
               style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
                 fontSize: 14.0.sp,
                 fontWeight: FontWeight.bold,
@@ -548,10 +553,20 @@ class PaymentDetails extends StatelessWidget {
           ],
         ),
         UIHelper.verticalSpace(20),
+
+        paymentIsLoading ?CircularProgressIndicator(color: Colors.blueAccent,):
+
         CustomButton(
           onTap: () async {
-            bool success = await bitPaymentRx.bitPaymentInfo(bitId: product.id);
-            print(">>>>>>>>>>>>>>>>>>>>>>> here is the bit id ${product.id}");
+            setState(() {
+              paymentIsLoading= true;
+            });
+
+            bool success = await bitPaymentRx.bitPaymentInfo(bitId: widget.product.id);
+            setState(() {
+              paymentIsLoading = false;
+            });
+            print(">>>>>>>>>>>>>>>>>>>>>>> here is the bit id ${widget.product.id}");
           },
           minWidth: double.infinity,
           text: 'Proceed To Payment',
@@ -561,147 +576,3 @@ class PaymentDetails extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
-
-// class PaymentDetails extends StatelessWidget {
-//   final BidData product;
-//   final dynamic myShippingCost;
-//   final dynamic productPercentage;
-//   final dynamic stateName;
-//
-//   const PaymentDetails({
-//     super.key,
-//     required this.product,
-//     required this.myShippingCost,
-//     required this.productPercentage,
-//     required this.stateName,
-//   });
-//
-//   double calculateTotalAmount(BidData product) {
-//     // Convert all values to doubles with proper null handling
-//     double productPrice = (product.amount ?? 0.0).toDouble();
-//     double taxAmount = productPrice * (productPercentage ?? 0.0) / 100;
-//     double shippingCost = (myShippingCost ?? 0.0).toDouble();
-//
-//     return productPrice + taxAmount + shippingCost;
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     double taxAmount = (product.amount ?? 0.0) * (productPercentage ?? 0.0) / 100;
-//
-//     return Column(
-//       children: [
-//         Row(
-//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//           children: [
-//             Text(
-//               'Price:- ',
-//               style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-//                 fontSize: 14.0.sp,
-//                 fontWeight: FontWeight.bold,
-//                 color: Colors.black,
-//               ),
-//             ),
-//             Text(
-//               '\$${product.amount?.toStringAsFixed(2) ?? "0.00"}',
-//               style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-//                 fontSize: 14.0.sp,
-//                 fontWeight: FontWeight.bold,
-//                 color: Colors.black,
-//               ),
-//             ),
-//           ],
-//         ),
-//         UIHelper.verticalSpace(10),
-//         Row(
-//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//           children: [
-//             Text(
-//               'Tax: $stateName ${"(${productPercentage??0.00} %)"} ',
-//               style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-//                 fontSize: 14.0.sp,
-//                 fontWeight: FontWeight.bold,
-//                 color: Colors.black,
-//               ),
-//             ),
-//             Text(
-//               '\$${taxAmount.toStringAsFixed(2)}',
-//               style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-//                 fontSize: 14.0.sp,
-//                 fontWeight: FontWeight.bold,
-//                 color: Colors.black,
-//               ),
-//             )
-//           ],
-//         ),
-//         UIHelper.verticalSpace(10),
-//         Row(
-//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//           children: [
-//             Text(
-//               'Shipping Price:- ',
-//               style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-//                 fontSize: 14.0.sp,
-//                 fontWeight: FontWeight.bold,
-//                 color: Colors.black,
-//               ),
-//             ),
-//             Text(
-//               '\$${(myShippingCost ?? 0.0).toStringAsFixed(2)}',
-//               style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-//                 fontSize: 14.0.sp,
-//                 fontWeight: FontWeight.bold,
-//                 color: Colors.black,
-//               ),
-//             ),
-//           ],
-//         ),
-//         Divider(
-//           color: Colors.grey.withOpacity(0.5),
-//           thickness: 1.0,
-//         ),
-//         UIHelper.verticalSpace(10),
-//         Row(
-//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//           children: [
-//             Text(
-//               'Total Price:- ',
-//               style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-//                 fontSize: 14.0.sp,
-//                 fontWeight: FontWeight.bold,
-//                 color: Colors.black,
-//               ),
-//             ),
-//             Text(
-//               '\$${calculateTotalAmount(product).toStringAsFixed(2)}',
-//               style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-//                 fontSize: 14.0.sp,
-//                 fontWeight: FontWeight.bold,
-//                 color: Colors.black,
-//               ),
-//             ),
-//           ],
-//         ),
-//         UIHelper.verticalSpace(20),
-//         CustomButton(
-//           onTap: () async {
-//
-//
-//           bool success = await  bitPaymentRx.bitPaymentInfo(bitId:product.id );
-//
-//
-//             print(">>>>>>>>>>>>>>>>>>>>>>> here is the bit id ${product.id}");
-//           },
-//           minWidth: double.infinity,
-//           text: 'Proceed To Payment',
-//           context: context,
-//         )
-//       ],
-//     );
-//   }
-// }

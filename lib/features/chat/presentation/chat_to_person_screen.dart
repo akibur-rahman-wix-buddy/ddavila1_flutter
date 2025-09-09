@@ -54,7 +54,8 @@ class _ChatToPersonScreenState extends State<ChatToPersonScreen> {
   dynamic myId = appData.read(kKeyUserID);
   bool youBLock = true;
   bool blockedYou = true;
-  List<XFile> selectedImages = [];
+  XFile? selectedImage;
+  bool isMessageSending = false;
 
   @override
   void initState() {
@@ -91,7 +92,7 @@ class _ChatToPersonScreenState extends State<ChatToPersonScreen> {
           blockedYou = response.data!.blockedyou!;
 
           nullMessage =
-              response.data?.conversations?.messages == [] ? true : false;
+          response.data?.conversations?.messages == [] ? true : false;
           _isLoading = false;
         });
         _scrollToBottom();
@@ -139,10 +140,10 @@ class _ChatToPersonScreenState extends State<ChatToPersonScreen> {
         "private-chat.${widget.conversationId}",
         // "private-chat.${widget.conversationId}",
         authorizationDelegate:
-            EndpointAuthorizableChannelTokenAuthorizationDelegate
-                .forPrivateChannel(
-          authorizationEndpoint:
-              Uri.parse("https://ddvila.softvencefsd.xyz/api/broadcasting/auth"),
+        EndpointAuthorizableChannelTokenAuthorizationDelegate
+            .forPrivateChannel(
+          authorizationEndpoint: Uri.parse(
+              "https://ddvila.softvencefsd.xyz/api/broadcasting/auth"),
           headers: {
             "Authorization": "Bearer ${appData.read(kKeyAccessToken)}",
           },
@@ -156,6 +157,55 @@ class _ChatToPersonScreenState extends State<ChatToPersonScreen> {
       });
 
       // Step 5: Listen to incoming messages
+      // _channelEventSubs = myPrivateChannel
+      //     .bind("App\\Events\\MessageCustomEvent")
+      //     .listen((event) {
+      //   print("=======================in the pushar: ${event.data}");
+      //
+      //   try {
+      //     if (event.data != null) {
+      //       print("=======================Pusher event data: ${event.data}");
+      //
+      //       final Map<String, dynamic> messageData = json.decode(event.data);
+      //       print(
+      //           "=======================Pusher message ID: ${messageData['id']}");
+      //       print(
+      //           "=======================Pusher conversation ID: ${messageData['conversation_id']}");
+      //       print(
+      //           "=======================sendable_id: ${messageData["sendable_id"]}");
+      //       print(
+      //           "=======================Pusher message content: ${messageData["content"]}");
+      //       print("=======================Pusher my ID: $myId");
+      //       print("=======================Pusher isMe: ${messageData["isMe"]}");
+      //
+      //       final newMessage = Message(
+      //         id: messageData['id'] ?? 0,
+      //         body: messageData['content'], // Changed from 'body' to 'content'
+      //         type: 'text',
+      //         createdAt: DateTime.parse(messageData['created_at']),
+      //         isMe: messageData["sendable_id"] == myId
+      //             ? true
+      //             : false, // Changed to compare with myId
+      //         // reactions: [], // Empty array if no reactions
+      //       );
+      //
+      //       if (mounted) {
+      //         setState(() {
+      //           _messages.insert(0, newMessage);
+      //         });
+      //         _scrollToBottom();
+      //       }
+      //     } else {
+      //       print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>> event issue");
+      //     }
+      //   } catch (e, stack) {
+      //     log("Error in main pusher : $e", error: stack);
+      //   }
+      // });
+
+
+
+
       _channelEventSubs = myPrivateChannel
           .bind("App\\Events\\MessageCustomEvent")
           .listen((event) {
@@ -166,26 +216,35 @@ class _ChatToPersonScreenState extends State<ChatToPersonScreen> {
             print("=======================Pusher event data: ${event.data}");
 
             final Map<String, dynamic> messageData = json.decode(event.data);
-            print(
-                "=======================Pusher message ID: ${messageData['id']}");
-            print(
-                "=======================Pusher conversation ID: ${messageData['conversation_id']}");
-            print(
-                "=======================sendable_id: ${messageData["sendable_id"]}");
-            print(
-                "=======================Pusher message content: ${messageData["content"]}");
-            print("=======================Pusher my ID: $myId");
-            print("=======================Pusher isMe: ${messageData["isMe"]}");
+
+            // Check if there's image attachment
+            bool hasImageAttachment = false;
+            List<Attachment> attachments = [];
+
+            if (messageData['attachment'] != null && messageData['attachment'] is List) {
+              List<dynamic> attachmentList = messageData['attachment'];
+              if (attachmentList.isNotEmpty) {
+                hasImageAttachment = true;
+                for (var attachmentData in attachmentList) {
+                  attachments.add(Attachment(
+                    id: attachmentData['id'] ?? 0,
+                    filePath: attachmentData['file_path'] ?? '',
+                    fileName: attachmentData['file_name'] ?? '',
+                    originalName: attachmentData['original_name'] ?? '',
+                    url: attachmentData['url'] ?? '',
+                    mimeType: attachmentData['mime_type'] ?? '',
+                  ));
+                }
+              }
+            }
 
             final newMessage = Message(
               id: messageData['id'] ?? 0,
-              body: messageData['content'], // Changed from 'body' to 'content'
-              type: 'text',
+              body: hasImageAttachment ? '' : messageData['content'], // Empty string for images
+              type: hasImageAttachment ? 'image' : 'text',
               createdAt: DateTime.parse(messageData['created_at']),
-              isMe: messageData["sendable_id"] == myId
-                  ? true
-                  : false, // Changed to compare with myId
-              // reactions: [], // Empty array if no reactions
+              isMe: messageData["sendable_id"] == myId,
+              attachment: attachments,
             );
 
             if (mounted) {
@@ -194,13 +253,31 @@ class _ChatToPersonScreenState extends State<ChatToPersonScreen> {
               });
               _scrollToBottom();
             }
-          } else {
-            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>> event issue");
           }
         } catch (e, stack) {
           log("Error in main pusher : $e", error: stack);
         }
       });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
       _pusherClient!.connect();
     } catch (e, stack) {
@@ -227,30 +304,93 @@ class _ChatToPersonScreenState extends State<ChatToPersonScreen> {
     });
   }
 
-  void _sendMessage() {
-      log("Sending message: ${chatController.text ??""} with ${selectedImages.length} images");
-      log( "this is the message ${chatController.text}");
+  // void _sendMessage() {
+  //   setState(() {
+  //     isMessageSending = true;
+  //   });
+  //   log("Sending message: ${chatController.text ?? ""} with ${selectedImages.length} images");
+  //   log("this is the message ${chatController.text}");
+  //
+  //   sendMessageRx
+  //       .addChat(
+  //     message: chatController.text.trim(),
+  //     toUserId: widget.participantableId,
+  //     avatars: selectedImages,
+  //   )
+  //       .then((response) {
+  //     if (response != null) {
+  //       setState(() {
+  //         isMessageSending = false;
+  //       });
+  //       log("Message sent successfully");
+  //       _scrollToBottom();
+  //       setState(() {
+  //         chatController.clear();
+  //         selectedImages.clear(); // Clear parent's list
+  //       });
+  //     } else {
+  //       setState(() {
+  //         isMessageSending = false;
+  //       });
+  //       _showError("Failed to send message");
+  //     }
+  //   }).catchError((error) {
+  //     setState(() {
+  //       isMessageSending = false;
+  //     });
+  //     _showError("Message rejected: $error");
+  //   });
+  // }
 
-      sendMessageRx.addChat(
-        message: chatController.text.trim() ,
-        toUserId: widget.participantableId,
-        avatars: selectedImages,
-      ).then((response) {
-        if (response != null) {
-          log("Message sent successfully");
-          _scrollToBottom();
-          setState(() {
-            chatController.clear();
-            selectedImages.clear(); // Clear parent's list
-          });
-        } else {
-          _showError("Failed to send message");
-        }
-      }).catchError((error) {
-        _showError("Message rejected: $error");
-      });
 
+
+  void _clearImageAfterSend() {
+    setState(() {
+      selectedImage = null; // ইমেজ clear করুন
+    });
   }
+
+// _sendMessage method update করুন
+  void _sendMessage() {
+    setState(() {
+      isMessageSending = true;
+    });
+
+    log("Sending message: ${chatController.text ?? ""} with image: ${selectedImage?.path}");
+
+    sendMessageRx
+        .addChat(
+      message: chatController.text.trim(),
+      toUserId: widget.participantableId,
+      avatar: selectedImage,
+    )
+        .then((response) {
+      if (response != null) {
+        setState(() {
+          isMessageSending = false;
+          chatController.clear();
+          // selectedImage = null; // এখানে না করে callback এর মাধ্যমে করবেন
+        });
+
+        _clearImageAfterSend(); // ইমেজ clear করুন
+        log("Message sent successfully");
+        _scrollToBottom();
+      } else {
+        setState(() {
+          isMessageSending = false;
+        });
+        _showError("Failed to send message");
+      }
+    }).catchError((error) {
+      setState(() {
+        isMessageSending = false;
+      });
+      _showError("Message rejected: $error");
+    });
+  }
+
+
+
 
   void _showError(String message) {
     Fluttertoast.showToast(
@@ -331,8 +471,7 @@ class _ChatToPersonScreenState extends State<ChatToPersonScreen> {
                 ],
               ),
               GestureDetector(
-                onTap: () {
-                },
+                onTap: () {},
                 child: Image.asset(
                   AppImages.appLogo,
                   color: Colors.white,
@@ -378,113 +517,6 @@ class _ChatToPersonScreenState extends State<ChatToPersonScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Column(
               children: [
-
-
-
-
-                // Expanded(
-                //   child: _isLoading
-                //       ? const Center(
-                //           child: Text("Data is loading...",
-                //               style: TextStyle(color: Colors.white)),
-                //         )
-                //       : _errorMessage != null
-                //           ? Center(child: Text(_errorMessage!))
-                //           : _messages.isEmpty
-                //               ? Center(
-                //                   child: Container(
-                //                     height: 200.h,
-                //                     width: 300.h,
-                //                     child: Column(
-                //                       children: [
-                //                         ClipOval(
-                //                           child: Image.network(
-                //                             widget.image.toString(),
-                //                             width:
-                //                                 106, // double the radius (16 * 2)
-                //                             height: 106,
-                //                             fit: BoxFit.cover,
-                //                             errorBuilder:
-                //                                 (context, error, stackTrace) {
-                //                               return Container(
-                //                                 width: 32,
-                //                                 height: 32,
-                //                                 color: Colors
-                //                                     .grey, // Fallback color
-                //                                 child: Image.asset(
-                //                                     AppImages.profileIcon),
-                //                               );
-                //                             },
-                //                           ),
-                //                         ),
-                //                         UIHelper.verticalSpace(12.h),
-                //
-                //                         Text(widget.name.toString(),
-                //                             style:
-                //                                 TextFontStyle.buttonTextStyle),
-                //                         // UIHelper.verticalSpace(8.h),
-                //                         Text(
-                //                           "Start Conversation .Say Hi",
-                //                           style: TextFontStyle.buttonTextStyle,
-                //                         ),
-                //                       ],
-                //                     ),
-                //                   ),
-                //                 )
-                //               : ListView.builder(
-                //                   controller: _scrollController,
-                //                   physics: const ClampingScrollPhysics(),
-                //                   padding: const EdgeInsets.only(bottom: 20),
-                //                   reverse: true,
-                //                   itemCount: _messages.length,
-                //                   itemBuilder: (context, index) {
-                //                     final message = _messages[index];
-                //
-                //                     print(
-                //                         ">>>>>>>>>>>>>>>>>>>>> is me ? ${message.isMe}");
-                //
-                //                     final isSentByCurrentUser =
-                //                         message.isMe ?? false;
-                //
-                //                     return Align(
-                //                       alignment: isSentByCurrentUser
-                //                           ? Alignment.centerRight
-                //                           : Alignment.centerLeft,
-                //                       child: isSentByCurrentUser
-                //                           ? UserChatWidget(
-                //                               attachments:
-                //                                   message.attachment ?? [],
-                //                               time: formatUtcToTimeAMPM(
-                //                                   utcTimeString: message
-                //                                       .createdAt
-                //                                       .toString()),
-                //                               message: message.body ?? "",
-                //                               isMe: message.isMe!,
-                //                               // image: message.sender?.avatar.toString() ?? "",
-                //                             )
-                //                           : AdminChatWidget(
-                //                               attachments:
-                //                                   message.attachment ?? [],
-                //                               id: 3,
-                //                               time: formatUtcToTimeAMPM(
-                //                                   utcTimeString: message
-                //                                       .createdAt
-                //                                       .toString()),
-                //                               senderName: widget.name,
-                //                               message: message.body ?? "",
-                //                               image: widget.image ?? "",
-                //                             ),
-                //                     );
-                //                   },
-                //                 ),
-                // ),
-
-
-
-
-
-
-
                 Expanded(
                   child: _isLoading
                       ? const Center(
@@ -495,7 +527,7 @@ class _ChatToPersonScreenState extends State<ChatToPersonScreen> {
                       ? Center(child: Text(_errorMessage!))
                       : _messages.isEmpty
                       ? Center(
-                    child: Container(
+                    child: SizedBox(
                       height: 200.h,
                       width: 300.h,
                       child: Column(
@@ -506,19 +538,22 @@ class _ChatToPersonScreenState extends State<ChatToPersonScreen> {
                               width: 106,
                               height: 106,
                               fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
+                              errorBuilder:
+                                  (context, error, stackTrace) {
                                 return Container(
                                   width: 32,
                                   height: 32,
                                   color: Colors.grey,
-                                  child: Image.asset(AppImages.profileIcon),
+                                  child: Image.asset(
+                                      AppImages.profileIcon),
                                 );
                               },
                             ),
                           ),
                           UIHelper.verticalSpace(12.h),
                           Text(widget.name.toString(),
-                              style: TextFontStyle.buttonTextStyle),
+                              style:
+                              TextFontStyle.buttonTextStyle),
                           Text(
                             "Start Conversation .Say Hi",
                             style: TextFontStyle.buttonTextStyle,
@@ -535,46 +570,67 @@ class _ChatToPersonScreenState extends State<ChatToPersonScreen> {
                     itemCount: _messages.length,
                     itemBuilder: (context, index) {
                       final message = _messages[index];
-                      final isSentByCurrentUser = message.isMe ?? false;
+                      final isSentByCurrentUser =
+                          message.isMe ?? false;
 
                       // Check if we need to show a date header
-                      final currentMessageDate = message.createdAt;
+                      final currentMessageDate =
+                          message.createdAt;
                       final bool showDateHeader;
 
                       if (index == _messages.length - 1) {
                         // First message (since list is reversed)
                         showDateHeader = true;
                       } else {
-                        final previousMessage = _messages[index + 1];
-                        final previousMessageDate = previousMessage.createdAt;
+                        final previousMessage =
+                        _messages[index + 1];
+                        final previousMessageDate =
+                            previousMessage.createdAt;
 
                         // Show header if dates are different
-                        showDateHeader = currentMessageDate != null &&
-                            previousMessageDate != null &&
-                            !_isSameDay(currentMessageDate, previousMessageDate);
+                        showDateHeader =
+                            currentMessageDate != null &&
+                                previousMessageDate != null &&
+                                !_isSameDay(currentMessageDate,
+                                    previousMessageDate);
                       }
+
+                      // print(">>>>>>>>>>>>>>> this is screen site list of attachment ${message.attachment?.map((item){item.filePath.toString();})}");
+
+                      print(
+                          ">>>>>>>>>>>>>>> this is screen site list of attachment ${message.attachment?.map((item) {
+                            return item.filePath.toString();
+                          }).toList()}");
 
                       return Column(
                         children: [
                           if (showDateHeader)
-                            DateHeader(date: formatUtcToDate(message.createdAt)),
+                            DateHeader(
+                                date: formatUtcToDate(
+                                    message.createdAt)),
                           Align(
                             alignment: isSentByCurrentUser
                                 ? Alignment.centerRight
                                 : Alignment.centerLeft,
                             child: isSentByCurrentUser
                                 ? UserChatWidget(
-                              attachments: message.attachment ?? [],
+                              attachments:
+                              message.attachment ?? [],
                               time: formatUtcToTimeAMPM(
-                                  utcTimeString: message.createdAt.toString()),
+                                  utcTimeString: message
+                                      .createdAt
+                                      .toString()),
                               message: message.body ?? "",
                               isMe: message.isMe!,
                             )
                                 : AdminChatWidget(
-                              attachments: message.attachment ?? [],
+                              attachments:
+                              message.attachment ?? [],
                               id: 3,
                               time: formatUtcToTimeAMPM(
-                                  utcTimeString: message.createdAt.toString()),
+                                  utcTimeString: message
+                                      .createdAt
+                                      .toString()),
                               senderName: widget.name,
                               message: message.body ?? "",
                               image: widget.image ?? "",
@@ -585,19 +641,6 @@ class _ChatToPersonScreenState extends State<ChatToPersonScreen> {
                     },
                   ),
                 ),
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                 // blockStatus == false?
                 // ChatBottomBarWidget(
@@ -615,22 +658,17 @@ class _ChatToPersonScreenState extends State<ChatToPersonScreen> {
 
 // In your build method:
 
-
-
-
-
-
-
-
                 ChatBottomBarWidget(
+                  onMessageSent: _clearImageAfterSend,
                   chatController: chatController,
                   onSendTap: _sendMessage,
-                  onImagesSelected: (images) {
+                  isMessageSend: isMessageSending,
+                  onImageSelected: (image) { // Changed from onImagesSelected
                     setState(() {
-                      selectedImages = images;
+                      selectedImage = image; // Store single image
                     });
                   },
-                  initialImages: selectedImages, // Pass current images
+                  selectedImage: selectedImage, // Pass single image
                 ),
 
                 const SizedBox(height: 25),
@@ -696,15 +734,14 @@ class EmojiReactionOverlay extends StatelessWidget {
   }
 }
 
-
-
 String formatUtcToDate(DateTime? utcDateTime) {
   if (utcDateTime == null) return '';
 
   final now = DateTime.now();
   final today = DateTime(now.year, now.month, now.day);
   final yesterday = DateTime(now.year, now.month, now.day - 1);
-  final messageDate = DateTime(utcDateTime.year, utcDateTime.month, utcDateTime.day);
+  final messageDate =
+  DateTime(utcDateTime.year, utcDateTime.month, utcDateTime.day);
 
   if (messageDate == today) {
     return 'Today';
@@ -717,8 +754,18 @@ String formatUtcToDate(DateTime? utcDateTime) {
 
 String _getMonthName(int month) {
   const months = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
   ];
   return months[month - 1];
 }
@@ -744,7 +791,7 @@ class DateHeader extends StatelessWidget {
         margin: EdgeInsets.symmetric(vertical: 8.h),
         decoration: BoxDecoration(
           // color: Colors.grey[200],
-          border: Border.all(color: Colors.white,width: 2),
+          border: Border.all(color: Colors.white, width: 2),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Text(
