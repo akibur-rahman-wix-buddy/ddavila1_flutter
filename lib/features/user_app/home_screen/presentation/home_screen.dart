@@ -47,7 +47,8 @@ class _HomeScreenState extends State<HomeScreen> {
     mySelfRx.mySelfData();
     super.initState();
     _loadInitialData();
-    print(">>>>>>>>>>>>>>> h key card attributes $isStripeConnected");
+    print(">>>>>>>>>>>>>>> h key card stripe attributes $isStripeConnected");
+    print(">>>>>>>>>>>>>>> h key card user  attributes $kKeyOnboarding");
   }
 
   Future<void> _loadInitialData() async {

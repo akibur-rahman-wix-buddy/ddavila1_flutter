@@ -14,15 +14,24 @@
 // }
 //
 // class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
-//   final List<TextEditingController> _controllers = List.generate(4, (_) => TextEditingController());
+//   final List<TextEditingController> _controllers =
+//   List.generate(4, (_) => TextEditingController());
 //   final List<FocusNode> _focusNodes = List.generate(4, (_) => FocusNode());
+//
+//   bool _isLoading = false;
 //
 //   @override
 //   void dispose() {
-//     for (var controller in _controllers) controller.dispose();
-//     for (var node in _focusNodes) node.dispose();
+//     for (var controller in _controllers) {
+//       controller.dispose();
+//     }
+//     for (var node in _focusNodes) {
+//       node.dispose();
+//     }
 //     super.dispose();
 //   }
+//
+//
 //
 //   void _onOtpChanged(String value, int index) {
 //     if (value.length == 1 && index < _controllers.length - 1) {
@@ -31,6 +40,8 @@
 //       _focusNodes[index - 1].requestFocus();
 //     }
 //   }
+//
+//
 //
 //   Future<void> _verifyOtp() async {
 //     String otp = _controllers.map((c) => c.text).join();
@@ -41,20 +52,39 @@
 //       return;
 //     }
 //
+//     setState(() {
+//       _isLoading = true;
+//     });
 //
-//     bool success = await verificationOtpRx.verificationInfo(email: widget.email, otp: otp);
-//
-//     if (success) {
-//       NavigationService.navigateTo(Routes.otpVerificationScreen);
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         const SnackBar(content: Text("OTP Verified Successfully!")),
+//     try {
+//       bool success = await verificationOtpRx.verificationInfo(
+//         email: widget.email,
+//         otp: otp,
 //       );
-//     } else {
+//
+//       setState(() {
+//         _isLoading = false;
+//       });
+//
+//       if (success) {
+//         NavigationService.navigateTo(Routes.successScreen);
+//         ScaffoldMessenger.of(context).showSnackBar(
+//           const SnackBar(content: Text("OTP Verified Successfully!")),
+//         );
+//       }
+//       // No else needed here because the error is already handled in verificationInfo
+//     } catch (e) {
+//       setState(() {
+//         _isLoading = false;
+//       });
 //       ScaffoldMessenger.of(context).showSnackBar(
-//         const SnackBar(content: Text("Invalid OTP, try again.")),
+//         SnackBar(content: Text("Error: $e")),
 //       );
 //     }
 //   }
+//
+//
+//
 //
 //   @override
 //   Widget build(BuildContext context) {
@@ -79,7 +109,7 @@
 //               ),
 //               const SizedBox(height: 4),
 //               Text(
-//                 "na********@chaublog.com",
+//                 widget.email.toString(),
 //                 style: TextFontStyle.textLine20w400cFFFFFFDvSans
 //                     .copyWith(color: Colors.blueAccent, fontSize: 16),
 //               ),
@@ -109,12 +139,25 @@
 //                 ),
 //               ),
 //               const SizedBox(height: 24),
-//               CustomButton(text: "Submit" , context:context,
+//
+//
+//               TextButton(onPressed: () async {
+//
+//                 await resendOtpRx.resendOtpInfo(email: widget.email);
+//
+//               }, child: Text("Resend "))
+//
+//
+//               // Show button or loading indicator
+//               _isLoading
+//                   ? const CircularProgressIndicator()
+//                   : CustomButton(
+//                 text: "Submit",
+//                 context: context,
 //                 onTap: () {
 //                   _verifyOtp();
-//                   String otp = _controllers.map((c) => c.text).join();
-//                   print("Entered OTP: $otp");
-//                 },),
+//                 },
+//               ),
 //             ],
 //           ),
 //         ),
@@ -123,13 +166,12 @@
 //   }
 // }
 
-
-
+import 'dart:async'; // Add this import
+import 'package:flutter/material.dart';
 import 'package:ddavila/common_widgets/custom_button.dart';
 import 'package:ddavila/helpers/all_routes.dart';
 import 'package:ddavila/helpers/navigation_service.dart';
 import 'package:ddavila/networks/api_acess.dart';
-import 'package:flutter/material.dart';
 import 'package:ddavila/assets_helper/text_font_style.dart';
 
 class OtpVerificationScreen extends StatefulWidget {
@@ -146,6 +188,15 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   final List<FocusNode> _focusNodes = List.generate(4, (_) => FocusNode());
 
   bool _isLoading = false;
+  bool _canResend = false;
+  int _resendCountdown = 60;
+  late Timer _resendTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _startResendTimer();
+  }
 
   @override
   void dispose() {
@@ -155,10 +206,29 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     for (var node in _focusNodes) {
       node.dispose();
     }
+    _resendTimer.cancel();
     super.dispose();
   }
 
+  void _startResendTimer() {
+    setState(() {
+      _canResend = false;
+      _resendCountdown = 60;
+    });
 
+    _resendTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_resendCountdown > 0) {
+        setState(() {
+          _resendCountdown--;
+        });
+      } else {
+        setState(() {
+          _canResend = true;
+        });
+        timer.cancel();
+      }
+    });
+  }
 
   void _onOtpChanged(String value, int index) {
     if (value.length == 1 && index < _controllers.length - 1) {
@@ -167,8 +237,6 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       _focusNodes[index - 1].requestFocus();
     }
   }
-
-
 
   Future<void> _verifyOtp() async {
     String otp = _controllers.map((c) => c.text).join();
@@ -199,7 +267,6 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
           const SnackBar(content: Text("OTP Verified Successfully!")),
         );
       }
-      // No else needed here because the error is already handled in verificationInfo
     } catch (e) {
       setState(() {
         _isLoading = false;
@@ -210,8 +277,21 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     }
   }
 
+  Future<void> _resendOtp() async {
+    if (!_canResend) return;
 
-
+    try {
+      await resendOtpRx.resendOtpInfo(email: widget.email);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("OTP sent successfully!")),
+      );
+      _startResendTimer();
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to resend OTP: $e")),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -267,15 +347,28 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
               ),
               const SizedBox(height: 24),
 
+              // Resend OTP button with countdown
+              TextButton(
+                onPressed: _canResend ? _resendOtp : null,
+                child: Text(
+                  _canResend
+                      ? "Resend OTP"
+                      : "Resend in $_resendCountdown seconds",
+                  style: TextStyle(
+                    color: _canResend ? Colors.blue : Colors.grey,
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 16),
+
               // Show button or loading indicator
               _isLoading
                   ? const CircularProgressIndicator()
                   : CustomButton(
                 text: "Submit",
                 context: context,
-                onTap: () {
-                  _verifyOtp();
-                },
+                onTap: _verifyOtp,
               ),
             ],
           ),
