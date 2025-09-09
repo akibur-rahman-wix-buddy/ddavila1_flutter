@@ -86,6 +86,8 @@ final class Endpoints {
 
   static String editSaleProduct(dynamic productId) =>
       "/seller/product/$productId";
+  static String editAuctionProduct(dynamic productId) =>
+      "/seller/product/$productId";
   static String shopApiLink({dynamic pageNumber})=> "/products?page=$pageNumber";
   static String recentWonProductApi({dynamic pageNumber})=> "/bids/leatest/won/today?page=$pageNumber";
   static String forgetPasswordChangeApiLink()=> "/reset-password";

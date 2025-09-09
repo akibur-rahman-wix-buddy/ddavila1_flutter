@@ -438,46 +438,6 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    'Create Listing',
-                    style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                      color: AppColor.blackColor,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    'Our Standard Service Plan is designed for homeowners who want a reliable and cost-effective solution without compromising on quality. ',
-                    style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                      color: AppColor.c666666,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w800,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                UIHelper.verticalSpace(10),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SvgPicture.asset(AppIcons.lineIcon),
-                    Text(
-                      'Item Details',
-                      style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                        color: AppColor.blackColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                    SvgPicture.asset(AppIcons.lineIcon),
-                  ],
-                ),
                 UIHelper.verticalSpace(10),
                 Align(
                   alignment: Alignment.centerLeft,
@@ -527,73 +487,7 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
                 ),
                 UIHelper.verticalSpace(10),
 
-                // * ########## Image Picker ##################
-                // GestureDetector(
-                //   onTap: _showImageSourceDialog,
-                //   child: DottedBorderContainer(
-                //     child: Column(
-                //       mainAxisAlignment: MainAxisAlignment.center,
-                //       children: [
-                //         hasAnyImage
-                //             ? SizedBox(
-                //                 height: 60,
-                //                 child: ListView.builder(
-                //                   scrollDirection: Axis.horizontal,
-                //                   itemCount: _cardImages.length,
-                //                   itemBuilder: (context, index) {
-                //                     final image = _cardImages[index];
-                //                     return Padding(
-                //                       padding: const EdgeInsets.symmetric(
-                //                           horizontal: 4),
-                //                       child: image['src']!.startsWith('data:')
-                //                           ? Image.memory(
-                //                               base64Decode(image['src']!
-                //                                   .split(',')
-                //                                   .last),
-                //                               width: 48,
-                //                               height: 48,
-                //                               fit: BoxFit.cover,
-                //                             )
-                //                           : Image.network(
-                //                               image['src']!,
-                //                               width: 48,
-                //                               height: 48,
-                //                               fit: BoxFit.cover,
-                //                             ),
-                //                     );
-                //                   },
-                //                 ),
-                //               )
-                //             : CircleAvatar(
-                //                 radius: 24,
-                //                 backgroundColor: Colors.grey.shade100,
-                //                 child: Image.asset(AppImages.picImage),
-                //               ),
-                //         const SizedBox(height: 12),
-                //         Text(
-                //           "Click to Upload Front Side of Card",
-                //           style:
-                //               TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                //             color: AppColor.blackColor,
-                //             fontSize: 16,
-                //             fontWeight: FontWeight.w800,
-                //           ),
-                //           textAlign: TextAlign.center,
-                //         ),
-                //         const SizedBox(height: 6),
-                //         Text(
-                //           "(Max. File size: 25 MB)",
-                //           style:
-                //               TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                //             color: AppColor.blackColor,
-                //             fontSize: 14,
-                //             fontWeight: FontWeight.w800,
-                //           ),
-                //         ),
-                //       ],
-                //     ),
-                //   ),
-                // ),
+                // * ######################## Image Picker ##########################
                 GestureDetector(
                   onTap: _showImageSourceDialog,
                   child: DottedBorderContainer(

@@ -3,6 +3,7 @@
 // ########################################################
 
 import 'package:ddavila/features/admin_app/all_product/data/delete_products/delete_products_rx.dart';
+import 'package:ddavila/features/admin_app/all_product/data/edit_auction/edit_seller_auction_rx.dart';
 import 'package:ddavila/features/admin_app/all_product/data/edit_products/edit_seller_products_rx.dart';
 import 'package:ddavila/features/admin_app/auction_screen/data/get_category/get_category_rx.dart';
 import 'package:ddavila/features/admin_app/auction_screen/data/get_property/get_property_rx.dart';
@@ -238,7 +239,6 @@ StripeConnectRx stripeConnectRx = StripeConnectRx(
   dataFetcher: BehaviorSubject<StripeConnectDataModel>(),
 );
 
-
 GetShopRx getShopRx = GetShopRx(
   empty: ShopAllProductsDataModel(),
   dataFetcher: BehaviorSubject<ShopAllProductsDataModel>(),
@@ -310,6 +310,10 @@ EditSellerProductAPIRX editSellerProductAPIRX = EditSellerProductAPIRX(
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );
 
+EditAuctionProductRX editAuctionProductRX = EditAuctionProductRX(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
 
 ResetPasswordRx resetPasswordRx = ResetPasswordRx(
   empty: <String, dynamic>{},

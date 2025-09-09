@@ -1,39 +1,38 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:developer';
-import 'package:ddavila/features/admin_app/all_product/data/edit_products/edit_seller_products_api.dart';
-import 'package:ddavila/helpers/all_routes.dart';
-import 'package:ddavila/helpers/navigation_service.dart';
+import 'package:ddavila/features/admin_app/all_product/data/edit_auction/edit_seller_auction_api.dart';
 import 'package:ddavila/helpers/toast.dart';
 import 'package:ddavila/networks/rx_base.dart';
 import 'package:dio/dio.dart';
 import 'package:rxdart/streams.dart';
 import 'package:image_picker/image_picker.dart'; // For XFile class
 
-final class EditSellerProductAPIRX extends RxResponseInt<Map<String, dynamic>> {
-  final api = EditSellerProductAPI.instance;
+final class EditAuctionProductRX extends RxResponseInt<Map<String, dynamic>> {
+  final api = EditAuctionProductAPI.instance;
 
-  EditSellerProductAPIRX({required super.empty, required super.dataFetcher});
+  EditAuctionProductRX({required super.empty, required super.dataFetcher});
 
   ValueStream get getFileData => dataFetcher.stream;
 
-  Future<bool> updateSaleProductsRX({
+  Future<bool> updateProductAuctionRX({
     required dynamic productId,
     dynamic title,
     dynamic description,
     dynamic categoryId,
     dynamic subcategoryId,
     dynamic type,
-    // * ########## sales data #########
     dynamic shippingCost,
-    dynamic buyNowPrice,
+    dynamic price,
     dynamic shipWithin,
-    // * ###############################
+    dynamic auction_end_at,
     List<XFile>? images,
     List<dynamic>? propertyItem,
     List<dynamic>? propertyValue,
   }) async {
     try {
-      // Call the updated updateSaleProducts API
-      Map<String, dynamic> data = await api.updateSaleProducts(
+      // Call the updated postProductSale API
+      Map<String, dynamic> data = await api.updateProductAuction(
         productId: productId,
         title: title,
         description: description,
@@ -41,14 +40,15 @@ final class EditSellerProductAPIRX extends RxResponseInt<Map<String, dynamic>> {
         subcategoryId: subcategoryId,
         type: type,
         shippingCost: shippingCost,
-        buyNowPrice: buyNowPrice,
+        price: price,
         shipWithin: shipWithin,
         images: images,
         propertyItem: propertyItem,
         propertyValue: propertyValue,
+        auction_end_at: auction_end_at,
       );
 
-      log(">>>>>>>>>>>>>>> Product post response: $data");
+      log(">>>>>>>>>>>>>>> Auction Product post response: $data");
       await handleSuccessWithReturn(data);
 
       return true;
@@ -74,10 +74,6 @@ final class EditSellerProductAPIRX extends RxResponseInt<Map<String, dynamic>> {
       if (error.response?.statusCode == 400) {
         ToastUtil.showShortToast(
             error.response?.data["error"] ?? "Invalid request");
-      } else if (error.response?.statusCode == 401) {
-        NavigationService.navigateToRemoveuntil(Routes.loginScreen);
-        ToastUtil.showShortToast(
-            error.response?.data["message"] ?? "Unauthorized access");
       } else {
         ToastUtil.showShortToast(
             error.response?.data["message"] ?? "An error occurred");
