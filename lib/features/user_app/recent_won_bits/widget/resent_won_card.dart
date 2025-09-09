@@ -30,6 +30,12 @@ class RecentOwnCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+
+
+
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> image is ${"$image_url$image"}");
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Container(

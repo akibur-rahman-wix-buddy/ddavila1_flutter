@@ -140,6 +140,56 @@ class _GetAllProductScreenState extends State<GetAllProductScreen> {
       ),
     );
   }
+  //
+  // Widget _buildResultsBody() {
+  //   if (_isLoading) {
+  //     return GridView.builder(
+  //       padding: EdgeInsets.all(16.r),
+  //       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+  //         crossAxisCount: 2,
+  //         crossAxisSpacing: 16.w,
+  //         mainAxisSpacing: 16.h,
+  //         childAspectRatio: 0.7,
+  //       ),
+  //       itemCount: 6,
+  //       itemBuilder: (context, index) => _buildShimmerEffect(),
+  //     );
+  //   }
+  //
+  //   if (_products?.data?.data == []) {
+  //     return Center(child: Text("No Data Available"));
+  //   }
+  //
+  //   if (_errorMessage != null) {
+  //     return Center(child: Text(_errorMessage!));
+  //   }
+  //
+  //   if (_filteredProducts.isEmpty) {
+  //     return const Center(child: Text('No products found'));
+  //   }
+  //
+  //   return GridView.builder(
+  //     padding: EdgeInsets.all(10.r),
+  //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+  //       crossAxisCount: 2,
+  //       crossAxisSpacing: 16.w,
+  //       mainAxisSpacing: 16.h,
+  //       childAspectRatio: 0.67,
+  //     ),
+  //     itemCount: _filteredProducts.length,
+  //     itemBuilder: (context, index) {
+  //       final product = _filteredProducts[index];
+  //       return _buildProductItem(product);
+  //     },
+  //   );
+  // }
+
+
+
+
+
+
+
 
   Widget _buildResultsBody() {
     if (_isLoading) {
@@ -154,6 +204,11 @@ class _GetAllProductScreenState extends State<GetAllProductScreen> {
         itemCount: 6,
         itemBuilder: (context, index) => _buildShimmerEffect(),
       );
+    }
+
+    // Check if products list is empty
+    if (_products?.data?.data.isEmpty ?? true) {
+      return const Center(child: Text("No products available"));
     }
 
     if (_errorMessage != null) {
@@ -179,6 +234,7 @@ class _GetAllProductScreenState extends State<GetAllProductScreen> {
       },
     );
   }
+
 
   Widget _buildShimmerEffect() {
     return Shimmer.fromColors(
@@ -309,7 +365,7 @@ class _GetAllProductScreenState extends State<GetAllProductScreen> {
                   ),
                   UIHelper.verticalSpace(8.h),
                   Text(
-                    '\$${product.price?.toStringAsFixed(2) ?? '0.00'}',
+                    '\$${ product.type.toString() == "sale"? product.price?.toStringAsFixed(2):product.startingPrice?.toStringAsFixed(2) ?? '0.00'}',
                     style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
                       color: AppColor.c6940C9,
                       fontSize: 16.sp,

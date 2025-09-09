@@ -1,36 +1,3 @@
-//
-// import 'package:image_picker/image_picker.dart';
-// import 'package:rxdart/rxdart.dart';
-//
-// import '../../../../networks/rx_base.dart';
-// import 'api.dart';
-//
-//
-// final class SendMessageRx extends RxResponseInt<Map> {
-//   final api = AddMessageApi.instance;
-//
-//   SendMessageRx({required super.empty, required super.dataFetcher});
-//
-//   ValueStream get chatListStream => dataFetcher.stream;
-//
-//   Future<Map?> addChat({required String message,     dynamic toUserId,   XFile? avatar,}) async {
-//     try {
-//       final data = await api.addChat(
-//         message: message,
-//         avatar: avatar,
-//         toUserId: toUserId
-//       );
-//       handleSuccessWithReturn(data);
-//       return data;
-//     } catch (error) {
-//       handleErrorWithReturn(error);
-//       return null;
-//     }
-//   }
-// }
-
-
-
 import 'dart:developer';
 
 import 'package:ddavila/helpers/all_routes.dart';
@@ -53,14 +20,14 @@ final class SendMessageRx extends RxResponseInt<Map> {
   ValueStream get chatListStream => dataFetcher.stream;
 
   Future<Map?> addChat({
-     dynamic message,
+    dynamic message,
     dynamic toUserId,
-    List<XFile>? avatars, // Changed from XFile? to List<XFile>?
+    XFile? avatar, // Changed from List<XFile>? to single XFile?
   }) async {
     try {
       final data = await api.addChat(
         message: message,
-        avatars: avatars, // Updated parameter name
+        avatar: avatar, // Changed parameter name
         toUserId: toUserId,
       );
       handleSuccessWithReturn(data);
@@ -71,8 +38,6 @@ final class SendMessageRx extends RxResponseInt<Map> {
     }
   }
 
-
-
   @override
   handleErrorWithReturn(dynamic error) {
     if (error is DioException) {
@@ -82,7 +47,6 @@ final class SendMessageRx extends RxResponseInt<Map> {
           "An unknown error occurred.";
 
       if (statusCode == 401) {
-
         appData.write(kKeyIsLoggedIn, false);
         NavigationService.navigateToReplacement(Routes.loginScreen);
       } else {
@@ -96,6 +60,4 @@ final class SendMessageRx extends RxResponseInt<Map> {
     dataFetcher.sink.addError(error);
     return null;
   }
-
-
 }
