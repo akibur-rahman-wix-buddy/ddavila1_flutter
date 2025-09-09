@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print, sized_box_for_whitespace
+
 import 'package:ddavila/assets_helper/app_icons.dart';
 import 'package:ddavila/common_widgets/custom_textfiled.dart';
 import 'package:ddavila/constants/app_constants.dart';

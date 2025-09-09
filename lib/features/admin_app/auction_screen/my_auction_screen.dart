@@ -3,13 +3,12 @@ import 'package:ddavila/features/admin_app/auction_screen/model/auction_model.da
 import 'package:ddavila/features/admin_app/auction_screen/model/auction_running_model.dart';
 import 'package:ddavila/features/admin_app/auction_screen/widget/auction_complete.dart';
 import 'package:ddavila/features/admin_app/auction_screen/widget/auction_running.dart';
-import 'package:ddavila/helpers/all_routes.dart';
 import 'package:ddavila/helpers/navigation_service.dart';
 import 'package:ddavila/networks/api_acess.dart';
 import 'package:flutter/material.dart';
 
 class AuctionScreen extends StatefulWidget {
-  const AuctionScreen({super.key,this.isBack});
+  const AuctionScreen({super.key, this.isBack});
   final bool? isBack;
 
   @override
@@ -40,19 +39,25 @@ class _AuctionScreenState extends State<AuctionScreen> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-
-              widget.isBack == true ? Row(
-                children: [
-                  Align(
-                      alignment: AlignmentDirectional.centerStart,
-                      child: IconButton(onPressed: (){
-                        NavigationService.goBack;
-                      }, icon: Icon(Icons.arrow_back))),
-
-                  Text("My Auction ",style:TextFontStyle.textLine16w500cFFFFFFLato.copyWith(color: Colors.black),),
-                  SizedBox()
-                ],
-              ):SizedBox(),
+              widget.isBack == true
+                  ? Row(
+                      children: [
+                        Align(
+                            alignment: AlignmentDirectional.centerStart,
+                            child: IconButton(
+                                onPressed: () {
+                                  NavigationService.goBack;
+                                },
+                                icon: Icon(Icons.arrow_back))),
+                        Text(
+                          "My Auction ",
+                          style: TextFontStyle.textLine16w500cFFFFFFLato
+                              .copyWith(color: Colors.black),
+                        ),
+                        SizedBox()
+                      ],
+                    )
+                  : SizedBox(),
               Container(
                 height: 50,
                 padding: const EdgeInsets.all(2),
@@ -62,7 +67,7 @@ class _AuctionScreenState extends State<AuctionScreen> {
                 ),
                 child: Row(
                   children: [
-                    _buildTab("On going", 0),
+                    _buildTab("On Going", 0),
                     _buildTab("Completed", 1),
                   ],
                 ),
