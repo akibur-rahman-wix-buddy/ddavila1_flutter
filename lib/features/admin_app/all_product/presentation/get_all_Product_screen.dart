@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, deprecated_member_use
 import 'package:ddavila/assets_helper/app_colors.dart';
 import 'package:ddavila/assets_helper/app_image.dart';
 import 'package:ddavila/assets_helper/text_font_style.dart';
@@ -225,7 +225,7 @@ class _GetAllProductScreenState extends State<GetAllProductScreen> {
         crossAxisCount: 2,
         crossAxisSpacing: 16.w,
         mainAxisSpacing: 16.h,
-        childAspectRatio: 0.67,
+        childAspectRatio: 0.66,
       ),
       itemCount: _filteredProducts.length,
       itemBuilder: (context, index) {
@@ -234,10 +234,6 @@ class _GetAllProductScreenState extends State<GetAllProductScreen> {
       },
     );
   }
-
-
-
-
 
 
   Widget _buildShimmerEffect() {
@@ -346,15 +342,18 @@ class _GetAllProductScreenState extends State<GetAllProductScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    product.title ?? 'No Title',
-                    style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                      color: AppColor.c000000,
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w600,
+                  SizedBox(
+                    height: 40.h,
+                    child: Text(
+                      product.title ?? 'No Title',
+                      style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                        color: AppColor.c000000,
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
                   ),
                   UIHelper.verticalSpace(4.h),
                   Text(

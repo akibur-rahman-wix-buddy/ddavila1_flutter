@@ -1,18 +1,15 @@
 
 
+// ignore_for_file: use_super_parameters, library_private_types_in_public_api, unused_field, unused_element, avoid_print
+
 import 'package:ddavila/features/admin_app/bit_history/widget/bid_history_table.dart';
-import 'package:ddavila/features/auth_screen/complete_account_info/complete_account_info_screen.dart';
-import 'package:ddavila/features/auth_screen/presentation/card_add_in_stripe.dart';
 import 'package:ddavila/helpers/all_routes.dart';
 import 'package:ddavila/helpers/navigation_service.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart' show Get;
 import 'package:rxdart/subjects.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:ddavila/features/admin_app/bit_history/data/get_Bit_history_data/buying_order_rx.dart';
 import 'package:ddavila/features/admin_app/bit_history/model/bit_history_data_model.dart';
-import 'package:ddavila/networks/endpoints.dart';
 
 class BidHistoryScreen extends StatefulWidget {
   const BidHistoryScreen({Key? key}) : super(key: key);

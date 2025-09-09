@@ -1,10 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:ddavila/constants/app_constants.dart';
-import 'package:ddavila/helpers/di.dart';
 import 'package:ddavila/helpers/toast.dart';
 import 'package:ddavila/helpers/wab_view.dart';
-import 'package:ddavila/networks/dio/dio.dart';
 import 'package:ddavila/networks/rx_base.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';

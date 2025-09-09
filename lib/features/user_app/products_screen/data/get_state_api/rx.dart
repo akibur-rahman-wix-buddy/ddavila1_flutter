@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_print, unused_local_variable
 import 'dart:developer';
 import 'package:ddavila/features/user_app/products_screen/model/state_data_model.dart';
 import 'package:ddavila/helpers/toast.dart';

@@ -1,4 +1,5 @@
-import 'package:ddavila/features/user_app/recent_won_bits/model/recent_won_data_model.dart' hide State;
+import 'package:ddavila/features/user_app/recent_won_bits/model/recent_won_data_model.dart'
+    hide State;
 import 'package:ddavila/features/user_app/recent_won_bits/widget/resent_won_card.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';
 import 'package:ddavila/networks/api_acess.dart';
@@ -25,7 +26,7 @@ class _RecentWonScreenState extends State<RecentWonScreen> {
     getRecentWonProductRx.getRecentWonProductData(pageNumber: currentPage);
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
-          _scrollController.position.maxScrollExtent * 0.9 &&
+              _scrollController.position.maxScrollExtent * 0.9 &&
           !isLoadingMore &&
           hasMorePages) {
         loadMoreData();
@@ -44,12 +45,14 @@ class _RecentWonScreenState extends State<RecentWonScreen> {
     setState(() {
       isLoadingMore = true;
     });
-    final data = await getRecentWonProductRx.getRecentWonProductData(pageNumber: currentPage + 1);
+    final data = await getRecentWonProductRx.getRecentWonProductData(
+        pageNumber: currentPage + 1);
     if (data?.data?.data != null && data!.data!.data!.isNotEmpty) {
       setState(() {
         currentPage++;
         allOrders.addAll(data.data!.data!);
-        hasMorePages = data.data!.nextPageUrl != null && data.data!.currentPage! < data.data!.lastPage!;
+        hasMorePages = data.data!.nextPageUrl != null &&
+            data.data!.currentPage! < data.data!.lastPage!;
         isLoadingMore = false;
       });
     } else {
@@ -70,43 +73,54 @@ class _RecentWonScreenState extends State<RecentWonScreen> {
       ),
       body: Column(
         children: [
-          StreamBuilder<RecentWonDataModel>(
-            stream: getRecentWonProductRx.dataFetcher,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting &&
-                  allOrders.isEmpty) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Center(
-                      child: CircularProgressIndicator(),
+          Expanded(
+            child: StreamBuilder<RecentWonDataModel>(
+              stream: getRecentWonProductRx.dataFetcher,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting &&
+                    allOrders.isEmpty) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      UIHelper.verticalSpace(10.h),
+                      const Text(
+                        "Loading...",
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ],
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(child: Text("Error: ${snapshot.error}"));
+                } else if (!snapshot.hasData ||
+                    snapshot.data?.data == null ||
+                    snapshot.data!.data!.data!.isEmpty) {
+                  // Center the "No product found." message
+                  return const Center(
+                    child: Text(
+                      "No product found.",
+                      style: TextStyle(fontSize: 16),
                     ),
-                    UIHelper.verticalSpace(10.h),
-                    const Text(
-                      "Loading...",
-                      style: TextStyle(color: Colors.red),
-                    ),
-                  ],
-                );
-              } else if (snapshot.hasError) {
-                return Center(child: Text("Error: ${snapshot.error}"));
-              } else if (!snapshot.hasData || snapshot.data?.data == null || snapshot.data!.data!.data!.isEmpty) {
-                return const Center(child: Text("No product found."));
-              }
-
-              if (snapshot.data!.data!.data != null) {
-                final newOrders = snapshot.data!.data!.data!.where((newOrder) =>
-                !allOrders.any((existingOrder) => existingOrder.id == newOrder.id)).toList();
-                if (newOrders.isNotEmpty) {
-                  allOrders.addAll(newOrders);
+                  );
                 }
-                hasMorePages = snapshot.data!.data!.nextPageUrl != null &&
-                    snapshot.data!.data!.currentPage! < snapshot.data!.data!.lastPage!;
-              }
 
-              return Expanded(
-                child: ListView.builder(
+                if (snapshot.data!.data!.data != null) {
+                  final newOrders = snapshot.data!.data!.data!
+                      .where((newOrder) => !allOrders.any(
+                          (existingOrder) => existingOrder.id == newOrder.id))
+                      .toList();
+                  if (newOrders.isNotEmpty) {
+                    allOrders.addAll(newOrders);
+                  }
+                  hasMorePages = snapshot.data!.data!.nextPageUrl != null &&
+                      snapshot.data!.data!.currentPage! <
+                          snapshot.data!.data!.lastPage!;
+                }
+
+                return ListView.builder(
                   controller: _scrollController,
                   shrinkWrap: true,
                   primary: false,
@@ -122,18 +136,22 @@ class _RecentWonScreenState extends State<RecentWonScreen> {
                     }
 
                     final order = allOrders[index];
-                    final product = order.products?.isNotEmpty == true ? order.products!.first : null;
+                    final product = order.products?.isNotEmpty == true
+                        ? order.products!.first
+                        : null;
 
                     return RecentOwnCard(
                       title: product?.title ?? 'No Title',
-                      image: product?.images?.isNotEmpty == true ? product!.images!.first : '',
+                      image: product?.images?.isNotEmpty == true
+                          ? product!.images!.first
+                          : '',
                       currentBid: product?.bid?.toString() ?? '0',
                       timeLeft: product?.auctionEndAt?.toIso8601String() ?? '',
                     );
                   },
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
         ],
       ),

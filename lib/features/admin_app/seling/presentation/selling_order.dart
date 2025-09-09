@@ -1,7 +1,8 @@
+// ignore_for_file: undefined_hidden_name
+
 import 'package:ddavila/common_widgets/custom_appbar.dart';
 import 'package:ddavila/common_widgets/custom_textfiled.dart';
-import 'package:ddavila/features/admin_app/seling/model/selling_order_data_model.dart'
-    hide State;
+import 'package:ddavila/features/admin_app/seling/model/selling_order_data_model.dart' hide State;
 import 'package:ddavila/features/admin_app/seling/widget/selling_table.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';
 import 'package:ddavila/networks/api_acess.dart';

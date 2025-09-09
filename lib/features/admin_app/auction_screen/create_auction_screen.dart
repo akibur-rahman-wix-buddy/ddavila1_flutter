@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable, unnecessary_to_list_in_spreads, avoid_print, curly_braces_in_flow_control_structures, deprecated_member_use, prefer_final_fields, unused_element
+
 import 'dart:convert';
 import 'dart:developer';
 import 'package:ddavila/assets_helper/app_colors.dart';
@@ -1251,7 +1253,7 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                       ),
                     ),
                     CustomButton(
-                      onTap: () {
+                      onTap: () async {
                         print(titleValuePairs);
                         var titleList =
                             titleValuePairs.map((e) => e['title']).toList();
@@ -1259,7 +1261,7 @@ class _CreateAuctionScreenState extends State<CreateAuctionScreen> {
                             titleValuePairs.map((e) => e['value']).toList();
                         print(titleList);
                         print(valueList);
-                        _saveText();
+                        await _saveText();
                         log("Description Data: $descriptionHtmlText");
                         log("Select Sub Category: ${selectedSubCategoryId.toString()}");
                         log("Select Category: ${selectedCategoryId.toString()}");

@@ -68,7 +68,7 @@ class _CategoryProductsWidgetState extends State<CategoryProductsWidget> {
                 }
 
                 final data = snapshot.data?.data?.products?.data;
-               return Expanded(
+                return Expanded(
                   child: GridView.builder(
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,

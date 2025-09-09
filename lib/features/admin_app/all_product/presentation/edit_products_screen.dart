@@ -1,5 +1,5 @@
 // * #####################################################
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, unnecessary_to_list_in_spreads, avoid_print, curly_braces_in_flow_control_structures, deprecated_member_use, unused_element, unnecessary_nullable_for_final_variable_declarations, prefer_final_fields, unused_field
 import 'dart:convert';
 import 'dart:developer';
 import 'package:ddavila/assets_helper/app_colors.dart';
@@ -438,46 +438,6 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    'Create Listing',
-                    style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                      color: AppColor.blackColor,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    'Our Standard Service Plan is designed for homeowners who want a reliable and cost-effective solution without compromising on quality. ',
-                    style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                      color: AppColor.c666666,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w800,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                UIHelper.verticalSpace(10),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SvgPicture.asset(AppIcons.lineIcon),
-                    Text(
-                      'Item Details',
-                      style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                        color: AppColor.blackColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                    SvgPicture.asset(AppIcons.lineIcon),
-                  ],
-                ),
                 UIHelper.verticalSpace(10),
                 Align(
                   alignment: Alignment.centerLeft,
@@ -527,73 +487,7 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
                 ),
                 UIHelper.verticalSpace(10),
 
-                // * ########## Image Picker ##################
-                // GestureDetector(
-                //   onTap: _showImageSourceDialog,
-                //   child: DottedBorderContainer(
-                //     child: Column(
-                //       mainAxisAlignment: MainAxisAlignment.center,
-                //       children: [
-                //         hasAnyImage
-                //             ? SizedBox(
-                //                 height: 60,
-                //                 child: ListView.builder(
-                //                   scrollDirection: Axis.horizontal,
-                //                   itemCount: _cardImages.length,
-                //                   itemBuilder: (context, index) {
-                //                     final image = _cardImages[index];
-                //                     return Padding(
-                //                       padding: const EdgeInsets.symmetric(
-                //                           horizontal: 4),
-                //                       child: image['src']!.startsWith('data:')
-                //                           ? Image.memory(
-                //                               base64Decode(image['src']!
-                //                                   .split(',')
-                //                                   .last),
-                //                               width: 48,
-                //                               height: 48,
-                //                               fit: BoxFit.cover,
-                //                             )
-                //                           : Image.network(
-                //                               image['src']!,
-                //                               width: 48,
-                //                               height: 48,
-                //                               fit: BoxFit.cover,
-                //                             ),
-                //                     );
-                //                   },
-                //                 ),
-                //               )
-                //             : CircleAvatar(
-                //                 radius: 24,
-                //                 backgroundColor: Colors.grey.shade100,
-                //                 child: Image.asset(AppImages.picImage),
-                //               ),
-                //         const SizedBox(height: 12),
-                //         Text(
-                //           "Click to Upload Front Side of Card",
-                //           style:
-                //               TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                //             color: AppColor.blackColor,
-                //             fontSize: 16,
-                //             fontWeight: FontWeight.w800,
-                //           ),
-                //           textAlign: TextAlign.center,
-                //         ),
-                //         const SizedBox(height: 6),
-                //         Text(
-                //           "(Max. File size: 25 MB)",
-                //           style:
-                //               TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                //             color: AppColor.blackColor,
-                //             fontSize: 14,
-                //             fontWeight: FontWeight.w800,
-                //           ),
-                //         ),
-                //       ],
-                //     ),
-                //   ),
-                // ),
+                // * ######################## Image Picker ##########################
                 GestureDetector(
                   onTap: _showImageSourceDialog,
                   child: DottedBorderContainer(
@@ -1209,6 +1103,7 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                UIHelper.verticalSpace(10),
                                 Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
@@ -1222,7 +1117,6 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
                                     ),
                                   ),
                                 ),
-                                UIHelper.verticalSpace(10),
                                 SizedBox(
                                   width: 150.w,
                                   child: DropDownCustomTextField(
@@ -1267,7 +1161,6 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
                                                 row['selectedValue'] as String,
                                           });
                                         }
-                                        print('Selected Title: $value');
                                       });
                                     },
                                     onChanged: (value) {
@@ -1280,7 +1173,6 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
                                                 row['selectedValue'] as String,
                                           };
                                         }
-                                        print('Title Changed: $value');
                                       });
                                     },
                                   ),
@@ -1290,6 +1182,7 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                UIHelper.verticalSpace(10),
                                 Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
@@ -1303,7 +1196,6 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
                                     ),
                                   ),
                                 ),
-                                UIHelper.verticalSpace(10),
                                 StreamBuilder<SubPropertyModel>(
                                   stream: getSubPropertyAPIRXObj.dataFetcher,
                                   builder: (context, subSnapshot) {
@@ -1360,7 +1252,6 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
                                                     as String,
                                               });
                                             }
-                                            log('Selected Value for Title ${row['selectedTitle']}: $value');
                                           });
                                         },
                                         onChanged: (value) {
@@ -1382,15 +1273,27 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
                                 ),
                               ],
                             ),
+                            // Delete button with minimum 1 row restriction
                             GestureDetector(
                               onTap: () {
                                 setState(() {
-                                  if (index < titleValuePairs.length) {
-                                    titleValuePairs.removeAt(index);
+                                  if (propertyRows.length > 1) {
+                                    if (index < titleValuePairs.length) {
+                                      titleValuePairs.removeAt(index);
+                                    }
+                                    propertyRows[index]['titleController']
+                                        ?.dispose();
+                                    propertyRows[index]['valueController']
+                                        ?.dispose();
+                                    propertyRows.removeAt(index);
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                            "At least one property is required."),
+                                      ),
+                                    );
                                   }
-                                  propertyRows[index]['titleController']
-                                      ?.dispose();
-                                  propertyRows.removeAt(index);
                                 });
                               },
                               child: Padding(
@@ -1404,6 +1307,7 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
                     );
                   },
                 ),
+
                 UIHelper.verticalSpaceMedium,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1424,7 +1328,7 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
                       ),
                     ),
                     CustomButton(
-                      onTap: () {
+                      onTap: () async {
                         print(titleValuePairs);
                         var titleList =
                             titleValuePairs.map((e) => e['title']).toList();
@@ -1432,7 +1336,7 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
                             titleValuePairs.map((e) => e['value']).toList();
                         print(titleList);
                         print(valueList);
-                        _saveText();
+                        await _saveText();
 
                         log("Description Data: $descriptionHtmlText");
                         log("Select Sub Category: ${selectedSubCategoryId.toString()}");

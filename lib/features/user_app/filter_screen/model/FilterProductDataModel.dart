@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 /// Model for filtered product data API response.
 class FilterProductDataModel {
   FilterProductDataModel({

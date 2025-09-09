@@ -1,4 +1,3 @@
-import 'package:ddavila/assets_helper/app_colors.dart';
 import 'package:ddavila/assets_helper/text_font_style.dart';
 import 'package:ddavila/helpers/html_text_viewer.dart';
 import 'package:flutter/material.dart';

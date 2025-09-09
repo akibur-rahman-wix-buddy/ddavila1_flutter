@@ -123,6 +123,8 @@
 // }
 
 
+// ignore_for_file: unused_local_variable, avoid_print, use_build_context_synchronously, prefer_final_fields
+
 import 'package:ddavila/helpers/navigation_service.dart';
 import 'package:ddavila/navigation_screen.dart';
 import 'package:ddavila/welcome_screen.dart';
@@ -160,6 +162,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
     bool isLoggedIn = appData.read(kKeyIsLoggedIn) ?? false;
     bool firstTime = appData.read(kKeyIsFirstTime) ?? false;
+    
     if (isLoggedIn) {
       String token = appData.read(kKeyAccessToken);
       DioSingleton.instance.update(token);
