@@ -1,7 +1,9 @@
 // ignore_for_file: constant_identifier_names
 //const String url = "http://192.168.40.86:8000";
 const String url = "https://ddvila.softvencefsd.xyz/api";
+// const String url = "https://app.thehobbynexus.com/api";
 const String image_url = "https://ddvila.softvencefsd.xyz/";
+// const String image_url = "https://app.thehobbynexus.com/";
 const String imageUrls = "$url/";
 
 final class NetworkConstants {

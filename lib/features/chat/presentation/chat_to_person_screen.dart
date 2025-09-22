@@ -368,6 +368,7 @@ class _ChatToPersonScreenState extends State<ChatToPersonScreen> {
       if (response != null) {
         setState(() {
           isMessageSending = false;
+          getAllChatListRx.getChatListInfo();
           chatController.clear();
           // selectedImage = null; // এখানে না করে callback এর মাধ্যমে করবেন
         });
