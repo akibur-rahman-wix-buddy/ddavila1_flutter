@@ -170,7 +170,7 @@ class _ShopScreenState extends State<ShopScreen> {
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      childAspectRatio: 0.61,
+                      childAspectRatio: 0.65,
                       crossAxisSpacing: 8.0,
                       mainAxisSpacing: 8.0,
                     ),
@@ -311,13 +311,18 @@ class _ShopScreenState extends State<ShopScreen> {
                                         style: const TextStyle(
                                             color: Colors.grey, fontSize: 12),
                                       ),
+                                    if (
+                                        product.auctionEndAt == null)
+                                      Text("Available",style: TextStyle(color: Colors.green),),
+                                    if (isTimeOver)
+                                      Text(" Finished bit",style: TextStyle(color: Colors.blueGrey),),
 
                                     Text(
                                         isTimeOver
                                             ? 'Status: TIME OVER'
                                             : 'Status: Running',
                                         style:
-                                            const TextStyle(color: Colors.red)),
+                                             TextStyle( color:isTimeOver ? Colors.red: Colors.green)),
                                     ElevatedButton(
                                       onPressed: () async {
                                         if (isSale && product.price != null) {

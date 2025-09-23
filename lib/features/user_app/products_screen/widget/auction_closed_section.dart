@@ -58,7 +58,7 @@ class AuctionClosedSection extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'This auction has officially ended',
+                   'This auction has officially ended',
                       style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
                         fontSize: 14.0,
                         fontWeight: FontWeight.bold,
@@ -78,7 +78,21 @@ class AuctionClosedSection extends StatelessWidget {
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(16),
-                            child: Column(
+                            child: winningBit== null?Column(
+                              children: [
+
+                                Icon(Icons.sentiment_dissatisfied_rounded,color: Colors.grey,weight: 20,size: 50,),
+                                UIHelper.verticalSpace(10.h),
+                                Text(
+                                  'No bids were placed for this auction',
+                                  style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
+                            ) :Column(
                               children: [
                                 Text(
                                   'Winning Bid',
@@ -176,7 +190,7 @@ class AuctionClosedSection extends StatelessWidget {
                                   ),
                                 ),
                               ],
-                            ),
+                            )
                           ),
                         ),
                       ),

@@ -25,7 +25,7 @@ class _ChatScreenState extends State<ChatScreen> {
   List<Conversation> _allConversations = [];
   List<Conversation> _filteredConversations = [];
   // Set up a timer to refresh every 3 seconds
-
+ bool isDeleted = false;
 
 
 
@@ -190,6 +190,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               : null;
 
                       final participantName = participant?.name ?? "Unknown";
+                      final chatId = participant?.id ?? "Unknown";
                       final participantAvatar = participant?.avatar;
                       final participantId =
                           conversation.participants?.isNotEmpty == true
@@ -323,11 +324,15 @@ class _ChatScreenState extends State<ChatScreen> {
                                             ),
                                           ),
                                           UIHelper.horizontalSpace(30),
-                                          if (conversation.readable == false)
-                                            const CircleAvatar(
-                                              radius: 5,
-                                              backgroundColor: Colors.blue,
-                                            )
+                                         GestureDetector(
+                                             onTap: () async {
+                                            isDeleted =   await deleteChatAPIRX.deleteProducts(chatID:chatId );
+                                               if(isDeleted){
+                                                 getAllChatListRx.getChatListInfo();
+                                               }
+                                             },
+                                             child: Icon(Icons.delete,color: Colors.red,))
+
                                         ],
                                       ),
                                     ],

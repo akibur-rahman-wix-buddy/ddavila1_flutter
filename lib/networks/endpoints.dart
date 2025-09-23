@@ -86,6 +86,9 @@ final class Endpoints {
   static String deleteProduct(dynamic productId) =>
       "/seller/product/delete/$productId";
 
+  static String chatProduct(dynamic chatId) =>
+      "/messages/remove/$chatId";
+
   static String editSaleProduct(dynamic productId) =>
       "/seller/product/$productId";
   static String editAuctionProduct(dynamic productId) =>

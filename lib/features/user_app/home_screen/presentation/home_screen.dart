@@ -68,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
           isCategoryLoading = true;
         });
         try {
-          await categoryWiseProductRx.categoryWiseProductData(id: firstCategoryId);
+          await popularCategoryWiseProductRx.popularCategoryWiseProductData(id: firstCategoryId);
         } catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Failed to load initial products: $e')),
@@ -507,12 +507,13 @@ class _HomeScreenState extends State<HomeScreen> {
     return StreamBuilder<PopularCategoryDataModel>(
       stream: getPopularCategoryRx.dataFetcher,
       builder: (context, snapshot) {
+
         if (!snapshot.hasData || snapshot.data!.data == null || snapshot.data!.data!.isEmpty) {
           return _buildErrorWidget("No data found.");
         }
-
         final data = snapshot.data!.data!;
-        selectedPopularId ??= data.first.id;
+          selectedPopularId ??= data.first.id;
+
 
         return SizedBox(
           height: 60,
@@ -529,7 +530,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     isCategoryLoading = true;
                   });
                   try {
-                    await categoryWiseProductRx.categoryWiseProductData(id: category.id!);
+                    await popularCategoryWiseProductRx.popularCategoryWiseProductData(id: category.id!);
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('Failed to load products: $e')),
@@ -575,7 +576,7 @@ class _HomeScreenState extends State<HomeScreen> {
   ///>>>>>>>>>>>>>>>>>>>>>> product categories card >>>>>>>>>>>>>>>>>>>>
   Widget _buildCategoryProducts() {
     return StreamBuilder<CategoryWiseProductDataModel>(
-      stream: categoryWiseProductRx.dataFetcher,
+      stream: popularCategoryWiseProductRx.dataFetcher,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return _buildLoadingIndicator();
@@ -592,7 +593,7 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisCount: 2,
             mainAxisSpacing: 10,
             crossAxisSpacing: 10,
-            childAspectRatio: 0.53,
+            childAspectRatio: 0.50,
           ),
           itemCount: data.length,
           itemBuilder: (context, index) {

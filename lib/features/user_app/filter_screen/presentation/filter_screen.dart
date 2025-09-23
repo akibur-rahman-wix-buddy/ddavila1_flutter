@@ -94,6 +94,8 @@ class _FilterScreenState extends State<FilterScreen> {
   void _resetFilters() {
     setState(() {
       selectedSubCategories.clear();
+      minController.clear();
+      maxController.clear();
       selectedItems.clear();
     });
     print("All filters have been reset");
@@ -277,9 +279,9 @@ class _FilterScreenState extends State<FilterScreen> {
 
                       Row(
                         children: [
-                          CustomTextField(controller: minController,fieldWidth: 150.w,hintText: "Min range ",inputType: TextInputType.number,),
+                          CustomTextField(controller: minController,fieldWidth: 150.w,hintText: "\$ Min range ",inputType: TextInputType.number,),
                           UIHelper.horizontalSpace(20.w),
-                          CustomTextField(controller:maxController, fieldWidth: 150.w,hintText: "Max range ",inputType: TextInputType.number),
+                          CustomTextField(controller:maxController, fieldWidth: 150.w,hintText: "\$ Max range ",inputType: TextInputType.number),
 
                         ],
                       ),

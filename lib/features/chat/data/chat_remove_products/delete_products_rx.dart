@@ -3,22 +3,24 @@ import 'package:ddavila/features/admin_app/all_product/data/delete_products/dele
 import 'package:ddavila/helpers/toast.dart';
 import 'package:ddavila/networks/rx_base.dart';
 import 'package:dio/dio.dart';
-import 'package:rxdart/streams.dart'; // For XFile class
+import 'package:rxdart/streams.dart';
 
-final class DeleteProductAPIRX extends RxResponseInt<Map<String, dynamic>> {
-  final api = DeleteProductAPI.instance;
+import 'delete_chat_api.dart'; // For XFile class
 
-  DeleteProductAPIRX({required super.empty, required super.dataFetcher});
+final class DeleteChatAPIRX extends RxResponseInt<Map<String, dynamic>> {
+  final api = DeleteChatAPI.instance;
+
+  DeleteChatAPIRX({required super.empty, required super.dataFetcher});
 
   ValueStream get getFileData => dataFetcher.stream;
 
   Future<bool> deleteProducts({
-    required dynamic productID,
+    required dynamic chatID,
   }) async {
     try {
       // Call the updated postProductSale API
       Map<String, dynamic> data = await api.deleteProduct(
-        chatID: productID,
+        chatID: chatID,
       );
 
       log(">>>>>>>>>>>>>>> Product post response: $data");

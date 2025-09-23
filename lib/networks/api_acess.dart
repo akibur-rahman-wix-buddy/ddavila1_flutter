@@ -29,6 +29,7 @@ import 'package:ddavila/features/auth_screen/data/reset_password/rx.dart';
 import 'package:ddavila/features/auth_screen/data/rx_sign_up/rx.dart';
 import 'package:ddavila/features/auth_screen/data/stripe_card_add/rx.dart';
 import 'package:ddavila/features/auth_screen/data/varify_otp/rx.dart';
+import 'package:ddavila/features/chat/data/chat_remove_products/delete_products_rx.dart';
 import 'package:ddavila/features/chat/data/rx_create_conversation/rx.dart';
 import 'package:ddavila/features/chat/data/rx_get_chat/rx.dart';
 import 'package:ddavila/features/chat/data/rx_send_message/rx.dart';
@@ -41,6 +42,7 @@ import 'package:ddavila/features/user_app/filter_screen/data/rx_post_filter/rx.d
 import 'package:ddavila/features/user_app/filter_screen/model/cetagory_wise_sub_category_model_data.dart';
 import 'package:ddavila/features/user_app/home_screen/data/category_wise_product_Data/rx.dart';
 import 'package:ddavila/features/user_app/home_screen/data/live_auction_rx/rx.dart';
+import 'package:ddavila/features/user_app/home_screen/data/popular_category_wise_product_Data/rx.dart';
 import 'package:ddavila/features/user_app/home_screen/data/rx_popular_category_Data/rx.dart';
 import 'package:ddavila/features/user_app/home_screen/model/category_wise_data_model.dart';
 import 'package:ddavila/features/user_app/home_screen/model/home_category_data_model.dart';
@@ -196,6 +198,11 @@ CategoryWiseProductRx categoryWiseProductRx = CategoryWiseProductRx(
   dataFetcher: BehaviorSubject<CategoryWiseProductDataModel>(),
 );
 
+PopularCategoryWiseProductRx popularCategoryWiseProductRx = PopularCategoryWiseProductRx(
+  empty: CategoryWiseProductDataModel(),
+  dataFetcher: BehaviorSubject<CategoryWiseProductDataModel>(),
+);
+
 GetStateRx getStateRx = GetStateRx(
   empty: StateDataModel(),
   dataFetcher: BehaviorSubject<StateDataModel>(),
@@ -280,6 +287,10 @@ UpdatePasswordRx updatePasswordRx = UpdatePasswordRx(
 );
 
 SellingOrderConfirmRx sellingOrderConfirmRx = SellingOrderConfirmRx(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
+);
+DeleteChatAPIRX deleteChatAPIRX = DeleteChatAPIRX(
   empty: <String, dynamic>{},
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );

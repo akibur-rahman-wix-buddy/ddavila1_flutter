@@ -61,13 +61,13 @@ class _AuctionDataGridDataState extends State<AuctionDataGridData> {
               ),
               GridColumn(
                 columnName: 'title',
-                width: 250,
-                label: _buildHeader('TITLE', Alignment.centerLeft),
+                width: 150,
+                label: _buildHeader('TITLE', Alignment.center),
               ),
               GridColumn(
                 columnName: 'startingPrice',
-                width: 120,
-                label: _buildHeader('START PRICE', Alignment.centerRight),
+                width: 100,
+                label: _buildHeader('BIDS', Alignment.center),
               ),
               GridColumn(
                 columnName: 'timeLeft',
@@ -188,7 +188,7 @@ class AuctionDataSource extends DataGridSource {
             "\$${dataCell.value}",
             style: const TextStyle(
                 fontWeight: FontWeight.bold, color: Colors.blue),
-            textAlign: TextAlign.right,
+            textAlign: TextAlign.center,
           );
         } else {
           cellContent = Text(
@@ -200,9 +200,9 @@ class AuctionDataSource extends DataGridSource {
         return Container(
           padding: const EdgeInsets.all(12.0),
           alignment: dataCell.columnName == 'startingPrice'
-              ? Alignment.centerRight
+              ? Alignment.center
               : (dataCell.columnName == 'title'
-              ? Alignment.centerLeft
+              ? Alignment.center
               : Alignment.center),
           child: cellContent,
         );
