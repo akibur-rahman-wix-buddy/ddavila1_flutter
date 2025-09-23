@@ -5,25 +5,21 @@ import 'package:ddavila/networks/endpoints.dart';
 import 'package:ddavila/networks/exception_handler/data_source.dart';
 import 'package:dio/dio.dart';
 
-final class DeleteProductAPI {
-  static final DeleteProductAPI _singleton = DeleteProductAPI._internal();
+final class DeleteChatAPI {
+  static final DeleteChatAPI _singleton = DeleteChatAPI._internal();
 
-  DeleteProductAPI._internal();
+  DeleteChatAPI._internal();
 
-  static DeleteProductAPI get instance => _singleton;
+  static DeleteChatAPI get instance => _singleton;
 
   Future<Map<String, dynamic>> deleteProduct({
     required dynamic chatID,
 // List of dynamic for product properties
   }) async {
     try {
-      // Create FormData for multipart request
-      FormData formData = FormData.fromMap({
-        "title": chatID,
-      });
       // Make the POST request with FormData
       Response response =
-          await getHttp(Endpoints.deleteProduct(chatID), formData);
+          await getHttp(Endpoints.chatProduct(chatID),);
 
       if (response.statusCode == 200) {
         final data = json.decode(json.encode(response.data));

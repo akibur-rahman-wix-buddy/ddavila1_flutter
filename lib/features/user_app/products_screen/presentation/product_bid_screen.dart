@@ -19,6 +19,7 @@ import 'package:ddavila/helpers/ui_helpers.dart';
 import 'package:ddavila/networks/api_acess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shimmer/shimmer.dart';
 import '../model/live_action_details_model.dart';
 import '../widget/product_image_slider.dart';
 
@@ -306,65 +307,254 @@ class _ProductsBidScreenState extends State<ProductsBidScreen> {
     return Scaffold(
       backgroundColor: AppColor.whiteColor,
       body: SafeArea(
-        child: StreamBuilder<LiveAuctionDetailsApiDataModel>(
-          stream: liveAuctionDetailsDataRx.dataFetcher,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Center(child: CircularProgressIndicator()),
-                  UIHelper.verticalSpace(10.h),
-                  const Text("Loading...", style: TextStyle(color: Colors.red))
-                ],
-              );
-            } else if (snapshot.hasError) {
-              return const Center(child: Text("Something went wrong!"));
-            } else if (!snapshot.hasData || snapshot.data?.data == null) {
-              return const Center(child: Text("No data found."));
-            } else {
-              BidData? winningBit;
-
-              myShippingCost = snapshot.data?.data?.shippingCost;
-
-              if (_currentProduct?.bids != null && _currentProduct!.bids!.isNotEmpty) {
-                for (var item in _currentProduct!.bids!) {
-                  if (item.isWinner == 1) {
-                    winningBit = item;
-                    print("✅ Winner found! User: ${item.user?.name}");
-                    print("✅ Winner found! User id: ${item.user?.id}");
+        child: StreamBuilder<bool>(
+            stream: liveAuctionDetailsDataRx.isLoadingStream,
+            builder: (context, loadingSnapshot) {
+              return StreamBuilder<LiveAuctionDetailsApiDataModel>(
+                stream: liveAuctionDetailsDataRx.dataFetcher,
+                builder: (context, snapshot) {
+                  // Show shimmer when loading
+                  if (loadingSnapshot.data == true) {
+                    return _buildShimmerLoading();
                   }
-                }
-              }
-              final product = _currentProduct ?? snapshot.data!.data!;
 
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    ProductImageSlider(images: product.images ?? []),
-                    ProductHeader(product: product),
-                    AuctionDetailsContainer(
-                      product: product,
-                      timeFinished: timeFinished,
-                      winningBit: winningBit,
-                      myId: myId,
-                      myShippingCost: myShippingCost,
-                      productPercentage: productPercentage,
-                      stateName: stateName,
+                  // Original logic for other states
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Center(child: CircularProgressIndicator()),
+                        UIHelper.verticalSpace(10.h),
+                        const Text("Loading...", style: TextStyle(color: Colors.red))
+                      ],
+                    );
+                  } else if (snapshot.hasError) {
+                    return const Center(child: Text("Something went wrong!"));
+                  } else if (!snapshot.hasData || snapshot.data?.data == null) {
+                    return const Center(child: Text("No data found."));
+                  } else {
+                  BidData? winningBit;
+
+                  myShippingCost = snapshot.data?.data?.shippingCost;
+
+
+                  /// >>>>>>>>>>>>>>>>>>> if first bit then use this >>>>>>>>>>>>>
+
+
+
+                  if(_currentProduct?.bids != null && _currentProduct!.bids!.isNotEmpty) {
+                    winningBit = _currentProduct?.bids?.first;
+                  }
+                  /// >>>>>>>>>>>>>>>>>>> if winner bit then use this >>>>>>>>>>>>>
+                  // if (_currentProduct?.bids != null && _currentProduct!.bids!.isNotEmpty) {
+                  //   for (var item in _currentProduct!.bids!) {
+                  //     if (item.isWinner == 1) {
+                  //       winningBit = item;
+                  //       print("✅ Winner found! User: ${item.user?.name}");
+                  //       print("✅ Winner found! User id: ${item.user?.id}");
+                  //     }
+                  //   }
+                  // }
+                  final product = _currentProduct ?? snapshot.data!.data!;
+
+                  return SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        ProductImageSlider(images: product.images ?? []),
+                        ProductHeader(product: product),
+                        AuctionDetailsContainer(
+                          product: product,
+                          timeFinished: timeFinished,
+                          winningBit: winningBit,
+                          myId: myId,
+                          myShippingCost: myShippingCost,
+                          productPercentage: productPercentage,
+                          stateName: stateName,
+                        ),
+                        UIHelper.verticalSpace(100.h)
+                      ],
                     ),
-                    UIHelper.verticalSpace(100.h)
-                  ],
-                ),
-              );
-            }
-          },
+                  );
+                }
+              },
+            );
+          }
         ),
       ),
       floatingActionButton: timeFinished == false ? _buildBidButton() : SizedBox(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
+
+
+
+  // Shimmer effect widget
+  Widget _buildShimmerLoading() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Image Shimmer
+          Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              width: double.infinity,
+              height: 300,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: Colors.white,
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+
+          // Title Shimmer
+          Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              width: double.infinity,
+              height: 24,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(6),
+                color: Colors.white,
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+
+          // Price Shimmer
+          Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              width: 120,
+              height: 20,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(6),
+                color: Colors.white,
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+
+          // Description Shimmer
+          Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              width: double.infinity,
+              height: 16,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4),
+                color: Colors.white,
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              width: double.infinity,
+              height: 16,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4),
+                color: Colors.white,
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              width: 200,
+              height: 16,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4),
+                color: Colors.white,
+              ),
+            ),
+          ),
+          const SizedBox(height: 30),
+
+          // Details Section Shimmer
+          _buildShimmerSection(),
+          const SizedBox(height: 20),
+          _buildShimmerSection(),
+          const SizedBox(height: 20),
+
+
+          // Button Shimmer
+          Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              width: double.infinity,
+              height: 50,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  Widget _buildShimmerSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            width: 150,
+            height: 18,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4),
+              color: Colors.white,
+            ),
+          ),
+        ),
+        const SizedBox(height: 10),
+        Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            width: double.infinity,
+            height: 14,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4),
+              color: Colors.white,
+            ),
+          ),
+        ),
+        const SizedBox(height: 5),
+        Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            width: 180,
+            height: 14,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4),
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+
+
+
 
   Widget _buildBidButton() {
     return isLoading

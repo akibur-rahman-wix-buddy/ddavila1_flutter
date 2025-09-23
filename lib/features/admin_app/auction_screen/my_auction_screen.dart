@@ -3,6 +3,7 @@ import 'package:ddavila/features/admin_app/auction_screen/model/auction_model.da
 import 'package:ddavila/features/admin_app/auction_screen/model/auction_running_model.dart';
 import 'package:ddavila/features/admin_app/auction_screen/widget/auction_complete.dart';
 import 'package:ddavila/features/admin_app/auction_screen/widget/auction_running.dart';
+import 'package:ddavila/helpers/all_routes.dart';
 import 'package:ddavila/helpers/navigation_service.dart';
 import 'package:ddavila/networks/api_acess.dart';
 import 'package:flutter/material.dart';
@@ -173,36 +174,46 @@ class _AuctionScreenState extends State<AuctionScreen> {
                                   itemBuilder: (context, index) {
                                     final value = items?[index];
 
-                                    return AuctionRunningView(
-                                      currentBid: (value?.highestBid != null &&
-                                              value!.highestBid != 0)
-                                          ? value.highestBid
-                                          : (value?.startingPrice != null &&
-                                                  value!.startingPrice != 0)
-                                              ? value.startingPrice
-                                              : 0,
-                                      title: value?.title,
-                                      image:
-                                          value?.images?.first.toString() ?? "",
-                                      timeLeft: value?.auctionEndAt,
+                                    return GestureDetector(
+                                      onTap: (){
 
-                                      // * Edit purpose
-                                      price: value?.price.toString() ?? 0,
-                                      type: value?.type.toString() ?? "",
-                                      shipping_cost:
-                                          value?.shippingCost.toString() ?? 0,
-                                      ship_within:
-                                          value?.shipWithin.toString() ?? "",
-                                      auction_end_at:
-                                          value?.auctionEndAt.toString() ?? "",
-                                      starting_price:
-                                          value?.startingPrice.toString() ?? 0,
-                                      imagesList: value?.images ?? [],
-                                      category_id:
-                                          value?.categoryId.toString() ?? 0,
-                                      sub_category_id:
-                                          value?.subCategoryId.toString() ?? 0,
-                                      id: value?.id.toString() ?? 0,
+                                          NavigationService.navigateToWithArgs(
+                                              Routes.productsBidScreen, {
+                                            "productId": value?.id.toString(),
+                                            "slag": value?.slug.toString(),
+                                          });
+                                      },
+                                      child: AuctionRunningView(
+                                        currentBid: (value?.highestBid != null &&
+                                                value!.highestBid != 0)
+                                            ? value.highestBid
+                                            : (value?.startingPrice != null &&
+                                                    value!.startingPrice != 0)
+                                                ? value.startingPrice
+                                                : 0,
+                                        title: value?.title,
+                                        image:
+                                            value?.images?.first.toString() ?? "",
+                                        timeLeft: value?.auctionEndAt,
+
+                                        // * Edit purpose
+                                        price: value?.price.toString() ?? 0,
+                                        type: value?.type.toString() ?? "",
+                                        shipping_cost:
+                                            value?.shippingCost.toString() ?? 0,
+                                        ship_within:
+                                            value?.shipWithin.toString() ?? "",
+                                        auction_end_at:
+                                            value?.auctionEndAt.toString() ?? "",
+                                        starting_price:
+                                            value?.startingPrice.toString() ?? 0,
+                                        imagesList: value?.images ?? [],
+                                        category_id:
+                                            value?.categoryId.toString() ?? 0,
+                                        sub_category_id:
+                                            value?.subCategoryId.toString() ?? 0,
+                                        id: value?.id.toString() ?? 0,
+                                      ),
                                     );
                                   },
                                 ),

@@ -3,12 +3,13 @@
 import 'package:ddavila/assets_helper/text_font_style.dart';
 import 'package:ddavila/helpers/all_routes.dart';
 import 'package:ddavila/helpers/navigation_service.dart';
+import 'package:ddavila/networks/api_acess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../networks/endpoints.dart';
 import 'package:intl/intl.dart';
 
-class AuctionCompleteView extends StatelessWidget {
+class AuctionCompleteView extends StatefulWidget {
   final dynamic id;
   final dynamic slug;
   final dynamic title;
@@ -28,6 +29,13 @@ class AuctionCompleteView extends StatelessWidget {
     required this.slug,
   });
 
+  @override
+  State<AuctionCompleteView> createState() => _AuctionCompleteViewState();
+}
+
+class _AuctionCompleteViewState extends State<AuctionCompleteView> {
+
+  bool isDeleting = false;
   /// date formatter
   String formatDate(dynamic date) {
     try {
@@ -40,6 +48,8 @@ class AuctionCompleteView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Container(
@@ -64,7 +74,7 @@ class AuctionCompleteView extends StatelessWidget {
                 top: Radius.circular(12),
               ),
               child: Image.network(
-                "$image_url$image",
+                "$image_url${widget.image}",
                 height: 200,
                 width: double.infinity,
                 fit: BoxFit.cover,
@@ -94,7 +104,7 @@ class AuctionCompleteView extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          title,
+                          widget.title,
                           style:
                               TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
                             fontSize: 16,
@@ -107,8 +117,8 @@ class AuctionCompleteView extends StatelessWidget {
                         onPressed: () {
                           NavigationService.navigateToWithArgs(
                               Routes.productsBidScreen, {
-                            "productId": id.toString(),
-                            "slag": slug.toString(),
+                            "productId": widget.id.toString(),
+                            "slag": widget.slug.toString(),
                           });
                         },
                         style: ElevatedButton.styleFrom(
@@ -133,53 +143,129 @@ class AuctionCompleteView extends StatelessWidget {
                   const SizedBox(height: 6),
 
                   /// Price
-                  Row(
-                    children: [
-                      Text(
-                        "Bidding price: ",
-                        style:
-                            TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                          fontSize: 14,
-                          color: Colors.black,
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              "Bidding price: ",
+                              style:
+                              TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                                fontSize: 14,
+                                color: Colors.black,
+                              ),
+                            ),
+                            Text(
+                              "\$${widget.price}",
+                              style:
+                              TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 4,
+                        ),
+                        Text(
+                          "Auction Ended: ${formatDate(widget.endDate)}",
+                          style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                            fontSize: 12.sp,
+                            color: Colors.blue,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 4,
+                        ),
+                        Text(
+                          (widget.winner == null || widget.winner.toString().isEmpty)
+                              ? "No Winner"
+                              : widget.winner.toString(),
+                          style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                            fontSize: 12.sp,
+                            color: (widget.winner == null || widget.winner.toString().isEmpty)
+                                ? Colors.red
+                                : Colors.green,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        bool? result = await showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text('Confirm Deletion'),
+                            content: const Text(
+                                'Are you sure you want to delete this product?'),
+                            actions: [
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.of(context).pop(false),
+                                child: const Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.of(context).pop(true),
+                                child: const Text('Delete'),
+                              ),
+                            ],
+                          ),
+                        );
+
+                        if (result == true) {
+
+                        setState(() {
+                          isDeleting = true;
+                        });
+
+                          // Call delete API
+                          bool isDeleted = await deleteProductAPIRX
+                              .deleteProducts(productID: widget.id);
+                          if (isDeleted) {
+                            // Refresh product list
+                            auctionCompleteApiRxObj.getAuctionComplete("");
+                          }
+
+                        setState(() {
+                          isDeleting = false;
+                        });
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      Text(
-                        "\$$price",
+                      child: isDeleting? SizedBox(
+                          height: 25,
+                          width: 25,
+                          child: CircularProgressIndicator(color: Colors.white)): Text(
+                        "Delete",
                         style:
-                            TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                          fontSize: 16.sp,
+                        TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+                          color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black87,
                         ),
                       ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 4,
-                  ),
-                  Text(
-                    "Auction Ended: ${formatDate(endDate)}",
-                    style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                      fontSize: 12.sp,
-                      color: Colors.blue,
-                      fontWeight: FontWeight.w500,
                     ),
-                  ),
-                  const SizedBox(
-                    height: 4,
-                  ),
-                  Text(
-                    (winner == null || winner.toString().isEmpty)
-                        ? "No Winner"
-                        : winner.toString(),
-                    style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                      fontSize: 12.sp,
-                      color: (winner == null || winner.toString().isEmpty)
-                          ? Colors.red
-                          : Colors.green,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
+                  ],
+                )
                 ],
               ),
             )

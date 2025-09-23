@@ -78,7 +78,7 @@ class AuctionDetailsContainer extends StatelessWidget {
             ),
             const SizedBox(height: 16.0),
             // Show appropriate UI based on timeFinished
-            timeFinished == true
+          timeFinished == true
                 ? AuctionClosedSection(
               winningBit: winningBit,
               myId: myId,

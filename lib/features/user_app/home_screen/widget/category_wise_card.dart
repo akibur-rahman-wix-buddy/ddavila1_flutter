@@ -1,3 +1,268 @@
+// import 'package:ddavila/assets_helper/text_font_style.dart';
+// import 'package:ddavila/constants/app_constants.dart';
+// import 'package:ddavila/features/auth_screen/complete_account_info/complete_account_info_screen.dart';
+// import 'package:ddavila/features/auth_screen/presentation/card_add_in_stripe.dart';
+// import 'package:ddavila/features/user_app/home_screen/model/category_wise_data_model.dart';
+// import 'package:ddavila/helpers/all_routes.dart';
+// import 'package:ddavila/helpers/di.dart';
+// import 'package:ddavila/helpers/ui_helpers.dart';
+// import 'package:ddavila/networks/api_acess.dart';
+// import 'package:ddavila/networks/endpoints.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter_screenutil/flutter_screenutil.dart';
+// import 'package:get/get.dart';
+// import 'package:shimmer/shimmer.dart';
+//
+// import '../../../../helpers/navigation_service.dart' show NavigationService;
+//
+// class CategoryProductsWidget extends StatefulWidget {
+//   const  CategoryProductsWidget({super.key,required this.id, required this.screenName});
+//   final dynamic id;
+//   final dynamic screenName;
+//
+//   @override
+//   State<CategoryProductsWidget> createState() => _CategoryProductsWidgetState();
+// }
+//
+// class _CategoryProductsWidgetState extends State<CategoryProductsWidget> {
+//
+//   bool isStripeConnected = appData.read(kKeyCardAttributes) ?? false;
+//   bool isProfileConnected = appData.read(kKeyOnboarding) ?? false;
+//
+//
+//   @override
+//   void initState() {
+//     categoryWiseProductRx.categoryWiseProductData(id: widget.id);
+//     super.initState();
+//   }
+//
+//
+//   String formatDate(String isoDate) {
+//     try {
+//       DateTime date = DateTime.parse(isoDate);
+//       return "${date.month}/${date.day}/${date.year}";
+//     } catch (e) {
+//       return "Invalid date";
+//     }
+//   }
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text(widget.screenName),
+//         backgroundColor: Colors.blueAccent,
+//       ),
+//
+//       body: Padding(
+//         padding: const EdgeInsets.all(16),
+//         child: Column(
+//           children: [
+//             StreamBuilder<CategoryWiseProductDataModel>(
+//               stream: categoryWiseProductRx.dataFetcher,
+//               builder: (context, snapshot) {
+//                 if (!snapshot.hasData ) {
+//                   return _buildErrorWidget("No data found.");
+//                 }
+//                 if(snapshot.connectionState == ConnectionState.waiting){
+//                   CircularProgressIndicator();
+//                 }
+//
+//                 final data = snapshot.data?.data?.products?.data;
+//                 return Expanded(
+//                   child: GridView.builder(
+//                     scrollDirection: Axis.vertical,
+//                     shrinkWrap: true,
+//                     // physics: const NeverScrollableScrollPhysics(),
+//                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+//                       crossAxisCount: 2,
+//                       mainAxisSpacing: 12,
+//                       crossAxisSpacing: 10,
+//                       childAspectRatio: .53,
+//                     ),
+//                     itemCount: data?.length,
+//                     itemBuilder: (context, index) {
+//                       return GestureDetector(
+//                           onTap: () {
+//                             print(">>>>>>>>>>>>>>> here is the product type after ${data[index].type}");
+//                             if (data[index].type == "sale") {
+//                               print(">>>>>>>>>>>>>>>>>>> here is the stripe connected value $isStripeConnected");
+//                               print(">>>>>>>>>>>>>>>>>>> here is the profile connected value $isProfileConnected");
+//                               if (isStripeConnected && isProfileConnected) {
+//                                 NavigationService.navigateToWithArgs(
+//                                   Routes.productDetailsScreen,
+//                                   {"slug": data[index].slug},
+//                                 );
+//                               } else if (!isProfileConnected) {
+//                                 Get.to(() => const CompleteAccountInfoScreen());
+//                               } else if (!isStripeConnected) {
+//                                 Get.to(() => const StripeCardScreen());
+//                               }
+//                               print(">>>>>>>>>>>>>>> here is the product id ${data[index].id}");
+//                               print(">>>>>>>>>>>>>>> here is the product type ${data[index].type}");
+//                             } else {
+//                               print(">>>>>>>>>>>>>>>>>>> here is the stripe connected value $isStripeConnected");
+//                               print(">>>>>>>>>>>>>>>>>>> here is the product id is ${data[index].id}");
+//                               if (isStripeConnected && isProfileConnected) {
+//                                 NavigationService.navigateToWithArgs(
+//                                   Routes.productsBidScreen,
+//                                   {"slag": data[index].slug, "productId": data[index].id},
+//                                 );
+//                               } else if (!isProfileConnected) {
+//                                 Get.to(() => const CompleteAccountInfoScreen());
+//                               } else if (!isStripeConnected) {
+//                                 Get.to(() => const StripeCardScreen());
+//                               }
+//                               print(">>>>>>>>>>>>>>> here is the product type ${data[index].type}");
+//                               print(">>>>>>>>>>>>>>> here is the not sale, and this is id product id ${data[index].id}");
+//                             }
+//                           },
+//                           child: _buildProductItem(context, data![index]));
+//                     },
+//                   ),
+//                 );
+//               },
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+//
+//   Widget _buildProductItem(BuildContext context, ProductData product) {
+//     return Container(
+//
+//       decoration: BoxDecoration(
+//         borderRadius: BorderRadius.circular(12.r),
+//         color: Colors.white,
+//         boxShadow: const [
+//           BoxShadow(color: Colors.black12, blurRadius: .4, spreadRadius: .4)
+//         ],
+//       ),
+//       child: Padding(
+//         padding: const EdgeInsets.all(5.0),
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             _buildProductImage(product),
+//             const SizedBox(height: 8),
+//             _buildProductTitle(product),
+//             const SizedBox(height: 8),
+//             _buildProductType(product),
+//             const SizedBox(height: 8),
+//             _buildProductPrice(product),
+//             const SizedBox(height: 8),
+//             _buildProductMetaInfo(product),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+//
+//   Widget _buildProductImage(ProductData product) {
+//     print(">>>>>>>>>>>>>>>>>> this is the image url ${"$image_url${product.images!.first}"}");
+//     return ClipRRect(
+//       borderRadius: BorderRadius.circular(12),
+//       child: Image.network(
+//         product.images?.isNotEmpty == true
+//             ? "$image_url${product.images!.first}" // Fixed: Added proper string concatenation
+//             : "",
+//         fit: BoxFit.cover,
+//         width: double.infinity,
+//         height: 200,
+//         loadingBuilder: (context, child, loadingProgress) {
+//           if (loadingProgress == null) return child;
+//           return Shimmer.fromColors(
+//             baseColor: Colors.grey[300]!,
+//             highlightColor: Colors.grey[100]!,
+//             child: Container(
+//                 width: 200,
+//                 height: 200,
+//                 color: Colors.white),
+//           );
+//         },
+//         errorBuilder: (context, error, stackTrace) {
+//           return Container(
+//             width: double.infinity,
+//             height: 200,
+//             color: Colors.grey[300],
+//             child: const Icon(Icons.broken_image, color: Colors.grey, size: 50),
+//           );
+//         },
+//       ),
+//     );
+//   }
+//
+//   Widget _buildProductTitle(ProductData product) {
+//     return SizedBox(
+//       height: 40,
+//       child: Text(
+//         product.title.toString() ?? "",
+//         style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+//           fontSize: 16,
+//           fontWeight: FontWeight.bold,
+//           color: Colors.black,
+//         ),
+//         maxLines: 2,
+//         overflow: TextOverflow.ellipsis,
+//       ),
+//     );
+//   }
+//
+//   Widget _buildProductType(ProductData product) {
+//     return Text(
+//       product.type.toString() ?? "",
+//       style: const TextStyle(
+//         fontSize: 14,
+//         fontWeight: FontWeight.w500,
+//         color: Colors.redAccent,
+//       ),
+//     );
+//   }
+//
+//   Widget _buildProductPrice(ProductData product) {
+//     return Row(
+//       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//       children: [
+//         Text(
+//           '\$${product.type == "sale"? product.price : product.highestBid}',
+//           style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
+//             fontSize: 18,
+//             color: Colors.black,
+//             fontWeight: FontWeight.bold,
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+//
+//   Widget _buildProductMetaInfo(ProductData product) {
+//     return Row(
+//       children: [
+//         Text(
+//           '${product.bid ??0} bids',
+//           style: const TextStyle(fontSize: 10, color: Colors.red),
+//         ),
+//         UIHelper.horizontalSpace(12.h),
+//         Text(
+//           'Posted : ${formatDate(product.createdAt.toString() ?? "")}',
+//           style: const TextStyle(fontSize: 10, color: Colors.grey),
+//         ),
+//       ],
+//     );
+//   }
+//
+//   Widget _buildErrorWidget(String message) {
+//     return Center(
+//       child: Text(
+//         message,
+//         style: const TextStyle(color: Colors.black),
+//       ),
+//     );
+//   }
+// }
+
+
+
 import 'package:ddavila/assets_helper/text_font_style.dart';
 import 'package:ddavila/constants/app_constants.dart';
 import 'package:ddavila/features/auth_screen/complete_account_info/complete_account_info_screen.dart';
@@ -16,7 +281,7 @@ import 'package:shimmer/shimmer.dart';
 import '../../../../helpers/navigation_service.dart' show NavigationService;
 
 class CategoryProductsWidget extends StatefulWidget {
-  const  CategoryProductsWidget({super.key,required this.id, required this.screenName});
+  const CategoryProductsWidget({super.key, required this.id, required this.screenName});
   final dynamic id;
   final dynamic screenName;
 
@@ -25,17 +290,18 @@ class CategoryProductsWidget extends StatefulWidget {
 }
 
 class _CategoryProductsWidgetState extends State<CategoryProductsWidget> {
-
   bool isStripeConnected = appData.read(kKeyCardAttributes) ?? false;
   bool isProfileConnected = appData.read(kKeyOnboarding) ?? false;
 
-
   @override
   void initState() {
-    categoryWiseProductRx.categoryWiseProductData(id: widget.id);
+    _loadData();
     super.initState();
   }
 
+  Future<void> _loadData() async {
+    await categoryWiseProductRx.categoryWiseProductData(id: widget.id);
+  }
 
   String formatDate(String isoDate) {
     try {
@@ -45,6 +311,7 @@ class _CategoryProductsWidgetState extends State<CategoryProductsWidget> {
       return "Invalid date";
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,73 +319,36 @@ class _CategoryProductsWidgetState extends State<CategoryProductsWidget> {
         title: Text(widget.screenName),
         backgroundColor: Colors.blueAccent,
       ),
-
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            StreamBuilder<CategoryWiseProductDataModel>(
-              stream: categoryWiseProductRx.dataFetcher,
-              builder: (context, snapshot) {
-                if (!snapshot.hasData ) {
-                  return _buildErrorWidget("No data found.");
-                }
-                if(snapshot.connectionState == ConnectionState.waiting){
-                  CircularProgressIndicator();
-                }
+            // Combined stream builder for both loading and data states
+            StreamBuilder<bool>(
+              stream: categoryWiseProductRx.isLoadingStream,
+              builder: (context, loadingSnapshot) {
+                return StreamBuilder<CategoryWiseProductDataModel>(
+                  stream: categoryWiseProductRx.dataFetcher,
+                  builder: (context, dataSnapshot) {
+                    // Show loading indicator when loading
+                    if (loadingSnapshot.data == true) {
+                      return _buildLoadingWidget();
+                    }
 
-                final data = snapshot.data?.data?.products?.data;
-                return Expanded(
-                  child: GridView.builder(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    // physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 12,
-                      crossAxisSpacing: 10,
-                      childAspectRatio: .53,
-                    ),
-                    itemCount: data?.length,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                          onTap: () {
-                            print(">>>>>>>>>>>>>>> here is the product type after ${data[index].type}");
-                            if (data[index].type == "sale") {
-                              print(">>>>>>>>>>>>>>>>>>> here is the stripe connected value $isStripeConnected");
-                              print(">>>>>>>>>>>>>>>>>>> here is the profile connected value $isProfileConnected");
-                              if (isStripeConnected && isProfileConnected) {
-                                NavigationService.navigateToWithArgs(
-                                  Routes.productDetailsScreen,
-                                  {"slug": data[index].slug},
-                                );
-                              } else if (!isProfileConnected) {
-                                Get.to(() => const CompleteAccountInfoScreen());
-                              } else if (!isStripeConnected) {
-                                Get.to(() => const StripeCardScreen());
-                              }
-                              print(">>>>>>>>>>>>>>> here is the product id ${data[index].id}");
-                              print(">>>>>>>>>>>>>>> here is the product type ${data[index].type}");
-                            } else {
-                              print(">>>>>>>>>>>>>>>>>>> here is the stripe connected value $isStripeConnected");
-                              print(">>>>>>>>>>>>>>>>>>> here is the product id is ${data[index].id}");
-                              if (isStripeConnected && isProfileConnected) {
-                                NavigationService.navigateToWithArgs(
-                                  Routes.productsBidScreen,
-                                  {"slag": data[index].slug, "productId": data[index].id},
-                                );
-                              } else if (!isProfileConnected) {
-                                Get.to(() => const CompleteAccountInfoScreen());
-                              } else if (!isStripeConnected) {
-                                Get.to(() => const StripeCardScreen());
-                              }
-                              print(">>>>>>>>>>>>>>> here is the product type ${data[index].type}");
-                              print(">>>>>>>>>>>>>>> here is the not sale, and this is id product id ${data[index].id}");
-                            }
-                          },
-                          child: _buildProductItem(context, data![index]));
-                    },
-                  ),
+                    // Show error if there's an error
+                    if (dataSnapshot.hasError) {
+                      return _buildErrorWidget("Error loading data: ${dataSnapshot.error}");
+                    }
+
+                    // Check if we have valid data
+                    final data = dataSnapshot.data?.data?.products?.data;
+
+                    if (data == null || data.isEmpty) {
+                      return _buildErrorWidget("No data found.");
+                    }
+
+                    return _buildProductGrid(data);
+                  },
                 );
               },
             ),
@@ -128,9 +358,124 @@ class _CategoryProductsWidgetState extends State<CategoryProductsWidget> {
     );
   }
 
+  Widget _buildLoadingWidget() {
+    return Expanded(
+      child: GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          mainAxisSpacing: 12,
+          crossAxisSpacing: 10,
+          childAspectRatio: .53,
+        ),
+        itemCount: 6, // Number of shimmer items
+        itemBuilder: (context, index) {
+          return _buildShimmerItem();
+        },
+      ),
+    );
+  }
+
+  Widget _buildShimmerItem() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12.r),
+          color: Colors.white,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: double.infinity,
+                height: 200,
+                color: Colors.white,
+              ),
+              const SizedBox(height: 8),
+              Container(
+                width: double.infinity,
+                height: 20,
+                color: Colors.white,
+              ),
+              const SizedBox(height: 8),
+              Container(
+                width: 60,
+                height: 16,
+                color: Colors.white,
+              ),
+              const SizedBox(height: 8),
+              Container(
+                width: 80,
+                height: 18,
+                color: Colors.white,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProductGrid(List<ProductData> data) {
+    return Expanded(
+      child: GridView.builder(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          mainAxisSpacing: 12,
+          crossAxisSpacing: 10,
+          childAspectRatio: .52,
+        ),
+        itemCount: data.length,
+        itemBuilder: (context, index) {
+          return GestureDetector(
+            onTap: () {
+              _handleProductTap(data[index]);
+            },
+            child: _buildProductItem(context, data[index]),
+          );
+        },
+      ),
+    );
+  }
+
+  void _handleProductTap(ProductData product) {
+    print(">>>>>>>>>>>>>>> here is the product type after ${product.type}");
+
+    if (product.type == "sale") {
+      print(">>>>>>>>>>>>>>>>>>> here is the stripe connected value $isStripeConnected");
+      print(">>>>>>>>>>>>>>>>>>> here is the profile connected value $isProfileConnected");
+
+      if (isStripeConnected && isProfileConnected) {
+        NavigationService.navigateToWithArgs(
+          Routes.productDetailsScreen,
+          {"slug": product.slug},
+        );
+      } else if (!isProfileConnected) {
+        Get.to(() => const CompleteAccountInfoScreen());
+      } else if (!isStripeConnected) {
+        Get.to(() => const StripeCardScreen());
+      }
+    } else {
+      if (isStripeConnected && isProfileConnected) {
+        NavigationService.navigateToWithArgs(
+          Routes.productsBidScreen,
+          {"slag": product.slug, "productId": product.id},
+        );
+      } else if (!isProfileConnected) {
+        Get.to(() => const CompleteAccountInfoScreen());
+      } else if (!isStripeConnected) {
+        Get.to(() => const StripeCardScreen());
+      }
+    }
+  }
+
   Widget _buildProductItem(BuildContext context, ProductData product) {
     return Container(
-
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12.r),
         color: Colors.white,
@@ -164,7 +509,7 @@ class _CategoryProductsWidgetState extends State<CategoryProductsWidget> {
       borderRadius: BorderRadius.circular(12),
       child: Image.network(
         product.images?.isNotEmpty == true
-            ? "$image_url${product.images!.first}" // Fixed: Added proper string concatenation
+            ? "$image_url${product.images!.first}"
             : "",
         fit: BoxFit.cover,
         width: double.infinity,
@@ -224,7 +569,7 @@ class _CategoryProductsWidgetState extends State<CategoryProductsWidget> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          '\$${product.type == "sale"? product.price : product.highestBid}',
+          '\$${product.type == "sale" ? product.price : product.highestBid}',
           style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
             fontSize: 18,
             color: Colors.black,
@@ -239,7 +584,7 @@ class _CategoryProductsWidgetState extends State<CategoryProductsWidget> {
     return Row(
       children: [
         Text(
-          '${product.bid ??0} bids',
+          '${product.bid ?? 0} bids',
           style: const TextStyle(fontSize: 10, color: Colors.red),
         ),
         UIHelper.horizontalSpace(12.h),
@@ -252,10 +597,12 @@ class _CategoryProductsWidgetState extends State<CategoryProductsWidget> {
   }
 
   Widget _buildErrorWidget(String message) {
-    return Center(
-      child: Text(
-        message,
-        style: const TextStyle(color: Colors.black),
+    return Expanded(
+      child: Center(
+        child: Text(
+          message,
+          style: const TextStyle(color: Colors.black, fontSize: 16),
+        ),
       ),
     );
   }

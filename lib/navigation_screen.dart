@@ -291,9 +291,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
                       disabledElevation: 0,
                       elevation: 0,
                       onPressed: () {
-                        NavigationService.navigateTo(
-                          Routes.myAuctionScreen,
-                        );
+
                       },
                       child: SvgPicture.asset(AppIcons.auctionIcon),
                     ),

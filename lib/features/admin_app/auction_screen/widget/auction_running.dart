@@ -6,13 +6,14 @@ import 'package:ddavila/assets_helper/app_colors.dart';
 import 'package:ddavila/assets_helper/text_font_style.dart';
 import 'package:ddavila/helpers/all_routes.dart';
 import 'package:ddavila/helpers/navigation_service.dart';
+import 'package:ddavila/networks/api_acess.dart';
 import 'package:ddavila/networks/endpoints.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:intl/intl.dart';
 
-class AuctionRunningView extends StatelessWidget {
+class AuctionRunningView extends StatefulWidget {
   final dynamic title;
   final dynamic currentBid;
   final dynamic timeLeft;
@@ -48,6 +49,12 @@ class AuctionRunningView extends StatelessWidget {
     this.id,
   });
 
+  @override
+  State<AuctionRunningView> createState() => _AuctionRunningViewState();
+}
+
+class _AuctionRunningViewState extends State<AuctionRunningView> {
+  bool isDeleting = false;
   String formatDate(dynamic date) {
     try {
       // যদি timeLeft string হয়
@@ -86,7 +93,7 @@ class AuctionRunningView extends StatelessWidget {
                 top: Radius.circular(12),
               ),
               child: Image.network(
-                "$image_url$image",
+                "$image_url${widget.image}",
                 height: 200,
                 width: double.infinity,
                 fit: BoxFit.cover,
@@ -116,7 +123,7 @@ class AuctionRunningView extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          title,
+                          widget.title,
                           style:
                               TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
                             fontSize: 16.sp,
@@ -127,34 +134,34 @@ class AuctionRunningView extends StatelessWidget {
                       ),
                       ElevatedButton(
                         onPressed: () async {
-                          log('=====> Product ID: $id');
-                          log('=====> Product Title: $title');
-                          log('=====> Product Image: $imagesList');
-                          log('=====> Product Price: $price');
-                          log('=====> Product Type: $type');
-                          log('=====> Product Shipping Cost: $shipping_cost');
-                          log('=====> Product Ship Within: $ship_within');
-                          log('=====> Product Auction End At: $auction_end_at');
-                          log('=====> Product Starting Price: $starting_price');
-                          log('=====> Product Category ID: $category_id');
-                          log('=====> Product Sub Category ID: $sub_category_id');
+                          log('=====> Product ID: ${widget.id}');
+                          log('=====> Product Title: ${widget.title}');
+                          log('=====> Product Image: ${widget.imagesList}');
+                          log('=====> Product Price: ${widget.price}');
+                          log('=====> Product Type: ${widget.type}');
+                          log('=====> Product Shipping Cost: ${widget.shipping_cost}');
+                          log('=====> Product Ship Within: ${widget.ship_within}');
+                          log('=====> Product Auction End At: ${widget.auction_end_at}');
+                          log('=====> Product Starting Price: ${widget.starting_price}');
+                          log('=====> Product Category ID: ${widget.category_id}');
+                          log('=====> Product Sub Category ID: ${widget.sub_category_id}');
                           NavigationService.navigateToWithArgs(
                               Routes.editProductsScreen, {
-                            "productId": id,
-                            "productType": type,
-                            "productTitle": title,
-                            "price": price,
+                            "productId": widget.id,
+                            "productType": widget.type,
+                            "productTitle": widget.title,
+                            "price": widget.price,
                             "description": '',
-                            "type": type,
-                            "bid": currentBid,
-                            "buyNowPrice": price,
-                            "shippingCost": shipping_cost,
-                            "shipWithIn": ship_within,
-                            "startingPrice": starting_price,
-                            "auctionEndDate": auction_end_at,
-                            "categoryId": category_id,
-                            "subcategoryId": sub_category_id,
-                            "productImages": imagesList,
+                            "type": widget.type,
+                            "bid": widget.currentBid,
+                            "buyNowPrice": widget.price,
+                            "shippingCost": widget.shipping_cost,
+                            "shipWithIn": widget.ship_within,
+                            "startingPrice": widget.starting_price,
+                            "auctionEndDate": widget.auction_end_at,
+                            "categoryId": widget.category_id,
+                            "subcategoryId": widget.sub_category_id,
+                            "productImages": widget.imagesList,
                           });
                         },
                         style: ElevatedButton.styleFrom(
@@ -181,36 +188,109 @@ class AuctionRunningView extends StatelessWidget {
                   const SizedBox(height: 6),
 
                   /// Current Bid
-                  Row(
-                    children: [
-                      Text(
-                        "Current Bid: ",
-                        style:
-                            TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                          fontSize: 14,
-                          color: Colors.grey,
-                        ),
-                      ),
-                      Text(
-                        "\$$currentBid",
-                        style:
-                            TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
+                  SizedBox(
+                    width: double.infinity,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  "Current Bid: ",
+                                  style: TextFontStyle
+                                      .textLine7w400cFFFFFFDmSans
+                                      .copyWith(
+                                    fontSize: 14,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                Text(
+                                  "\$${widget.currentBid}",
+                                  style: TextFontStyle
+                                      .textLine7w400cFFFFFFDmSans
+                                      .copyWith(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 12),
 
-                  /// Ends Date
-                  Text(
-                    "Ends: ${formatDate(timeLeft)}",
-                    style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
-                      fontSize: 14,
-                      color: AppColor.c4096FF,
-                      fontWeight: FontWeight.w500,
+                            /// Ends Date
+                            Text(
+                              "Ends: ${formatDate(widget.timeLeft)}",
+                              style: TextFontStyle.textLine7w400cFFFFFFDmSans
+                                  .copyWith(
+                                fontSize: 14,
+                                color: AppColor.c4096FF,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            bool? result = await showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text('Confirm Deletion'),
+                                content: const Text(
+                                    'Are you sure you want to delete this product?'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(false),
+                                    child: const Text('Cancel'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(true),
+                                    child: const Text('Delete'),
+                                  ),
+                                ],
+                              ),
+                            );
+
+                            if (result == true) {
+                              setState(() {
+                                isDeleting =true;
+                              });
+                              bool isDeleted = await deleteProductAPIRX
+                                  .deleteProducts(productID: widget.id);
+                              if (isDeleted) {
+                                // Refresh product list
+                                auctionOngoingApiRxObj.getAuctionOngoing("");
+                              }
+                              setState(() {
+                                isDeleting = false;
+                              });
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: Text(
+                            "Delete",
+                            style: TextFontStyle.textLine7w400cFFFFFFDmSans
+                                .copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
