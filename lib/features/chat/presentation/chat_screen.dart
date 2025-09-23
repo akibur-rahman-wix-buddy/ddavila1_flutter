@@ -324,14 +324,48 @@ class _ChatScreenState extends State<ChatScreen> {
                                             ),
                                           ),
                                           UIHelper.horizontalSpace(30),
-                                         GestureDetector(
-                                             onTap: () async {
-                                            isDeleted =   await deleteChatAPIRX.deleteProducts(chatID:chatId );
-                                               if(isDeleted){
-                                                 getAllChatListRx.getChatListInfo();
-                                               }
-                                             },
-                                             child: Icon(Icons.delete,color: Colors.red,))
+                                          GestureDetector(
+                                            onTap: () async {
+                                              // Show confirmation dialog
+                                              bool? shouldDelete = await showDialog(
+                                                context: context,
+                                                builder: (BuildContext context) {
+                                                  return AlertDialog(
+                                                    title: Text("Confirm Delete"),
+                                                    content: Text("Are you sure you want to delete this chat?"),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.of(context).pop(false); // Return false
+                                                        },
+                                                        child: Text("Cancel"),
+                                                      ),
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.of(context).pop(true); // Return true
+                                                        },
+                                                        child: Text("Delete", style: TextStyle(color: Colors.red)),
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              );
+
+                                              // If user confirmed deletion (shouldDelete is true)
+                                              if (shouldDelete == true) {
+                                                bool isDeleted = await deleteChatAPIRX.deleteProducts(chatID: chatId);
+                                                if (isDeleted) {
+                                                  getAllChatListRx.getChatListInfo();
+
+                                                  // Optional: Show success message
+                                                  ScaffoldMessenger.of(context).showSnackBar(
+                                                    SnackBar(content: Text("Chat deleted successfully")),
+                                                  );
+                                                }
+                                              }
+                                            },
+                                            child: Icon(Icons.delete, color: Colors.red),
+                                          )
 
                                         ],
                                       ),
