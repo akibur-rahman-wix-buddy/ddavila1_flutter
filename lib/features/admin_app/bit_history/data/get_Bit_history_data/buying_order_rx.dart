@@ -35,6 +35,26 @@ final class GetBidHistoryRX extends RxResponseInt<BidHistoryDataModel> {
     }
   }
 
+
+  @override
+  BidHistoryDataModel? handleSuccessWithReturn(BidHistoryDataModel data) {
+    // Fix: Properly reverse the data list if it exists
+    if (data.data != null && data.data!.isNotEmpty) {
+      final reversedData = List<BidHistoryData>.from(data.data!.reversed);
+      final reversedDataModel = BidHistoryDataModel(
+        success: data.success,
+        message: data.message,
+        data: reversedData,
+        code: data.code,
+      );
+      dataFetcher.sink.add(reversedDataModel);
+      return reversedDataModel;
+    }
+
+    dataFetcher.sink.add(data);
+    return data;
+  }
+
   @override
   handleErrorWithReturn(dynamic error) {
     if (error is DioException) {

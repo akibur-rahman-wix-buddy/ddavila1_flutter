@@ -1076,15 +1076,16 @@ class ShippingAddress {
 
 enum DatumStatus {
   CONFIRMED,
-  PENDING,COMPLETED,SHIPPING, confirmed, completed
+  PENDING,COMPLETED,SHIPPING, confirmed, completed,PAID
 }
 
 final datumStatusValues = EnumValues({
   "confirmed": DatumStatus.CONFIRMED,
+  "pending": DatumStatus.PENDING,
   "completed": DatumStatus.COMPLETED,
   "shipping": DatumStatus.SHIPPING,
+  "paid": DatumStatus.PAID
 });
-
 class User {
   dynamic id;
   Name? name;
