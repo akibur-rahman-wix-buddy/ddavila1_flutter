@@ -36,8 +36,8 @@ class _ShopScreenState extends State<ShopScreen> {
   List<Product> allProducts = [];
   final Map<int, bool> _isProcessingMap =
       {}; // Map to track loading state for each product
-  bool isStripeConnected = appData.read(kKeyCardAttributes) ?? false;
-  bool isProfileConnected = appData.read(kKeyOnboarding) ?? false;
+  bool isStripeConnected = appData.read(kKeyCardAttributes);
+  bool isProfileConnected = appData.read(kKeyOnboarding);
   bool? isLikeFromApi;
   final Map<int, bool> _likeStates = {};
 
@@ -205,50 +205,66 @@ class _ShopScreenState extends State<ShopScreen> {
                       final isProcessing =
                           _isProcessingMap[product.id] ?? false;
 
-                      isLikeFromApi = product.bookmark ??false;
+
+                      if (allProducts.isEmpty) {
+                        allProducts = snapshot.data!.data?.products ?? [];
+                        // Initialize like states when data is first loaded
+                        for (var product in allProducts) {
+                          if (product.id != null) {
+                            _likeStates[product.id!] = product.bookmark ?? false;
+                          }
+                        }
+                      }
 
                       return GestureDetector(
                         onTap: () {
                           print(
-                              ">>>>>>>>>>>>>>> here is the product type after ${product.type}");
-                          if (product.type == "sale") {
+                              ">>>>>>>>>>>>>>> here is the product type  after ${product.type}");
+                          if (product.type.toString() == "sale") {
                             print(
-                                ">>>>>>>>>>>>>>>>>>> here is the stripe connected value $isStripeConnected");
-                            print(
-                                ">>>>>>>>>>>>>>>>>>> here is the profile connected value $isProfileConnected");
-                            if (isStripeConnected && isProfileConnected) {
+                                ">>>>>>>>>>>>>>>>>>> here is the  stripe connected value ${isStripeConnected}");
+                            if (isStripeConnected == true && isProfileConnected == true) {
                               NavigationService.navigateToWithArgs(
                                 Routes.productDetailsScreen,
-                                {"slug": product.slug},
+                                {
+                                  "slug": product.slug,
+                                },
                               );
-                            } else if (!isProfileConnected) {
-                              Get.to(() => const CompleteAccountInfoScreen());
-                            } else if (!isStripeConnected) {
-                              Get.to(() => const StripeCardScreen());
+                            } else if (isStripeConnected == false) {
+                              Get.to(StripeCardScreen());
+                            } else if (isProfileConnected == false) {
+                              Get.to(CompleteAccountInfoScreen());
                             }
+
+                            print(">>>>>>>>>>>>>>> here is the product id ${product.id}");
+                            print(">>>>>>>>>>>>>>> here is the product type ${product.type}");
+                            // NavigationService.navigateToWithArgs(
+                            //   Routes.productDetailsScreen,
+                            //   {"slug": product.slug},
+                            // );
+                          } else if (product.type.toString() == "auction") {
+                            print(">>>>>>>>>>>>>>>>>>> this is the else product ");
+
                             print(
-                                ">>>>>>>>>>>>>>> here is the product id ${product.id}");
-                            print(
-                                ">>>>>>>>>>>>>>> here is the product type ${product.type}");
-                          } else {
-                            print(
-                                ">>>>>>>>>>>>>>>>>>> here is the stripe connected value $isStripeConnected");
-                            print(
-                                ">>>>>>>>>>>>>>>>>>> here is the product id is ${product.id}");
-                            if (isStripeConnected && isProfileConnected) {
+                                ">>>>>>>>>>>>>>>>>>> here is the  stripe connected value ${isStripeConnected}");
+                            if (isStripeConnected == true && isProfileConnected == true) {
                               NavigationService.navigateToWithArgs(
                                 Routes.productsBidScreen,
                                 {"slag": product.slug, "productId": product.id},
                               );
-                            } else if (!isProfileConnected) {
-                              Get.to(() => const CompleteAccountInfoScreen());
-                            } else if (!isStripeConnected) {
-                              Get.to(() => const StripeCardScreen());
+                            } else if (isProfileConnected == false) {
+                              Get.to(CompleteAccountInfoScreen());
+                            } else if (isStripeConnected == false) {
+                              Get.to(StripeCardScreen());
                             }
+
+                            print(">>>>>>>>>>>>>>> here is the product type ${product.type}");
                             print(
-                                ">>>>>>>>>>>>>>> here is the product type ${product.type}");
-                            print(
-                                ">>>>>>>>>>>>>>> here is the not sale, and this is id product id ${product.id}");
+                                ">>>>>>>>>>>>>>> here is the not sale , and this is id product id ${product.id}");
+                            // NavigationService.navigateToWithArgs(
+                            //   Routes.productsBidScreen,
+                            //   {"slag": product.slug, "productId": product..id},
+                            // );
                           }
                         },
                         child: Card(
@@ -318,16 +334,38 @@ class _ShopScreenState extends State<ShopScreen> {
                                           ],
                                         ),
                                         GestureDetector(
-                                          onTap: () {
+                                          onTap: () async {
+                                            if (product.id == null) return;
+
+                                            final productId = product.id!;
+                                            final currentState = _likeStates[productId] ?? false;
+                                            final newState = !currentState;
+
+                                            // IMMEDIATE UI CHANGE
                                             setState(() {
-                                              final productId = product.id!;
-                                              _likeStates[productId] = !(_likeStates[productId] ?? (product.bookmark ?? false));
-                                              postWhiteListRx.postWhiteListApiInfo(productId: productId);
+                                              _likeStates[productId] = newState;
                                             });
+
+                                            try {
+                                              await postWhiteListRx.postWhiteListApiInfo(productId: productId);
+                                              // Success - state is already updated
+                                            } catch (error) {
+                                              // If API fails, revert the UI change
+                                              if (mounted) {
+                                                setState(() {
+                                                  _likeStates[productId] = currentState;
+                                                });
+                                              }
+                                              print('API Error: $error');
+                                              // Optional: Show error message to user
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(content: Text('Failed to update bookmark: $error')),
+                                              );
+                                            }
                                           },
                                           child: Icon(
-                                            (_likeStates[product.id!] ?? false) ? Icons.favorite : Icons.favorite_border,
-                                            color: (_likeStates[product.id!] ?? false) ? Colors.red : Colors.black,
+                                            (_likeStates[product.id ?? 0] ?? false) ? Icons.favorite : Icons.favorite_border,
+                                            color: (_likeStates[product.id ?? 0] ?? false) ? Colors.red : Colors.black,
                                             size: 25,
                                           ),
                                         )
@@ -357,7 +395,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                         product.auctionEndAt == null)
                                       Text("Available",style: TextStyle(color: Colors.green),),
                                     if (isTimeOver)
-                                      Text("Finished bit",style: TextStyle(color: Colors.blueGrey),),
+                                      Text("Finished bids",style: TextStyle(color: Colors.blueGrey),),
 
                                     Text(
                                         isTimeOver

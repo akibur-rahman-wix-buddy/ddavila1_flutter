@@ -154,6 +154,10 @@ class _BuyingTableState extends State<BuyingTable> {
     print('Button pressed for order ID: $id with status: $currentStatus');
 
     final orderIndex = _currentData.indexWhere((order) => order.id == id);
+    List<String> allStatuses = _currentData
+        .expand((order) => order.orderItems!.toList())
+        .map((data) => data.product!.status.toString())
+        .toList();
     if (orderIndex == -1) return;
 
     final order = _currentData[orderIndex];
@@ -211,6 +215,8 @@ class _BuyingTableState extends State<BuyingTable> {
         if (index != -1) {
           if (currentStatus.toLowerCase() == 'shipping') {
             _currentData[index].status = DatumStatus.confirmed;
+          } else if (currentStatus.toLowerCase() == 'confirmed') {
+            _currentData[index].status = DatumStatus.completed;
           } else if (currentStatus.toLowerCase() == 'confirmed') {
             _currentData[index].status = DatumStatus.completed;
           }

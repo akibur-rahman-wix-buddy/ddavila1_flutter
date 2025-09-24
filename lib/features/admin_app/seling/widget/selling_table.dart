@@ -899,11 +899,28 @@ class OrderDataSource extends DataGridSource {
 
           print(">>>>>>>>>>>>>>>>>>>> product button details $statusValue");
 
+
+
+
+
+
+
+
+
+
+
+
+
           // Disable button if status is not 'confirmed' or trackingNumber exists
           if (statusValue == 'confirmed' &&
               orderData.any((order) =>
               order.orderNumber == orderNumber &&
                   (order.trackingNumber == null || order.trackingNumber!.isEmpty))) {
+            isEnabled = true;
+            buttonColor = Colors.blue;
+          }   else  if (statusValue == 'shipping' &&
+              orderData.any((order) =>
+              order.orderNumber == orderNumber)) {
             isEnabled = true;
             buttonColor = Colors.blue;
           } else {
