@@ -428,7 +428,7 @@ class _CategoryProductsWidgetState extends State<CategoryProductsWidget> {
           crossAxisCount: 2,
           mainAxisSpacing: 12,
           crossAxisSpacing: 10,
-          childAspectRatio: .52,
+          childAspectRatio: 100/220,
         ),
         itemCount: data.length,
         itemBuilder: (context, index) {

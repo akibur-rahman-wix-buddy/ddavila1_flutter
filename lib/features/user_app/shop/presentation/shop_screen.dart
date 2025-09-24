@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print, sized_box_for_whitespace, library_private_types_in_public_api
 
 import 'package:ddavila/assets_helper/app_icons.dart';
+import 'package:ddavila/assets_helper/app_image.dart';
 import 'package:ddavila/common_widgets/custom_textfiled.dart';
 import 'package:ddavila/constants/app_constants.dart';
 import 'package:ddavila/features/auth_screen/complete_account_info/complete_account_info_screen.dart';
@@ -37,6 +38,8 @@ class _ShopScreenState extends State<ShopScreen> {
       {}; // Map to track loading state for each product
   bool isStripeConnected = appData.read(kKeyCardAttributes) ?? false;
   bool isProfileConnected = appData.read(kKeyOnboarding) ?? false;
+  bool? isLikeFromApi;
+  final Map<int, bool> _likeStates = {};
 
   @override
   void initState() {
@@ -139,6 +142,7 @@ class _ShopScreenState extends State<ShopScreen> {
 
           if (allProducts.isEmpty) {
             allProducts = snapshot.data!.data?.products ?? [];
+
           }
 
           return SafeArea(
@@ -170,7 +174,7 @@ class _ShopScreenState extends State<ShopScreen> {
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      childAspectRatio: 0.65,
+                      childAspectRatio: 100/170,
                       crossAxisSpacing: 8.0,
                       mainAxisSpacing: 8.0,
                     ),
@@ -200,6 +204,8 @@ class _ShopScreenState extends State<ShopScreen> {
                               .isBefore(DateTime.now());
                       final isProcessing =
                           _isProcessingMap[product.id] ?? false;
+
+                      isLikeFromApi = product.bookmark ??false;
 
                       return GestureDetector(
                         onTap: () {
@@ -275,8 +281,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                   errorBuilder: (context, error, stackTrace) =>
                                       Container(
                                           height: 120,
-                                          child: const Icon(Icons.error,
-                                              size: 50)),
+                                          child:  Image.asset(AppImages.placeholder)),
                                 ),
                               ),
                               Padding(
@@ -284,18 +289,55 @@ class _ShopScreenState extends State<ShopScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      product.title ?? '',
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
+                                    
+                                    
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            SizedBox(
+                                              width: 130.w,
+                                              child: Text(
+                                                product.title ?? '',
+                                                style: const TextStyle(
+                                                    fontWeight: FontWeight.bold),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 4),
+                                            if (isSale && product.price != null)
+                                              SizedBox(
+                                                width: 130.w,
+                                                child: Text(overflow: TextOverflow.ellipsis,'Price \$${product.price}',
+                                                    style: const TextStyle(
+                                                        color: Colors.green)),
+                                              ),
+                                          ],
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              final productId = product.id!;
+                                              _likeStates[productId] = !(_likeStates[productId] ?? (product.bookmark ?? false));
+                                              postWhiteListRx.postWhiteListApiInfo(productId: productId);
+                                            });
+                                          },
+                                          child: Icon(
+                                            (_likeStates[product.id!] ?? false) ? Icons.favorite : Icons.favorite_border,
+                                            color: (_likeStates[product.id!] ?? false) ? Colors.red : Colors.black,
+                                            size: 25,
+                                          ),
+                                        )
+                                      ],
                                     ),
-                                    const SizedBox(height: 4),
-                                    if (isSale && product.price != null)
-                                      Text('Price \$${product.price}',
-                                          style: const TextStyle(
-                                              color: Colors.green)),
+                                 
+                                    
+                                    
+                                    
+                                    
                                     if (isAuction && product.highestBid != null)
                                       Text(
                                           'Current Bid \$${product.highestBid}',
@@ -315,7 +357,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                         product.auctionEndAt == null)
                                       Text("Available",style: TextStyle(color: Colors.green),),
                                     if (isTimeOver)
-                                      Text(" Finished bit",style: TextStyle(color: Colors.blueGrey),),
+                                      Text("Finished bit",style: TextStyle(color: Colors.blueGrey),),
 
                                     Text(
                                         isTimeOver

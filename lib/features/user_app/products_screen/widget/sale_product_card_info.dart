@@ -199,14 +199,17 @@ class _ProductInfoCardState extends State<ProductInfoCard> {
               children: [
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   const Text("Total Price:", style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold, color: Colors.grey)),
-                  Text("\$${widget.totalAmount.toStringAsFixed(2)}",
-                      style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.black)),
+                  SizedBox(
+                    width: 200.w,
+                    child: Text("\$${widget.totalAmount.toStringAsFixed(2)}",
+                        style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.black)),
+                  ),
                 ]),
 
 
                 CustomButton(
 
-                  minWidth: 200,
+                  minWidth: 150,
                   onTap: isProcessing
                       ? null // Disable button when processing
                       : () async {

@@ -29,11 +29,12 @@ final class GetShopRx extends RxResponseInt<ShopAllProductsDataModel> {
 
   @override
   ShopAllProductsDataModel? handleSuccessWithReturn(dynamic data) {
-
     print("Input data value: $data");
 
     try {
       final result = super.handleSuccessWithReturn(data);
+      if (result != null && result.data?.products != null) {
+      }
 
       return result;
     } catch (e) {

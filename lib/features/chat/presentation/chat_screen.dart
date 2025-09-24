@@ -190,7 +190,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               : null;
 
                       final participantName = participant?.name ?? "Unknown";
-                      final chatId = participant?.id ?? "Unknown";
+                      final chatId = conversation.id ?? "Unknown";
                       final participantAvatar = participant?.avatar;
                       final participantId =
                           conversation.participants?.isNotEmpty == true

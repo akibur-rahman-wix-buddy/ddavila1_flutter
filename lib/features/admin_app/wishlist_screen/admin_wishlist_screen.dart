@@ -36,6 +36,8 @@ class _AdminWishListScreenState extends State<AdminWishListScreen> {
   List<AllProductData> _filteredProducts = [];
   bool _isLoading = true;
   String? _errorMessage;
+  bool isLikeFromApi = true;
+  final Map<int, bool> _likeStates = {};
   final TextEditingController _searchController = TextEditingController();
 
   @override
@@ -87,7 +89,11 @@ class _AdminWishListScreenState extends State<AdminWishListScreen> {
                       return const Center(child: Text('No data available.'));
                     }
 
+
+
                     final wishlist = snapshot.data!.data!;
+
+
 
                     return ListView.builder(
                       padding: EdgeInsets.zero,
@@ -95,6 +101,9 @@ class _AdminWishListScreenState extends State<AdminWishListScreen> {
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
+                        if (wishlist[index].product == null) {
+                          return const SizedBox.shrink(); // বা Container()
+                        }
                         final product = wishlist[index].product;
                         return GestureDetector(
                           onTap: () {
@@ -214,11 +223,27 @@ class _AdminWishListScreenState extends State<AdminWishListScreen> {
                                             ),
 
                                             /// Button text depends on tab
-                                            SvgPicture.asset(
-                                              AppIcons.heart,
-                                              height: 24.h,
-                                              width: 24.w,
-                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                if (product?.id == null) return;
+
+                                                setState(() {
+                                                  final productId = product!.id!;
+                                                  // Toggle the like state
+                                                  _likeStates[productId] = !(_likeStates[productId] ?? true); // Default to true
+                                                  postWhiteListRx.postWhiteListApiInfo(productId: productId);
+                                                });
+                                              },
+                                              child: Icon(
+                                                product?.id != null && (_likeStates[product!.id!] ?? true) // Default to true
+                                                    ? Icons.favorite
+                                                    : Icons.favorite_border,
+                                                color: product?.id != null && (_likeStates[product!.id!] ?? true) // Default to true
+                                                    ? Colors.red
+                                                    : Colors.black,
+                                                size: 25,
+                                              ),
+                                            )
                                           ],
                                         ),
                                         const SizedBox(height: 6),

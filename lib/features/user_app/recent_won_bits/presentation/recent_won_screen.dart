@@ -145,7 +145,8 @@ class _RecentWonScreenState extends State<RecentWonScreen> {
                       image: product?.images?.isNotEmpty == true
                           ? product!.images!.first
                           : '',
-                      currentBid: product?.bid?.toString() ?? '0',
+                      // currentBid: product?.bid?.toString() ?? '0',
+                      currentBid:order.totalAmount.toString(),
                       timeLeft: product?.auctionEndAt?.toIso8601String() ?? '',
                     );
                   },
