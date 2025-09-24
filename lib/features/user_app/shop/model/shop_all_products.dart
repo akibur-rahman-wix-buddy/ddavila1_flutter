@@ -2,7 +2,7 @@ class ShopAllProductsDataModel {
   bool? success;
   String? message;
   Data? data; // Changed from ShopProductsData to Data
-  int? code;
+  dynamic code;
 
   ShopAllProductsDataModel({this.success, this.message, this.data, this.code});
 
@@ -10,7 +10,7 @@ class ShopAllProductsDataModel {
     success = json['success'] as bool?;
     message = json['message'] as String?;
     data = json['data'] != null ? Data.fromJson(json['data'] as Map<String, dynamic>) : null;
-    code = json['code'] as int?;
+    code = json['code'] as dynamic;
   }
 
   Map<String, dynamic> toJson() {
@@ -26,19 +26,19 @@ class ShopAllProductsDataModel {
 }
 
 class Data {
-  int? currentPage;
+  dynamic currentPage;
   List<Product>? products; // Renamed from data to products for clarity
   String? firstPageUrl;
-  int? from;
-  int? lastPage;
+  dynamic from;
+  dynamic lastPage;
   String? lastPageUrl;
   List<Links>? links;
   String? nextPageUrl;
   String? path;
-  int? perPage;
+  dynamic perPage;
   String? prevPageUrl;
-  int? to;
-  int? total;
+  dynamic to;
+  dynamic total;
 
   Data({
     this.currentPage,
@@ -57,7 +57,7 @@ class Data {
   });
 
   Data.fromJson(Map<String, dynamic> json) {
-    currentPage = json['current_page'] as int?;
+    currentPage = json['current_page'] as dynamic;
     if (json['data'] != null) {
       products = (json['data'] as List<dynamic>)
           .map((v) => Product.fromJson(v as Map<String, dynamic>))
@@ -66,8 +66,8 @@ class Data {
       products = [];
     }
     firstPageUrl = json['first_page_url'] as String?;
-    from = json['from'] as int?;
-    lastPage = json['last_page'] as int?;
+    from = json['from'] as dynamic;
+    lastPage = json['last_page'] as dynamic;
     lastPageUrl = json['last_page_url'] as String?;
     if (json['links'] != null) {
       links = (json['links'] as List<dynamic>)
@@ -78,10 +78,10 @@ class Data {
     }
     nextPageUrl = json['next_page_url'] as String?;
     path = json['path'] as String?;
-    perPage = json['per_page'] as int?;
+    perPage = json['per_page'] as dynamic;
     prevPageUrl = json['prev_page_url'] as String?;
-    to = json['to'] as int?;
-    total = json['total'] as int?;
+    to = json['to'] as dynamic;
+    total = json['total'] as dynamic;
   }
 
   Map<String, dynamic> toJson() {
@@ -108,18 +108,18 @@ class Data {
 }
 
 class Product {
-  int? id;
+  dynamic id;
   String? title;
   String? slug;
   List<String>? images;
-  int? price;
+  dynamic price;
   String? type;
-  int? bid;
+  dynamic bid;
   String? shippingCost;
-  int? startingPrice;
+  dynamic startingPrice;
   String? auctionEndAt;
   bool? bookmark;
-  int? highestBid;
+  dynamic highestBid;
   String? firstImage;
 
   Product({
@@ -139,18 +139,18 @@ class Product {
   });
 
   Product.fromJson(Map<String, dynamic> json) {
-    id = json['id'] as int?;
+    id = json['id'] as dynamic;
     title = json['title'] as String?;
     slug = json['slug'] as String?;
     images = (json['images'] as List<dynamic>?)?.cast<String>() ?? [];
-    price = json['price'] as int?;
+    price = json['price'] as dynamic;
     type = json['type'] as String?;
-    bid = json['bid'] as int?;
+    bid = json['bid'] as dynamic;
     shippingCost = json['shipping_cost'] as String?;
-    startingPrice = json['starting_price'] as int?;
+    startingPrice = json['starting_price'] as dynamic;
     auctionEndAt = json['auction_end_at'] as String?;
     bookmark = json['bookmark'] as bool?;
-    highestBid = json['highest_bid'] as int?;
+    highestBid = json['highest_bid'] as dynamic;
     firstImage = json['first_image'] as String?;
   }
 

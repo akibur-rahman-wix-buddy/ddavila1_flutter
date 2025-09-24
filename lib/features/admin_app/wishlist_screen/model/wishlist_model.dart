@@ -39,7 +39,7 @@ class Data {
   String? createdAt;
   String? updatedAt;
   Null? deletedAt;
-  Product? product;
+  WishListProduct? product;
 
   Data(
       {this.id,
@@ -58,7 +58,7 @@ class Data {
     updatedAt = json['updated_at'];
     deletedAt = json['deleted_at'];
     product =
-    json['product'] != null ? new Product.fromJson(json['product']) : null;
+    json['product'] != null ? new WishListProduct.fromJson(json['product']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -76,7 +76,7 @@ class Data {
   }
 }
 
-class Product {
+class WishListProduct {
   int? id;
   String? title;
   String? slug;
@@ -99,7 +99,7 @@ class Product {
   String? updatedAt;
   Null? deletedAt;
 
-  Product(
+  WishListProduct(
       {this.id,
         this.title,
         this.slug,
@@ -122,7 +122,7 @@ class Product {
         this.updatedAt,
         this.deletedAt});
 
-  Product.fromJson(Map<String, dynamic> json) {
+  WishListProduct.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
     slug = json['slug'];
