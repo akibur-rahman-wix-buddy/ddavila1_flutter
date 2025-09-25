@@ -153,10 +153,30 @@ class _BuyingTableState extends State<BuyingTable> {
   Future<void> _handleButtonPressed(int id, String currentStatus) async {
     print('Button pressed for order ID: $id with status: $currentStatus');
 
+    print('Button pressed for order ID: $id with status: $currentStatus');
+
     final orderIndex = _currentData.indexWhere((order) => order.id == id);
     if (orderIndex == -1) return;
 
     final order = _currentData[orderIndex];
+
+    // Don't allow actions on Paid or Completed orders
+    if (currentStatus.toLowerCase() == 'paid' ||
+        currentStatus.toLowerCase() == 'completed') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+              'This order is already ${currentStatus.toLowerCase()} and cannot be modified'),
+          backgroundColor: Colors.blue,
+        ),
+      );
+      return;
+    }
+
+    // final orderIndex = _currentData.indexWhere((order) => order.id == id);
+    // if (orderIndex == -1) return;
+    //
+    // final order = _currentData[orderIndex];
 
     final bool? confirm = await showDialog<bool>(
       context: context, // Use the State class's context
@@ -202,7 +222,7 @@ class _BuyingTableState extends State<BuyingTable> {
     });
 
     bool success =
-    await buyingOrderConfirmRx.buyingOrderConfirmInfo(productId: id);
+        await buyingOrderConfirmRx.buyingOrderConfirmInfo(productId: id);
 
     if (success) {
       widget.onDataUpdated();
@@ -269,70 +289,163 @@ class OrderDataSource extends DataGridSource {
     required this.context,
   });
 
+  // @override
+  // List<DataGridRow> get rows => orderData.map<DataGridRow>((data) {
+  //   String productNames = data.orderItems
+  //       ?.map((item) => item.product?.title ?? 'Unknown Product')
+  //       .join(', ') ??
+  //       'No Products';
+  //   String orderDate = data.orderedAt?.toString().split(' ')[0] ?? 'N/A';
+  //   String tracking = data.trackingNumber ?? 'No tracking';
+  //
+  //   String shippingAddress = 'No Address';
+  //   if (data.user != null) {
+  //     final address = data.user!;
+  //     List<String> addressParts = [];
+  //
+  //     if (address.address?.isNotEmpty == true) addressParts.add(address.address!);
+  //     if (address.city?.isNotEmpty == true) addressParts.add(address.city!);
+  //     if (address.state?.isNotEmpty == true) addressParts.add(address.state!);
+  //     if (address.country?.isNotEmpty == true) addressParts.add(address.country!);
+  //
+  //     if (addressParts.isNotEmpty) {
+  //       shippingAddress = addressParts.join(', ');
+  //     }
+  //   }
+  //
+  //   String status = data.status?.toString().split('.').last ?? 'Pending';
+  //   status = status[0].toUpperCase() + status.substring(1).toLowerCase();
+  //
+  //   String buttonText;
+  //   bool isButtonActive;
+  //
+  //   if (status.toLowerCase() == 'completed') {
+  //     buttonText = 'Completed';
+  //     isButtonActive = false;
+  //   } else if (status.toLowerCase() == 'shipping') {
+  //     buttonText = 'Accept';
+  //     isButtonActive = true;
+  //   } else if (status.toLowerCase() == 'confirmed') {
+  //     buttonText = 'Complete';
+  //     isButtonActive = false;
+  //   } else {
+  //     buttonText = 'Complete Order';
+  //     isButtonActive = false;
+  //   }
+  //
+  //   return DataGridRow(cells: [
+  //     DataGridCell<String>(columnName: 'OrderNumber', value: data.orderNumber ?? 'N/A'),
+  //     DataGridCell<String>(columnName: 'ProductName', value: productNames),
+  //     DataGridCell<String>(
+  //         columnName: 'TotalAmount', value: '\$${data.totalAmount?.toString() ?? '0.00'}'),
+  //     DataGridCell<String>(columnName: 'Status', value: status),
+  //     DataGridCell<String>(columnName: 'shippingAddress', value: shippingAddress),
+  //     DataGridCell<String>(columnName: 'Tracking', value: tracking),
+  //     DataGridCell<String>(columnName: 'OrderDate', value: orderDate),
+  //     DataGridCell<Map<String, dynamic>>(
+  //         columnName: 'Action',
+  //         value: {
+  //           'text': buttonText,
+  //           'isActive': isButtonActive,
+  //           'id': data.id ?? 0,
+  //           'status': status,
+  //         }),
+  //   ]);
+  // }).toList();
 
   @override
   List<DataGridRow> get rows => orderData.map<DataGridRow>((data) {
-    String productNames = data.orderItems
-        ?.map((item) => item.product?.title ?? 'Unknown Product')
-        .join(', ') ??
-        'No Products';
-    String orderDate = data.orderedAt?.toString().split(' ')[0] ?? 'N/A';
-    String tracking = data.trackingNumber ?? 'No tracking';
+        String productNames = data.orderItems
+                ?.map((item) => item.product?.title ?? 'Unknown Product')
+                .join(', ') ??
+            'No Products';
+        String orderDate = data.orderedAt?.toString().split(' ')[0] ?? 'N/A';
+        String tracking = data.trackingNumber ?? 'No tracking';
 
-    String shippingAddress = 'No Address';
-    if (data.user != null) {
-      final address = data.user!;
-      List<String> addressParts = [];
+        String shippingAddress = 'No Address';
+        if (data.user != null) {
+          final address = data.user!;
+          List<String> addressParts = [];
 
-      if (address.address?.isNotEmpty == true) addressParts.add(address.address!);
-      if (address.city?.isNotEmpty == true) addressParts.add(address.city!);
-      if (address.state?.isNotEmpty == true) addressParts.add(address.state!);
-      if (address.country?.isNotEmpty == true) addressParts.add(address.country!);
+          if (address.address?.isNotEmpty == true)
+            addressParts.add(address.address!);
+          if (address.city?.isNotEmpty == true) addressParts.add(address.city!);
+          if (address.state?.isNotEmpty == true)
+            addressParts.add(address.state!);
+          if (address.country?.isNotEmpty == true)
+            addressParts.add(address.country!);
 
-      if (addressParts.isNotEmpty) {
-        shippingAddress = addressParts.join(', ');
-      }
-    }
+          if (addressParts.isNotEmpty) {
+            shippingAddress = addressParts.join(', ');
+          }
+        }
 
-    String status = data.status?.toString().split('.').last ?? 'Pending';
-    status = status[0].toUpperCase() + status.substring(1).toLowerCase();
+        // NEW LOGIC: Check if order status is confirmed and product status is inactive
+        String status = data.status?.toString().split('.').last ?? 'Pending';
+        status = status[0].toUpperCase() + status.substring(1).toLowerCase();
 
-    String buttonText;
-    bool isButtonActive;
+        // Check if any product in order items has inactive status
+        bool hasInactiveProduct = data.orderItems?.any((item) =>
+                item.product?.status
+                    ?.toString()
+                    .split('.')
+                    .last
+                    .toLowerCase() ==
+                'inactive') ??
+            false;
 
-    if (status.toLowerCase() == 'completed') {
-      buttonText = 'Completed';
-      isButtonActive = false;
-    } else if (status.toLowerCase() == 'shipping') {
-      buttonText = 'Accept';
-      isButtonActive = true;
-    } else if (status.toLowerCase() == 'confirmed') {
-      buttonText = 'Complete';
-      isButtonActive = false;
-    } else {
-      buttonText = 'Complete Order';
-      isButtonActive = false;
-    }
+        // Apply the new rule: if order status is confirmed and product is inactive, show as Paid
+        if (status.toLowerCase() == 'confirmed' && hasInactiveProduct) {
+          status = 'Paid';
+        }
+        if (status.toLowerCase() == 'paid') {
+          status = 'Pending';
+        }
 
-    return DataGridRow(cells: [
-      DataGridCell<String>(columnName: 'OrderNumber', value: data.orderNumber ?? 'N/A'),
-      DataGridCell<String>(columnName: 'ProductName', value: productNames),
-      DataGridCell<String>(
-          columnName: 'TotalAmount', value: '\$${data.totalAmount?.toString() ?? '0.00'}'),
-      DataGridCell<String>(columnName: 'Status', value: status),
-      DataGridCell<String>(columnName: 'shippingAddress', value: shippingAddress),
-      DataGridCell<String>(columnName: 'Tracking', value: tracking),
-      DataGridCell<String>(columnName: 'OrderDate', value: orderDate),
-      DataGridCell<Map<String, dynamic>>(
-          columnName: 'Action',
-          value: {
+        String buttonText;
+        bool isButtonActive;
+
+        // Update button logic to handle the new Paid status
+        if (status.toLowerCase() == 'completed' ||
+            status.toLowerCase() == 'paid') {
+          buttonText = status; // Show "Completed" or "Paid"
+          isButtonActive = false;
+        } else if (status.toLowerCase() == 'shipping') {
+          buttonText = 'Accept';
+          isButtonActive = true;
+        } else if (status.toLowerCase() == 'confirmed') {
+          buttonText = 'Complete';
+          isButtonActive =
+              true; // Changed to true since confirmed orders should be actionable
+        } else if (status.toLowerCase() == 'pending') {
+          buttonText = 'paid';
+          isButtonActive =
+              false; // Changed to true since confirmed orders should be actionable
+        } else {
+          buttonText = 'Complete Order';
+          isButtonActive = false;
+        }
+
+        return DataGridRow(cells: [
+          DataGridCell<String>(
+              columnName: 'OrderNumber', value: data.orderNumber ?? 'N/A'),
+          DataGridCell<String>(columnName: 'ProductName', value: productNames),
+          DataGridCell<String>(
+              columnName: 'TotalAmount',
+              value: '\$${data.totalAmount?.toString() ?? '0.00'}'),
+          DataGridCell<String>(columnName: 'Status', value: status),
+          DataGridCell<String>(
+              columnName: 'shippingAddress', value: shippingAddress),
+          DataGridCell<String>(columnName: 'Tracking', value: tracking),
+          DataGridCell<String>(columnName: 'OrderDate', value: orderDate),
+          DataGridCell<Map<String, dynamic>>(columnName: 'Action', value: {
             'text': buttonText,
             'isActive': isButtonActive,
             'id': data.id ?? 0,
             'status': status,
           }),
-    ]);
-  }).toList();
+        ]);
+      }).toList();
 
   @override
   DataGridRowAdapter buildRow(DataGridRow row) {
@@ -342,33 +455,76 @@ class OrderDataSource extends DataGridSource {
       color: rowIndex % 2 == 0 ? Colors.grey[50] : Colors.white,
       cells: row.getCells().map<Widget>((dataCell) {
         if (dataCell.columnName == 'ProductName') {
-          return _cell(text: dataCell.value.toString(), alignment: Alignment.centerLeft);
+          return _cell(
+              text: dataCell.value.toString(), alignment: Alignment.centerLeft);
         } else if (dataCell.columnName == 'OrderNumber' ||
             dataCell.columnName == 'OrderDate') {
-          return _cell(text: dataCell.value.toString(), alignment: Alignment.center);
+          return _cell(
+              text: dataCell.value.toString(), alignment: Alignment.center);
         } else if (dataCell.columnName == 'TotalAmount') {
           return _cell(
               text: dataCell.value.toString(),
               alignment: Alignment.center,
-              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue[800]));
-        } else if (dataCell.columnName == 'Status') {
-          //
-          // String allStatuses = _currentData
-          //     .expand((order) => order.orderItems!.toList())
-          //     .map((data) => data.product!.status.toString()).toString();
+              style: TextStyle(
+                  fontWeight: FontWeight.bold, color: Colors.blue[800]));
+        }
 
+        // else if (dataCell.columnName == 'Status') {
+        //   //
+        //   // String allStatuses = _currentData
+        //   //     .expand((order) => order.orderItems!.toList())
+        //   //     .map((data) => data.product!.status.toString()).toString();
+        //
+        //
+        //
+        //   Color statusColor;
+        //   switch (dataCell.value.toString().toLowerCase()) {
+        //     case 'confirmed':
+        //       statusColor = Colors.green;
+        //       break;
+        //     case 'completed':
+        //       statusColor = Colors.grey;
+        //       break;
+        //     case 'shipping':
+        //       statusColor = Colors.blue;
+        //       break;
+        //     case 'pending':
+        //       statusColor = Colors.orange;
+        //       break;
+        //     default:
+        //       statusColor = Colors.grey;
+        //   }
+        //
+        //   return Container(
+        //     margin: EdgeInsets.all(10),
+        //     alignment: Alignment.center,
+        //     padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+        //     decoration: BoxDecoration(
+        //       color: statusColor.withOpacity(0.1),
+        //       borderRadius: BorderRadius.circular(12),
+        //     ),
+        //     child: Text(
+        //       dataCell.value.toString(),
+        //       style: TextStyle(
+        //         color: statusColor,
+        //         fontWeight: FontWeight.w500,
+        //         fontSize: 12,
+        //       ),
+        //     ),
+        //   );
+        // }
 
-
+        else if (dataCell.columnName == 'Status') {
           Color statusColor;
           switch (dataCell.value.toString().toLowerCase()) {
             case 'confirmed':
               statusColor = Colors.green;
               break;
-              case 'confirmed':
-              statusColor = Colors.green;
-              break;
             case 'completed':
               statusColor = Colors.grey;
+              break;
+            case 'paid': // NEW CASE for Paid status
+              statusColor = Colors.purple;
               break;
             case 'shipping':
               statusColor = Colors.blue;
@@ -412,25 +568,26 @@ class OrderDataSource extends DataGridSource {
             padding: EdgeInsets.all(8.0),
             child: hasTracking
                 ? ElevatedButton(
-              onPressed: () {
-                _showTrackingDialog(context, data);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              ),
-              child: Text(
-                'View Tracking',
-                style: TextStyle(fontSize: 12, color: Colors.white),
-              ),
-            )
+                    onPressed: () {
+                      _showTrackingDialog(context, data);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    ),
+                    child: Text(
+                      'View Tracking',
+                      style: TextStyle(fontSize: 12, color: Colors.white),
+                    ),
+                  )
                 : Text(
-              'No tracking',
-              style: TextStyle(fontSize: 12, color: Colors.grey),
-            ),
+                    'No tracking',
+                    style: TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
           );
         } else if (dataCell.columnName == 'Action') {
           final actionData = dataCell.value as Map<String, dynamic>?;
@@ -445,30 +602,31 @@ class OrderDataSource extends DataGridSource {
             padding: EdgeInsets.all(4.0),
             child: isLoading
                 ? CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-              strokeWidth: 2,
-            )
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                    strokeWidth: 2,
+                  )
                 : ElevatedButton(
-              onPressed: isButtonActive && !isLoading
-                  ? () async {
-                await onButtonPressed(id, status);
-                refresh();
-              }
-                  : null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: isButtonActive && !isLoading
-                    ? Colors.blue
-                    : Colors.grey,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              ),
-              child: Text(
-                buttonText,
-                style: TextStyle(fontSize: 12, color: Colors.white),
-              ),
-            ),
+                    onPressed: isButtonActive && !isLoading
+                        ? () async {
+                            await onButtonPressed(id, status);
+                            refresh();
+                          }
+                        : null,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: isButtonActive && !isLoading
+                          ? Colors.blue
+                          : Colors.grey,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    ),
+                    child: Text(
+                      buttonText,
+                      style: TextStyle(fontSize: 12, color: Colors.white),
+                    ),
+                  ),
           );
         }
 
@@ -500,10 +658,7 @@ class OrderDataSource extends DataGridSource {
   }
 }
 
-
 void _showTrackingDialog(BuildContext context, BuyingOrderDatum data) {
-
-
   String formatDate(String isoDate) {
     try {
       DateTime date = DateTime.parse(isoDate);
@@ -564,16 +719,18 @@ void _showTrackingDialog(BuildContext context, BuyingOrderDatum data) {
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
-                    data.status?.name.toString()??"",
+                    data.status?.name.toString() ?? "",
                     style: TextStyle(color: Colors.blue),
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 8),
-            Text('Total Amount: \$${data.totalAmount?.toString() ?? '0.00'}'), // Updated to use data
+            Text(
+                'Total Amount: \$${data.totalAmount?.toString() ?? '0.00'}'), // Updated to use data
             const SizedBox(height: 8),
-            Text('Order Date: ${formatDate(data.orderedAt?.toString() ?? 'N/A')}'), // Updated to use data
+            Text(
+                'Order Date: ${formatDate(data.orderedAt?.toString() ?? 'N/A')}'), // Updated to use data
           ],
         ),
         actions: [
@@ -586,13 +743,6 @@ void _showTrackingDialog(BuildContext context, BuyingOrderDatum data) {
     },
   );
 }
-
-
-
-
-
-
-
 
 //
 // import 'package:ddavila/networks/api_acess.dart';

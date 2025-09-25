@@ -1,10 +1,11 @@
+//
 // import 'dart:convert';
 //
 // class BuyingOrderDataModel {
 //   bool? success;
 //   String? message;
 //   BuyingOrderData? data;
-//   int? code;
+//   dynamic code;
 //
 //   BuyingOrderDataModel({
 //     this.success,
@@ -33,19 +34,19 @@
 // }
 //
 // class BuyingOrderData {
-//   int? currentPage;
+//   dynamic currentPage;
 //   List<BuyingOrderDatum>? data;
 //   String? firstPageUrl;
-//   int? from;
-//   int? lastPage;
+//   dynamic from;
+//   dynamic lastPage;
 //   String? lastPageUrl;
 //   List<Link>? links;
 //   dynamic nextPageUrl;
 //   String? path;
-//   int? perPage;
+//   dynamic perPage;
 //   dynamic prevPageUrl;
-//   int? to;
-//   int? total;
+//   dynamic to;
+//   dynamic total;
 //
 //   BuyingOrderData({
 //     this.currentPage,
@@ -101,10 +102,10 @@
 // }
 //
 // class BuyingOrderDatum {
-//   int? id;
-//   int? userId;
-//   int? paymentId;
-//   int? cartId;
+//   dynamic id;
+//   dynamic userId;
+//   dynamic paymentId;
+//   dynamic cartId;
 //   String? orderNumber;
 //   String? totalAmount;
 //   Currency? currency;
@@ -162,15 +163,21 @@
 //     cartId: json["cart_id"],
 //     orderNumber: json["order_number"],
 //     totalAmount: json["total_amount"],
-//     currency: currencyValues.map[json["currency"]]!,
-//     status: datumStatusValues.map[json["status"]]!,
+//     currency: json["currency"] != null && currencyValues.map.containsKey(json["currency"])
+//         ? currencyValues.map[json["currency"]]
+//         : null,
+//     status: json["status"] != null && datumStatusValues.map.containsKey(json["status"])
+//         ? datumStatusValues.map[json["status"]]
+//         : null,
 //     shippingAddress: json["shipping_address"] == null ? null : ShippingAddress.fromJson(json["shipping_address"]),
 //     notes: json["notes"],
 //     orderedAt: json["ordered_at"] == null ? null : DateTime.parse(json["ordered_at"]),
 //     createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
 //     updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
 //     deletedAt: json["deleted_at"],
-//     productType: typeValues.map[json["product_type"]]!,
+//     productType: json["product_type"] != null && typeValues.map.containsKey(json["product_type"])
+//         ? typeValues.map[json["product_type"]]
+//         : null,
 //     taxAmount: json["tax_amount"],
 //     shippingAmount: json["shipping_amount"],
 //     platformFee: json["platform_fee"],
@@ -217,11 +224,11 @@
 // });
 //
 // class OrderItem {
-//   int? id;
-//   int? orderId;
-//   int? productId;
+//   dynamic id;
+//   dynamic orderId;
+//   dynamic productId;
 //   dynamic productBidId;
-//   int? quantity;
+//   dynamic quantity;
 //   String? unitPrice;
 //   String? subtotal;
 //   List<dynamic>? attributes;
@@ -281,23 +288,23 @@
 // }
 //
 // class Product {
-//   int? id;
+//   dynamic id;
 //   String? title;
 //   String? slug;
 //   List<String>? images;
 //   String? description;
-//   int? userId;
-//   int? categoryId;
-//   int? subCategoryId;
-//   int? stock;
+//   dynamic userId;
+//   dynamic categoryId;
+//   dynamic subCategoryId;
+//   dynamic stock;
 //   Type? type;
-//   int? bid;
+//   dynamic bid;
 //   String? shippingCost;
-//   int? shipWithin;
-//   int? price;
-//   int? startingPrice;
+//   dynamic shipWithin;
+//   dynamic price;
+//   dynamic startingPrice;
 //   DateTime? auctionEndAt;
-//   int? winnerId;
+//   dynamic winnerId;
 //   ProductStatus? status;
 //   DateTime? createdAt;
 //   DateTime? updatedAt;
@@ -341,7 +348,9 @@
 //     categoryId: json["category_id"],
 //     subCategoryId: json["sub_category_id"],
 //     stock: json["stock"],
-//     type: typeValues.map[json["type"]]!,
+//     type: json["type"] != null && typeValues.map.containsKey(json["type"])
+//         ? typeValues.map[json["type"]]
+//         : null,
 //     bid: json["bid"],
 //     shippingCost: json["shipping_cost"],
 //     shipWithin: json["ship_within"],
@@ -349,7 +358,9 @@
 //     startingPrice: json["starting_price"],
 //     auctionEndAt: json["auction_end_at"] == null ? null : DateTime.parse(json["auction_end_at"]),
 //     winnerId: json["winner_id"],
-//     status: productStatusValues.map[json["status"]]!,
+//     status: json["status"] != null && productStatusValues.map.containsKey(json["status"])
+//         ? productStatusValues.map[json["status"]]
+//         : null,
 //     createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
 //     updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
 //     deletedAt: json["deleted_at"],
@@ -432,26 +443,28 @@
 //
 // enum DatumStatus {
 //   CONFIRMED,
-//   PENDING
+//   PENDING,COMPLETED,SHIPPING, confirmed, completed,PAID
 // }
 //
 // final datumStatusValues = EnumValues({
 //   "confirmed": DatumStatus.CONFIRMED,
-//   "pending": DatumStatus.PENDING
+//   "pending": DatumStatus.PENDING,
+//   "completed": DatumStatus.COMPLETED,
+//   "shipping": DatumStatus.SHIPPING,
+//   "paid": DatumStatus.PAID
 // });
-//
 // class User {
-//   int? id;
+//   dynamic id;
 //   Name? name;
 //   Email? email;
 //   Avatar? avatar;
 //   DateTime? emailVerifiedAt;
 //   StripeAccountId? stripeAccountId;
-//   int? onboardComplete;
-//   dynamic country;
-//   City? city;
-//   State? state;
-//   Address? address;
+//   dynamic onboardComplete;
+//   String? country; // Already a String
+//   String? city;    // Change from City? to String?
+//   String? state;   // Change from State? to String?
+//   String? address; // Change from Address? to String?
 //   String? phone;
 //   bool? isBanned;
 //   String? zipCode;
@@ -483,16 +496,28 @@
 //
 //   factory User.fromJson(Map<String, dynamic> json) => User(
 //     id: json["id"],
-//     name: nameValues.map[json["name"]]!,
-//     email: emailValues.map[json["email"]]!,
-//     avatar: avatarValues.map[json["avatar"]]!,
-//     emailVerifiedAt: json["email_verified_at"] == null ? null : DateTime.parse(json["email_verified_at"]),
-//     stripeAccountId: stripeAccountIdValues.map[json["stripe_account_id"]]!,
+//     name: json["name"] != null && nameValues.map.containsKey(json["name"])
+//         ? nameValues.map[json["name"]]
+//         : null,
+//     email: json["email"] != null && emailValues.map.containsKey(json["email"])
+//         ? emailValues.map[json["email"]]
+//         : null,
+//     avatar: json["avatar"] != null &&
+//         avatarValues.map.containsKey(json["avatar"])
+//         ? avatarValues.map[json["avatar"]]
+//         : null,
+//     emailVerifiedAt: json["email_verified_at"] == null
+//         ? null
+//         : DateTime.parse(json["email_verified_at"]),
+//     stripeAccountId: json["stripe_account_id"] != null &&
+//         stripeAccountIdValues.map.containsKey(json["stripe_account_id"])
+//         ? stripeAccountIdValues.map[json["stripe_account_id"]]
+//         : null,
 //     onboardComplete: json["onboard_complete"],
 //     country: json["country"],
-//     city: cityValues.map[json["city"]]!,
-//     state: stateValues.map[json["state"]]!,
-//     address: addressValues.map[json["address"]]!,
+//     city: json["city"], // Directly use the string value
+//     state: json["state"], // Directly use the string value
+//     address: json["address"], // Directly use the string value
 //     phone: json["phone"],
 //     isBanned: json["is_banned"],
 //     zipCode: json["zip_code"],
@@ -509,9 +534,9 @@
 //     "stripe_account_id": stripeAccountIdValues.reverse[stripeAccountId],
 //     "onboard_complete": onboardComplete,
 //     "country": country,
-//     "city": cityValues.reverse[city],
-//     "state": stateValues.reverse[state],
-//     "address": addressValues.reverse[address],
+//     "city": city,
+//     "state": state,
+//     "address": address,
 //     "phone": phone,
 //     "is_banned": isBanned,
 //     "zip_code": zipCode,
@@ -615,19 +640,6 @@
 //     return reverseMap;
 //   }
 // }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1025,11 +1037,13 @@ class Product {
 }
 
 enum ProductStatus {
-  ACTIVE
+  ACTIVE,
+  INACTIVE
 }
 
 final productStatusValues = EnumValues({
-  "active": ProductStatus.ACTIVE
+  "active": ProductStatus.ACTIVE,
+  "inactive": ProductStatus.INACTIVE
 });
 
 enum Type {
@@ -1086,6 +1100,7 @@ final datumStatusValues = EnumValues({
   "shipping": DatumStatus.SHIPPING,
   "paid": DatumStatus.PAID
 });
+
 class User {
   dynamic id;
   Name? name;
@@ -1094,10 +1109,10 @@ class User {
   DateTime? emailVerifiedAt;
   StripeAccountId? stripeAccountId;
   dynamic onboardComplete;
-  String? country; // Already a String
-  String? city;    // Change from City? to String?
-  String? state;   // Change from State? to String?
-  String? address; // Change from Address? to String?
+  String? country;
+  String? city;
+  String? state;
+  String? address;
   String? phone;
   bool? isBanned;
   String? zipCode;
@@ -1148,9 +1163,9 @@ class User {
         : null,
     onboardComplete: json["onboard_complete"],
     country: json["country"],
-    city: json["city"], // Directly use the string value
-    state: json["state"], // Directly use the string value
-    address: json["address"], // Directly use the string value
+    city: json["city"],
+    state: json["state"],
+    address: json["address"],
     phone: json["phone"],
     isBanned: json["is_banned"],
     zipCode: json["zip_code"],
