@@ -108,7 +108,7 @@ class _GetAllProductScreenState extends State<GetAllProductScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blueAccent,
-        title: const Text('All Products'),
+        title: const Text('My Products'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
