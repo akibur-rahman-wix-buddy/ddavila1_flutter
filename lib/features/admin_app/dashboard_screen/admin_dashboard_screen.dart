@@ -89,7 +89,15 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   }).toList();
 
                   return Column(
+
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      
+                      
+                      Text("My Auction History",style: TextFontStyle.headLine22w600cFFFFFFLato.copyWith(color: Colors.black,fontWeight: FontWeight.w700),),
+                      UIHelper.verticalSpace(12.h),
+                      Text("Review all your past auction in one place. Stay informed about your auction activity and outcomes.",style: TextFontStyle.textLine14w500cFFFFFFLato.copyWith(color: Colors.black87,),),
+                      UIHelper.verticalSpace(16.h),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -306,7 +314,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                           child: Column(
                             children: [
                               Text(
-                                "Top Auction Overview",
+                                "Earning Performance",
                                 style: TextFontStyle.textLine7w400cFFFFFFDmSans
                                     .copyWith(
                                   color: AppColor.blackColor,
@@ -382,13 +390,15 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                "Top Bidder",
-                                style: TextFontStyle.textLine7w400cFFFFFFDmSans
-                                    .copyWith(
-                                  color: AppColor.blackColor,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w800,
+                              Center(
+                                child: Text(
+                                  "Top Bidder",
+                                  style: TextFontStyle.textLine7w400cFFFFFFDmSans
+                                      .copyWith(
+                                    color: AppColor.blackColor,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w800,
+                                  ),
                                 ),
                               ),
                               const SizedBox(height: 16),
@@ -446,7 +456,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                           child: Column(
                             children: [
                               Text(
-                                "Top Auction Overview",
+                                "Earning Performance",
                                 style: TextFontStyle.textLine7w400cFFFFFFDmSans
                                     .copyWith(
                                   color: AppColor.blackColor,
