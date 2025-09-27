@@ -849,7 +849,7 @@ class OrderDataSource extends DataGridSource {
 
           switch (statusValue) {
             case 'confirmed':
-              statusText = 'Confirmed';
+              statusText = 'pending';
               statusColor = Colors.green;
               break;
             case 'shipping':
@@ -898,15 +898,6 @@ class OrderDataSource extends DataGridSource {
           Color buttonColor;
 
           print(">>>>>>>>>>>>>>>>>>>> product button details $statusValue");
-
-
-
-
-
-
-
-
-
 
 
 
