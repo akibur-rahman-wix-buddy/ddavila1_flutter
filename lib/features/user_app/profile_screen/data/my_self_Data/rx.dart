@@ -3,7 +3,9 @@
 import 'dart:developer';
 import 'package:ddavila/constants/app_constants.dart';
 import 'package:ddavila/features/user_app/profile_screen/model/my_self_model_data.dart';
+import 'package:ddavila/helpers/all_routes.dart';
 import 'package:ddavila/helpers/di.dart';
+import 'package:ddavila/helpers/navigation_service.dart';
 import 'package:ddavila/helpers/toast.dart';
 import 'package:ddavila/networks/rx_base.dart';
 import 'package:dio/dio.dart';
@@ -88,13 +90,13 @@ final class MySelfRx extends RxResponseInt<MySelfModelData> {
           error.response?.data?["message"] ??
           "An unknown error occurred.";
 
-      // if (statusCode == 401) {
-      //
-      //   appData.write(kKeyIsLoggedIn, false);
-      //   NavigationService.navigateToReplacement(Routes.loginScreen);
-      // } else {
-      //   ToastUtil.showShortToast(errorMessage);
-      // }
+      if (statusCode == 401) {
+
+        appData.write(kKeyIsLoggedIn, false);
+        NavigationService.navigateToReplacement(Routes.loginScreen);
+      } else {
+        ToastUtil.showShortToast(errorMessage);
+      }
     } else {
       ToastUtil.showShortToast("An unexpected error occurred.");
     }

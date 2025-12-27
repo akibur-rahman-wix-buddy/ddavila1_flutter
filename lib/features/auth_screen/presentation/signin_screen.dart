@@ -6,9 +6,12 @@ import 'package:ddavila/assets_helper/text_font_style.dart';
 import 'package:ddavila/common_widgets/custom_button.dart';
 import 'package:ddavila/helpers/all_routes.dart';
 import 'package:ddavila/helpers/navigation_service.dart';
+import 'package:ddavila/helpers/social_login/apple_login.dart';
+import 'package:ddavila/helpers/social_login/google_login.dart';
 import 'package:ddavila/helpers/toast.dart';
 import 'package:ddavila/helpers/ui_helpers.dart';
 import 'package:ddavila/networks/api_acess.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -296,7 +299,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   const SizedBox(height: 19),
                   // Google Sign In Button
                   SocialButton(
-                    title: 'google',
+                    icon: 'google',
                     buttonTitle: 'Sign in with Google',
                     color: AppColor.cFFFFFF,
                     height: 52.0,
@@ -311,12 +314,30 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                     iconHeight: 24.0,
                     iconWidth: 24.0,
-                    onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Google sign in tapped!'),
-                        ),
-                      );
+                    onTap: () async {
+                      await GoogleAuthData.signInWithGoogle(context);
+                    },
+                  ),
+                  const SizedBox(height: 19),
+                  // Google Sign In Button
+                  SocialButton(
+                    icon: "",
+                    buttonTitle: 'Sign in with Apple',
+                    color: AppColor.cFFFFFF,
+                    height: 52.0,
+                    width: double.infinity,
+                    borderRadius: 67.0,
+                    borderColor: AppColor.c666666.withAlpha(35),
+                    borderWidth: 2.0,
+                    textStyle: const TextStyle(
+                      color: AppColor.c666666,
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    iconHeight: 24.0,
+                    iconWidth: 24.0,
+                    onTap: () async {
+                      await SocialAuthApple.signInWithApple(context);
                     },
                   ),
                   const SizedBox(height: 50),

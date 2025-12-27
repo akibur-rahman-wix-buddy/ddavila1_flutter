@@ -3,6 +3,7 @@
 import 'dart:developer';
 import 'package:auto_animated/auto_animated.dart';
 import 'package:ddavila/loading_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
@@ -14,12 +15,16 @@ import 'package:ddavila/networks/dio/dio.dart';
 import 'package:provider/provider.dart';
 import '/helpers/all_routes.dart';
 import 'constants/custome_theme.dart';
+import 'firebase_options.dart';
 import 'helpers/helper_methods.dart';
 import 'helpers/navigation_service.dart';
 import 'helpers/register_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   Stripe.publishableKey =
       "pk_test_51Raxa44azWPOh4j7n7lXUYffcYmfQQRYfmwm4nohAR9Rl7WRWYBbY1A1WFrEXnF4MZF0aOWhSkemEZrJUV97UzN200l9CqOWX9";
   await Stripe.instance.applySettings();

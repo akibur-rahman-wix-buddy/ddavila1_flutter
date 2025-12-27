@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "661887671818",
+    "project_id": "the-hobby-nexus",
+    "storage_bucket": "the-hobby-nexus.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:661887671818:android:afbaaa120677c5ddb9c9f3",
+        "android_client_info": {
+          "package_name": "com.ddavila.nexus.ddavila"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "661887671818-ngv9uran18i2jq6ll75o61qddoc7bt1m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB22JksHJlipg_g1iwKx6ygTtnuHwcCMw0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "661887671818-ngv9uran18i2jq6ll75o61qddoc7bt1m.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "661887671818-rbg95eemkbn134ovs7clamhci747ilue.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ddavila.nexus.ddavila"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

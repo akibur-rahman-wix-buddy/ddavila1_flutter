@@ -13,14 +13,38 @@ String formatCountdown(DateTime endTime) {
 
   return "${days}d ${hours}h ${minutes}m ${seconds}s";
 }
-Stream<String> getLiveCountdownStream({required String isoTime}) {
+// Stream<String> getLiveCountdownStream({required String isoTime}) {
+//   final endTime = DateTime.parse(isoTime);
+//   return Stream.periodic(const Duration(seconds: 1), (_) {
+//     return formatCountdown(endTime);
+//   });
+// }
+
+
+
+Stream<String> getLiveCountdownStream({required dynamic isoTime}) {
+
+
+  print(">>>>>>>>>>>>>. bit time is ${isoTime}");
+
   final endTime = DateTime.parse(isoTime);
   return Stream.periodic(const Duration(seconds: 1), (_) {
-    return formatCountdown(endTime);
+    final now = DateTime.now();
+    final difference = endTime.difference(now);
+
+    // Return '00:00:00' if the countdown has ended
+    if (difference.isNegative) {
+      return '00:00:00';
+    }
+
+    // Format the countdown
+    final hours = difference.inHours.remainder(24).toString().padLeft(2, '0');
+    final minutes = difference.inMinutes.remainder(60).toString().padLeft(2, '0');
+    final seconds = difference.inSeconds.remainder(60).toString().padLeft(2, '0');
+
+    return '$hours:$minutes:$seconds';
   });
 }
-
-
 
 
 bool isTimeFinished(String dateTimeString) {
