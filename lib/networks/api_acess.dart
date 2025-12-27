@@ -67,6 +67,7 @@ import 'package:ddavila/features/user_app/recent_won_bits/data/recent_won_produc
 import 'package:ddavila/features/user_app/recent_won_bits/model/recent_won_data_model.dart';
 import 'package:ddavila/features/user_app/shop/data/shop_all_products/rx.dart';
 import 'package:ddavila/features/user_app/shop/model/shop_all_products.dart';
+import 'package:ddavila/helpers/social_login/social_login_rx.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:ddavila/features/auth_screen/data/rx_sign_in/rx.dart';
 
@@ -147,6 +148,11 @@ ResendOtpRx resendOtpRx = ResendOtpRx(
   empty: <String, dynamic>{},
   dataFetcher: BehaviorSubject<Map<String, dynamic>>(),
 );
+
+
+PostSocialLoginRX postGoogleLoginRX = PostSocialLoginRX(
+  empty: <String, dynamic>{},
+  dataFetcher: BehaviorSubject<Map<String, dynamic>>(),);
 
 GetAllChatListRx getAllChatListRx = GetAllChatListRx(
   empty: ChatListModelData(),

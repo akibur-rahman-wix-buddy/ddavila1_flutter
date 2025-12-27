@@ -117,7 +117,7 @@ class PriceAndTimeInfo extends StatelessWidget {
                     ),
                     const SizedBox(width: 8.0),
                     StreamBuilder<String>(
-                      stream: getLiveCountdownStream(isoTime: product.auctionEndAt?.toString() ?? ""),
+                      stream: getLiveCountdownStream(isoTime: product.auctionEndAt.toString() ?? ""),
                       builder: (context, snapshot) {
                         return Text(
                           snapshot.data ?? "Loading...",

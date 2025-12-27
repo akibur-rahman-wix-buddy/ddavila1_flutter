@@ -613,7 +613,7 @@ class _ProductsBidScreenState extends State<ProductsBidScreen> {
 
 
 
-
+///>>>>>>>>>>>>>>>>>>>>> here is the payment details section >>>>>>>>>>>
 
 class PaymentDetails extends StatefulWidget {
   final BidData product;
