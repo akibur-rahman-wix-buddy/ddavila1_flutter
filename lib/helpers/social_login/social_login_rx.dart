@@ -36,7 +36,7 @@ final class PostSocialLoginRX extends RxResponseInt<Map> {
   Future<Map> handleSuccessWithReturn(Map data) async {
     message = data["message"];
     if (data["success"] == true) {
-      String accesstoken = data["token"];
+      String accesstoken = data["data"]["token"];
       log('rx token $accesstoken');
       String id = data["data"]["id"].toString();
 

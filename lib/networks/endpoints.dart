@@ -98,6 +98,6 @@ final class Endpoints {
   static String recentWonProductApi({dynamic pageNumber})=> "/bids/leatest/won/today?page=$pageNumber";
   static String forgetPasswordChangeApiLink()=> "/reset-password";
   static String resendOtpApiLink()=> "/resend-otp";
-  static String googleLogin()=> "/resend-otp";
+  static String googleLogin()=> "/social-login";
 
 }

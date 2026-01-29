@@ -565,11 +565,14 @@ class _CategoryProductsWidgetState extends State<CategoryProductsWidget> {
   }
 
   Widget _buildProductPrice(ProductData product) {
+    // Get the price based on product type
+     final price = product.type == "sale" ? product.price : product.highestBid;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          '\$${product.type == "sale" ? product.price : product.highestBid}',
+          '\$${price.toStringAsFixed(2)}', // Shows 2 decimal points
           style: TextFontStyle.textLine7w400cFFFFFFDmSans.copyWith(
             fontSize: 18,
             color: Colors.black,
